@@ -1,2 +1,1 @@
-# copyrat# copyrat
-# copyrat
+# A TernatTeam Production
