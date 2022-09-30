@@ -1,5 +1,5 @@
 import React from 'react';
-
+import InGamePage from './InGame';
 import { Center, Button, Text } from 'native-base';
 
 var players = [
@@ -47,34 +47,39 @@ var players = [
   }
 ];
 
-export const ForgotPasswordPage = () => {
-  function smth() {
-    
+export const ForgotPasswordPage = ({ navigation }) => {
+  function set_roles() {
+    let no_of_rats = players.length / 2;
     let cnt = 0;
-    while (cnt < 3) {
+    while (cnt < no_of_rats) {
       let val = Math.floor(Math.random() * 5) + 1;
       if (players[val].role === 'cat') {
         players[val].role = 'rat';
         cnt++;
       }
     }
+    for(let i = 0; i < players.length; i++)
+      players[i].fakeid = players[i].name;
     let res = players.filter( role => role.role === 'rat');
-    res[0].fakeid = res[2].name;
-    for (let i = 1; i < 3; i++) {
+    res[0].fakeid = res[no_of_rats - 1].name;
+    for (let i = 1; i < no_of_rats; i++) {
       res[i].fakeid = res[i - 1].name;
     }
-    alert(JSON.stringify(res));
 
+    navigation.navigate('InGame')
+    //alert(JSON.stringify(res));
+    
     // reset roles
-    for (let i = 0; i < 6; i++)
-      players[i].role = 'cat';
+    
+    
   }
   return (
     
     <Center w="100%" h="100%" bgColor="primary1.500">
       <Button
         onPress={() => 
-          smth()
+          set_roles()
+          
         }
       >
         Apasa
@@ -87,3 +92,4 @@ export const ForgotPasswordPage = () => {
 
 
 export default ForgotPasswordPage;
+export {players};

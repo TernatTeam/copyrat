@@ -12,6 +12,7 @@ import {
   LoginPage,
   RegisterPage,
   ForgotPasswordPage,
+  InGamePage,
 } from '../src/pages/auth/index';
 
 const Stack = createStackNavigator();
@@ -29,6 +30,7 @@ const AppRouter = () => {
       >
         <Stack.Screen name="Login" component={LoginPage} />
         <Stack.Screen name="Register" component={RegisterPage} />
+        <Stack.Screen name="InGame" component={InGamePage} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordPage} />
       </Stack.Navigator>
     </NavigationContainer>
