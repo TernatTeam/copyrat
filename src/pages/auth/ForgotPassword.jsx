@@ -4,44 +4,50 @@ import { Center, Button, Text } from 'native-base';
 
 var players = [
   {
-    name: 'Dragos',
+    name: 'Dragos', //index 0
     role: 'cat',
-    votes: 0, 
+    no_of_votes: 0,
+    vote: 2, 
     fakeid: null,
     score: 0
   },
   {
-    name: 'Cosmin',
+    name: 'Cosmin', //index 1
     role: 'cat',
-    votes: 0,
+    no_of_votes: 0,
+    vote: 2,
     fakeid: null, 
     score: 0
   }, 
   {
-    name: 'Mario',
+    name: 'Mario', //index 2
     role: 'cat',
-    votes: 0,
+    no_of_votes: 0,
+    vote: 0,
     fakeid: null, 
     score: 0
   },
   {
-  name: 'David',
+  name: 'David', //index 3
   role: 'cat',
-  votes: 0,
+  no_of_votes: 0,
+  vote: 0,
   fakeid: null, 
   score: 0
   },
   {
-    name: 'Costin',
+    name: 'Costin', //index 4
     role: 'cat',
-    votes: 0, 
+    no_of_votes: 0,
+    vote: 3, 
     fakeid: null,
     score: 0
   },
   {
-    name: 'Matei',
+    name: 'Matei', //index 5
     role: 'cat',
-    votes: 0,
+    no_of_votes: 0,
+    vote: -1,
     fakeid: null, 
     score: 0
   }
