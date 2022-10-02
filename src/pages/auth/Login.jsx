@@ -18,7 +18,7 @@ export const LoginPage = ({ navigation }) => {
       <Image source={require('../../../assets/logo_trans.png')} style = {{width:200, height: 200}} />
       {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
       <>
-        <Text style={{ fontSize: 20 }}>Sign In</Text>
+        <Text style={{ fontSize: 30, fontWeight: 'bold' }}>Sign In</Text>
 
         <Box style={styles.input}>
           <TextInput
