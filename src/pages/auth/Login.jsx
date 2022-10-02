@@ -42,7 +42,7 @@ export const LoginPage = ({ navigation }) => {
           />
         </Box>
 
-        <Button
+        <Button style={styles.buttonStyle}
           onPress={() =>
             signIn(email, password).then((value) => {
               if (value == 200) {
@@ -53,7 +53,7 @@ export const LoginPage = ({ navigation }) => {
         >
           Sign In
         </Button>
-        <Button
+        <Button style={styles.buttonStyle}
           onPress={() => {
             
                 navigation.navigate("Register");
@@ -81,4 +81,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 5,
   },
+  buttonStyle: {
+    padding: 5,
+    width: 120,
+    height: 50,
+    backgroundColor: '#74859a',
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#000000',
+    margin: 10
+  }
 });

@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import React, { useEffect, useReducer, useState } from "react";
 import { Button } from "native-base";
 
@@ -9,6 +9,7 @@ import {
 } from '../../config/firebase/firebase-key-config';
 import { async } from "@firebase/util";
 import { doc, updateDoc, increment } from "firebase/firestore";
+import { ImageBackground } from "react-native";
 
 let uIds = [];
 
@@ -63,21 +64,48 @@ export const LobbyPage = ({ navigation }) => {
 
   return (
     <View style={{ alignItems: "center", justifyContent: "center", flex: 1, backgroundColor:"#747474" }}>
-      <Text>Lobby Page</Text>
-      <Button onPress={() => {
-        setRoles();
-        navigation.navigate("Chat")
+      <ImageBackground 
+      source={require('../../assets/logo_trans.png')} 
+      style = {{width:500, height: 500, backgroundColor: 'transparent', opacity: 0.05}} />
+      <Text style={{fontSize: 30, fontWeight: 'bold'}}>Lobby Page</Text>
+      <Button style={styles.buttonStyle}
+        onPress={() => {
+          setRoles();
+          navigation.navigate("Chat")
         }
         }>Start
       </Button>
       
-      <Button onPress={() => {
-        reset();
-      }
+      <Button style={styles.buttonStyle}
+        onPress={() => {
+          reset();
+        }
       }>Reset
       </Button>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  input: {
+    padding: 10,
+    margin: 4,
+    width: "75%",
+    fontSize: 15,
+    backgroundColor: "#74859a",
+    borderRadius: 10,
+    margin: 5,
+  },
+  buttonStyle: {
+    padding: 5,
+    width: 120,
+    height: 50,
+    backgroundColor: '#74859a',
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#000000',
+    margin: 10
+  }
+});
 
 export default LobbyPage;
