@@ -1,42 +1,73 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import { Button, Center, Text } from "native-base";
-
-import {
-  db,
-  collection,
-  addDoc,
-} from "../../../config/firebase/firebase-key-config";
+import { Center, Button, View, Box } from "native-base";
+import { auth } from "../../../config/firebase/firebase-key-config";
+import { signIn } from "../../../config/firebase/firebase-functions";
+import { Text } from "react-native";
+import { TouchableWithoutFeedback, StyleSheet } from "react-native";
+import { Keyboard } from "react-native";
+import { TextInput } from "react-native";
+import { Alert } from "react-native";
 
 export const LoginPage = ({ navigation }) => {
-  const writeData = async () => {
-    try {
-      await addDoc(collection(db, `test/`), {
-        muie: "muie2",
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
-    <Center w="100%" h="100%">
-      <Text>Login Page</Text>
-      <Button
-        marginBottom="4px"
-        onPress={() => {
-          navigation.navigate("Register");
-        }}
-      >
-        Regsiter
-      </Button>
+    <Center style={{ flex: 1 }}>
+      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+      <>
+        <Text style={{ fontSize: 20 }}>Sign In</Text>
 
-      <Button onPress={writeData}>Write in db</Button>
-      <Button onPress={() => navigation.navigate("Home")} marginTop="5px">
-        Log In!!!
-      </Button>
+        <Box style={styles.input}>
+          <TextInput
+            placeholder="Email"
+            autoCompleteType={null}
+            fontSize={15}
+            onChangeText={(mail) => {
+              setEmail(mail);
+            }}
+          />
+        </Box>
+        <Box style={styles.input}>
+          <TextInput
+            placeholder="Password"
+            autoCompleteType={null}
+            secureTextEntry={true}
+            fontSize={15}
+            onChangeText={(pass) => {
+              setPassword(pass);
+            }}
+          />
+        </Box>
+
+        <Button
+          onPress={() =>
+            signIn(email, password).then((value) => {
+              if (value == 200) {
+                navigation.navigate("Home");
+              }
+            })
+          }
+        >
+          Sign In
+        </Button>
+      </>
+      {/* </TouchableWithoutFeedback> */}
     </Center>
   );
 };
 
 export default LoginPage;
+
+const styles = StyleSheet.create({
+  input: {
+    padding: 10,
+    margin: 4,
+    width: "75%",
+    fontSize: 15,
+    backgroundColor: "chocolate",
+    borderRadius: 10,
+    margin: 5,
+  },
+});
