@@ -1,9 +1,15 @@
 import React from 'react';
 
+import { LogBox } from 'react-native';
+
 import { NativeBaseProvider, StatusBar } from 'native-base';
 
 import Navigator from './routes/index';
 import theme from './config/theme/colors';
+
+LogBox.ignoreLogs([
+  'Warning: Async Storage has been extracted from react-native core',
+]);
 
 export const App = () => {
   return (
