@@ -10,57 +10,21 @@ import {
 import { async } from "@firebase/util";
 import { doc, updateDoc, increment } from "firebase/firestore";
 
-function wset_roles() { 
-  let no_of_rats = playersDB.length / 2;
-  let cnt = 0;
-  /*
-  const newState = playersDB.map(player => {
-    if(player.role === "cat") {
-      return {
-        ...player,
-        name: "mario"
-      }
-    }
-    return player;
-  })
-*/
-  setPlayersDB(newState);
-
-  while (cnt < no_of_rats) {
-    let val = Math.floor(Math.random() * 5) + 1;
-    if (playersDB[val].role === 'cat') {
-      
-      cnt++;
-    }
-  }/*
-  for(let i = 0; i < players.length; i++)
-    players[i].fakeid = players[i].name;
-  let res = players.filter( role => role.role === 'rat');
-  res[0].fakeid = res[no_of_rats - 1].name;
-  for (let i = 1; i < no_of_rats; i++) {
-    res[i].fakeid = res[i - 1].name;
-  }
-*/
- 
-  
-}
 let uIds = [];
-export const LobbyPage = ({ navigation }) => {
-  
+
+export const LobbyPage = ({ navigation }) => {  
   const [playersDB, setPlayersDB] = useState([]);
  
   const getPlayers = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'games/abcd/players'));
       let playersArray = [];
-
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         // console.log(doc.id, ' => ', doc.data());
         playersArray.push(doc.data());
         uIds.push(doc.id);
       });
-
       setPlayersDB(playersArray);
     } catch (err) {
       console.log('Error: ', err);
@@ -69,17 +33,16 @@ export const LobbyPage = ({ navigation }) => {
 
   useEffect(() => {getPlayers()}, [])
   
-//Assign roles
+  //Assign roles
   const setRoles = () => {
-    let no_of_rats = playersDB.length / 2;
-    
+    let no_of_rats = playersDB.length / 2;   
     //arr of 3 rand index
     var arr = [];
     while(arr.length < no_of_rats){
       var r = Math.floor(Math.random() * (playersDB.length - 1)) + 1;
       if(arr.indexOf(r) === -1) arr.push(r);
     }
-    console.log(arr);
+    //update roles and fake_id
     for(let i = 0; i < no_of_rats; i++) {
       updateDoc(doc(db, 'games/abcd/players/' + uIds[arr[i]]), {
           role: "rat" ,
@@ -88,7 +51,7 @@ export const LobbyPage = ({ navigation }) => {
     }
   }
 
-  //reset roles + fake_id
+  //reset roles and fake_id
   const reset = () => {
     for(let i = 0; i < playersDB.length; i++) {
       updateDoc(doc(db, 'games/abcd/players/' + uIds[i]), {
@@ -110,9 +73,8 @@ export const LobbyPage = ({ navigation }) => {
       
       <Button onPress={() => {
         reset();
-        
       }
-      }>Schimba
+      }>Reset
       </Button>
     </View>
   );
