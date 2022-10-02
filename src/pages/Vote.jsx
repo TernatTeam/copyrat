@@ -6,6 +6,7 @@ import { doc, updateDoc, increment } from 'firebase/firestore';
 import { collection, db, getDocs } from '../../config/firebase/firebase-key-config';
 
 const currentPlayerIndex = 3; // David
+let votedPlayerIndex = -1; // nimeni
 let uIDs = [];
 
 export const VotePage = ({ navigation }) => {
@@ -50,10 +51,18 @@ export const VotePage = ({ navigation }) => {
   };
 
   const voteFor = (playerName) => {
-    let indexOfVoted = playersDB.findIndex(player => player.fake_id == playerName);
-    playersDB[indexOfVoted].no_of_votes++;
-    window.alert(playersDB[indexOfVoted].no_of_votes);
+    votedPlayerIndex = playersDB.findIndex(player => player.fake_id == playerName);
+    window.alert("You are voting " + playersDB[votedPlayerIndex].fake_id);
   };
+
+  const confirmVote = () => {
+    if (votedPlayerIndex >= 0) {
+      playersDB[votedPlayerIndex].no_of_votes++;
+      window.alert("Locking in.. " + playersDB[votedPlayerIndex].fake_id);
+    } else {
+      window.alert("You need to vote someone!");
+    }
+  }
 
   const resetVotes = () => {
     const nrOfPlayers = playersDB.length;
@@ -135,6 +144,34 @@ export const VotePage = ({ navigation }) => {
     resetVotes();
   }
 
+  //Assign roles
+  const setRoles = () => {
+    let no_of_rats = playersDB.length / 2;   
+    //arr of 3 rand index
+    var arr = [];
+    while(arr.length < no_of_rats){
+      var r = Math.floor(Math.random() * (playersDB.length - 1)) + 1;
+      if(arr.indexOf(r) === -1) arr.push(r);
+    }
+    //update roles and fake_id
+    for(let i = 0; i < no_of_rats; i++) {
+      updateDoc(doc(db, 'games/abcd/players/' + uIDs[arr[i]]), {
+          role: "rat" ,
+          fake_id: playersDB[arr[(i + 1) % no_of_rats]].name
+      });
+    }
+  }
+
+  //reset roles and fake_id
+  const reset = () => {
+    for(let i = 0; i < playersDB.length; i++) {
+      updateDoc(doc(db, 'games/abcd/players/' + uIDs[i]), {
+        role: "cat" ,
+        fake_id: playersDB[i].name
+    });
+    }
+  }
+
   useEffect(() => {
     getPlayers()
   }, []);
@@ -169,13 +206,12 @@ export const VotePage = ({ navigation }) => {
         w="20%" h="5%"
         marginBottom="4px"
         padding="1px"
-        bgColor="amber.900"
+        bgColor="fuchsia.700"
         onPress={() => {
-          console.log(playersDB);
-          //resetVotes();
+          confirmVote();
         }}
       >
-        Reset
+        Done
       </Button>
 
       <Button
@@ -201,7 +237,20 @@ export const VotePage = ({ navigation }) => {
       >
         Reset FB
       </Button>
-      <Button onPress={() => navigation.navigate("Chat")}>NextRound</Button>
+
+      <Button 
+        w="20%" h="5%"
+        marginBottom="4px"
+        padding="1px"
+        onPress={() => {
+          resetVotes();
+          reset();
+          setRoles();
+          navigation.navigate("Chat");
+        }}
+      >
+        NextRound
+      </Button>
     </View>
   );
 };
