@@ -1,63 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Center, Text, Button } from 'native-base';
 import { db, collection, getDocs } from '../../../config/firebase/firebase-key-config';
-
-let players = [
-  {
-    name: 'Dragos',
-    role: 'rat',
-    fakeid: 'Matei',
-    nrOfVotes: 0,
-    vote: 'Mario',
-    score: 0
-  },
-  {
-    name: 'Cosmin',
-    role: 'cat',
-    fakeid: 'Cosmin',
-    vote: 'Mario',
-    nrOfVotes: 0, 
-    score: 0
-  }, 
-  {
-    name: 'Mario',
-    role: 'rat',
-    fakeid: 'Dragos',
-    vote: 'Cosmin',
-    nrOfVotes: 0, 
-    score: 0
-  },
-  {
-    name: 'David',
-    role: 'cat',
-    fakeid: 'David',
-    vote: 'Mario',
-    nrOfVotes: 0, 
-    score: 0
-  },
-  {
-    name: 'Costin',
-    role: 'cat',
-    fakeid: 'Costin',
-    vote: 'Mario',
-    nrOfVotes: 0, 
-    score: 0
-  },
-  {
-    name: 'Matei',
-    role: 'rat',
-    fakeid: 'Mario',
-    nrOfVotes: 0,
-    vote: 'Dragos',
-    score: 0
-  }
-];
-
-let currentPlayerIndex = 3; // David
+import { increment, doc, updateDoc } from 'firebase/firestore';
 
 export const ForgotPasswordPage = () => {
-  /*const [playersDB, setPlayersDB] = useState([]);
-
+  let currentPlayerIndex = 3; // David
+  let uIds = [];
+  const [players, setPlayers] = useState([]);
+  
   const getPlayers = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'games/abcd/players'));
@@ -67,25 +17,47 @@ export const ForgotPasswordPage = () => {
         // doc.data() is never undefined for query doc snapshots
         // console.log(doc.id, ' => ', doc.data());
         playersArray.push(doc.data());
+        uIds.push(doc.id);
       });
   
-      setPlayersDB(playersArray);
+      setPlayers(playersArray);
     } catch (err) {
       console.log('Error: ', err);
     }
-  };*/
+  };
+
+  const updateScore = () => {
+    const nrOfPlayers = players.length;
+    
+    for (let i = 0; i < nrOfPlayers; i++) {
+      updateDoc(doc(db, 'games/abcd/players/' + uIds[i]), {
+        score: increment(players[i].score)
+      });
+    }
+  };
+
+  const resetScoresFB = () => {
+    const nrOfPlayers = players.length;
+    
+    for (let i = 0; i < nrOfPlayers; i++) {
+      updateDoc(doc(db, 'games/abcd/players/' + uIds[i]), {
+        score: 0
+      });
+    }
+  };
 
   const voteFor = (playerName) => {
-    let indexOfVoted = players.findIndex(player => player.fakeid == playerName);
-    players[indexOfVoted].nrOfVotes++;
-    window.alert(players[indexOfVoted].nrOfVotes);
+    let indexOfVoted = players.findIndex(player => player.fake_id == playerName);
+    players[indexOfVoted].no_of_votes++;
+    window.alert(players[indexOfVoted].no_of_votes);
   };
   
   const resetVotes = () => {
     const nrOfPlayers = players.length;
   
     for (let i = 0; i < nrOfPlayers; i++) {
-      players[i].nrOfVotes = players[i].score = 0;
+      players[i].no_of_votes = 0;
+      players[i].score = 0;
     }
   }
   
@@ -103,8 +75,6 @@ export const ForgotPasswordPage = () => {
     window.alert(results);
 
     showRats();
-
-    resetVotes();
   }
 
   const showRats = () => {
@@ -124,10 +94,10 @@ export const ForgotPasswordPage = () => {
   
     for (let i = 0; i < nrOfPlayers; i++) {
       if (players[i].role === 'cat') { // real
-        let indexOfVoted = players.findIndex(player => player.fakeid == players[i].vote);
+        let indexOfVoted = players.findIndex(player => player.fake_id == players[i].vote);
 
         if (players[indexOfVoted].role === 'rat') {
-          players[i].score += nrOfPlayers - 1 - players[indexOfVoted].nrOfVotes;
+          players[i].score += nrOfPlayers - 1 - players[indexOfVoted].no_of_votes;
         }
         
         if (players[i].score < 1) {
@@ -140,7 +110,7 @@ export const ForgotPasswordPage = () => {
           players[i].score += 5;
         }
       } else { // fake
-        players[i].score += nrOfPlayers - 2 - players[i].nrOfVotes;
+        players[i].score += nrOfPlayers - 2 - players[i].no_of_votes;
         players[i].score *= 10;
         
         if (players[i].score == 10 * (nrOfPlayers - 2)){
@@ -156,11 +126,15 @@ export const ForgotPasswordPage = () => {
     });
 
     showScore();
+
+    updateScore();
+
+    resetVotes();
   }
    
-  // useEffect(() => {
-  //   getPlayers();
-  // }, []);
+  useEffect(() => {
+    getPlayers();
+  }, []);
 
   return (
     <Center w="100%" h="100%" bgColor="coolGray.300">
@@ -169,7 +143,7 @@ export const ForgotPasswordPage = () => {
       {
         players?.map((player, index) => {
           
-          if (index != currentPlayerIndex && player.name != players[currentPlayerIndex].fakeid )
+          if (index != currentPlayerIndex && player.name != players[currentPlayerIndex].fake_id )
             return (
               <Button
                 w="20%" h="5%"
@@ -210,6 +184,18 @@ export const ForgotPasswordPage = () => {
         Stop Vote!
       </Button>
       
+      <Button
+        w="20%" h="5%"
+        marginBottom="4px"
+        padding="1px"
+        bgColor="black"
+        onPress={() => {
+          resetScoresFB();
+        }}
+      >
+        Reset FB
+      </Button>
+
     </Center>
   );
 };
