@@ -6,7 +6,7 @@ import { signIn } from "../../../config/firebase/firebase-functions";
 import { Text } from "react-native";
 import { TouchableWithoutFeedback, StyleSheet } from "react-native";
 import { Keyboard } from "react-native";
-import { TextInput } from "react-native";
+import { TextInput, Image } from "react-native";
 import { Alert } from "react-native";
 
 export const LoginPage = ({ navigation }) => {
@@ -14,7 +14,8 @@ export const LoginPage = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   return (
-    <Center style={{ flex: 1 }}>
+    <Center style={{ flex: 1, backgroundColor: "#747474" }}>
+      <Image source={require('../../../assets/logo_trans.png')} style = {{width:200, height: 200}} />
       {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
       <>
         <Text style={{ fontSize: 20 }}>Sign In</Text>
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
     margin: 4,
     width: "75%",
     fontSize: 15,
-    backgroundColor: "chocolate",
+    backgroundColor: "#74859a",
     borderRadius: 10,
     margin: 5,
   },

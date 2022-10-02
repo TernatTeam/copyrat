@@ -62,7 +62,7 @@ export const LobbyPage = ({ navigation }) => {
   }
 
   return (
-    <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
+    <View style={{ alignItems: "center", justifyContent: "center", flex: 1, backgroundColor:"#747474" }}>
       <Text>Lobby Page</Text>
       <Button onPress={() => {
         setRoles();

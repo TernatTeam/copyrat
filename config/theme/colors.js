@@ -5,7 +5,7 @@ const theme = extendTheme({
     primary1: {
       50: '#FFE1E1', // 35% lighten
       100: '#FFC8C8', // 25% lighten
-      500: '#F78888', // original
+      500: '#747474', // original
       600: '#DE6F6F', // 10% darker
     },
     primary2: {
