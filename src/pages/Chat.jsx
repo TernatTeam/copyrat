@@ -1,5 +1,10 @@
 import { Button, Text, View } from "native-base";
-import React, { useState, useCallback, useLayoutEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useLayoutEffect,
+  useEffect,
+} from "react";
 import { ViewBase } from "react-native";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
 import {
@@ -7,34 +12,25 @@ import {
   db,
   doc,
   setDoc,
+  auth,
+  getDoc,
 } from "../../config/firebase/firebase-key-config";
 import { query, onSnapshot, orderBy } from "firebase/firestore";
+import { async } from "@firebase/util";
 
 export const ChatPage = ({ navigation }) => {
-  const [messages, setMessages] = useState([
-    // {
-    //   _id: 2,
-    //   text: "Salutare",
-    //   createdAt: new Date(),
-    //   user: {
-    //     _id: 2,
-    //     name: "Costi",
-    //     avatar:
-    //       "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/WildRat.jpg/330px-WildRat.jpg",
-    //   },
-    // },
-    // {
-    //   _id: 1,
-    //   text: "Hello World",
-    //   createdAt: new Date(),
-    //   user: {
-    //     _id: 2,
-    //     name: "Dragos",
-    //     avatar:
-    //       "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/WildRat.jpg/330px-WildRat.jpg",
-    //   },
-    // },
-  ]);
+  const [messages, setMessages] = useState([]);
+  const [fakeId, setFakeId] = useState();
+
+  useLayoutEffect(() => {
+    const getFakeId = async () => {
+      const docRef = doc(db, "games", "abcd", "players", auth.currentUser.uid);
+      const docSnap = await getDoc(docRef);
+
+      setFakeId(docSnap.data().fake_id);
+    };
+    return getFakeId;
+  });
 
   const onSend = useCallback((messages = []) => {
     setMessages((previousMessages) =>
@@ -57,20 +53,6 @@ export const ChatPage = ({ navigation }) => {
   }, []);
 
   useLayoutEffect(() => {
-    // const unsubscribe = db
-    //   .collection("chats")
-    //   .orderBy("createdAt", "desc")
-    //   .onSnapshot((snapshot) =>
-    //     setMessages(
-    //       snapshot.docs.map((doc) => ({
-    //         _id: doc.data()._id,
-    //         createdAt: doc.data().createdAt.toDate(),
-    //         text: doc.data().text,
-    //         user: doc.data().user,
-    //       }))
-    //     )
-    //   );
-
     const q = query(
       collection(db, "games/abcd/chat"),
       orderBy("createdAt", "desc")
@@ -100,7 +82,7 @@ export const ChatPage = ({ navigation }) => {
         renderBubble={(props) => {
           return (
             <View>
-              <Text>{props.currentMessage.user.name}</Text>
+              <Text>{props.currentMessage.user.fakeId}</Text>
               <Bubble
                 {...props}
                 textStyle={{
@@ -122,6 +104,10 @@ export const ChatPage = ({ navigation }) => {
               />
             </View>
           );
+        }}
+        user={{
+          _id: auth.currentUser?.uid,
+          fakeId: fakeId,
         }}
       />
     </View>
