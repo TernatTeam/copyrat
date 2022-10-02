@@ -8,7 +8,7 @@ import {
   getDocs,
 } from '../../config/firebase/firebase-key-config';
 import { async } from "@firebase/util";
-import { doc, updateDoc, increment, query } from "firebase/firestore";
+import { doc, updateDoc, increment } from "firebase/firestore";
 
 function wset_roles() { 
   let no_of_rats = playersDB.length / 2;
@@ -44,18 +44,9 @@ function wset_roles() {
  
   
 }
-
+let uIds = [];
 export const LobbyPage = ({ navigation }) => {
-  const updateScore = () => {
-    const nrOfPlayers = players.length;
-
-    for (let i = 0; i < nrOfPlayers; i++) {
-      updateDoc(doc(db, 'games/abcd/players/' + uIds[i]), {
-        score: increment(players[i].score)
-      });
-    }
-  };
-  let uIds = [];
+  
   const [playersDB, setPlayersDB] = useState([]);
  
   const getPlayers = async () => {
@@ -70,42 +61,55 @@ export const LobbyPage = ({ navigation }) => {
         uIds.push(doc.id);
       });
 
-      setPlayers(playersArray);
+      setPlayersDB(playersArray);
     } catch (err) {
       console.log('Error: ', err);
     }
   };
 
   useEffect(() => {getPlayers()}, [])
-  useEffect(() => {console.log(playersDB)}, [playersDB])
   
-  const reset = async() => {
-    
-  }
 //Assign roles
   const setRoles = () => {
     let no_of_rats = playersDB.length / 2;
-    let cnt = 0;
     
-    while (cnt < no_of_rats) {
-      let val = Math.floor(Math.random() * 5) + 1;
-       
+    //arr of 3 rand index
+    var arr = [];
+    while(arr.length < no_of_rats){
+      var r = Math.floor(Math.random() * (playersDB.length - 1)) + 1;
+      if(arr.indexOf(r) === -1) arr.push(r);
     }
-    
+    console.log(arr);
+    for(let i = 0; i < no_of_rats; i++) {
+      updateDoc(doc(db, 'games/abcd/players/' + uIds[arr[i]]), {
+          role: "rat" ,
+          fake_id: playersDB[arr[(i + 1) % no_of_rats]].name
+      });
+    }
+  }
+
+  //reset roles + fake_id
+  const reset = () => {
+    for(let i = 0; i < playersDB.length; i++) {
+      updateDoc(doc(db, 'games/abcd/players/' + uIds[i]), {
+        role: "cat" ,
+        fake_id: playersDB[i].name
+    });
+    }
   }
 
   return (
     <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
       <Text>Lobby Page</Text>
       <Button onPress={() => {
-        //setRoles();
+        setRoles();
         navigation.navigate("Chat")
         }
         }>Start
       </Button>
       
       <Button onPress={() => {
-        //reset();
+        reset();
         
       }
       }>Schimba
