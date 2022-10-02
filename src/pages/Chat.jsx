@@ -1,12 +1,12 @@
-import { Button, Text, View } from "native-base";
+import { Button, Center, Text, View } from "native-base";
 import React, {
   useState,
   useCallback,
   useLayoutEffect,
   useEffect,
 } from "react";
-import { ViewBase } from "react-native";
-import { GiftedChat, Bubble } from "react-native-gifted-chat";
+import { TouchableOpacity, ViewBase } from "react-native";
+import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import {
   collection,
   db,
@@ -71,7 +71,7 @@ export const ChatPage = ({ navigation }) => {
   }, []);
 
   return (
-    <View flex={1}>
+    <View flex={1} backgroundColor={"#747474"}>
       <View flexDirection={"row"} justifyContent={"space-around"}>
         <Button onPress={() => navigation.navigate("Vote")}>Vote</Button>
         <Button onPress={() => navigation.navigate("Lobby")}>Exit</Button>
@@ -79,6 +79,21 @@ export const ChatPage = ({ navigation }) => {
       <GiftedChat
         messages={messages}
         onSend={(messages) => onSend(messages)}
+        renderInputToolbar={(props) => {
+          return (
+            <InputToolbar
+              {...props}
+              containerStyle={{
+                backgroundColor: "#74859a",
+                borderRadius: 30,
+                alignItems: "flex-end",
+                flex: 1,
+                margin: 5,
+              }}
+              textInputStyle={{ color: "white" }}
+            />
+          );
+        }}
         renderBubble={(props) => {
           return (
             <View>
@@ -90,7 +105,7 @@ export const ChatPage = ({ navigation }) => {
                     color: "white",
                   },
                   left: {
-                    color: "black",
+                    color: "white",
                   },
                 }}
                 wrapperStyle={{
