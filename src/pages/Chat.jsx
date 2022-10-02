@@ -16,7 +16,8 @@ import {
   getDoc,
 } from "../../config/firebase/firebase-key-config";
 import { query, onSnapshot, orderBy } from "firebase/firestore";
-import { async } from "@firebase/util";
+import chatBubble from "./chatComponents/chatBubble";
+import inputToolBar from "./chatComponents/inputToolBar";
 
 export const ChatPage = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
@@ -79,47 +80,8 @@ export const ChatPage = ({ navigation }) => {
       <GiftedChat
         messages={messages}
         onSend={(messages) => onSend(messages)}
-        renderInputToolbar={(props) => {
-          return (
-            <InputToolbar
-              {...props}
-              containerStyle={{
-                backgroundColor: "#74859a",
-                borderRadius: 30,
-                alignItems: "flex-end",
-                flex: 1,
-                margin: 5,
-              }}
-              textInputStyle={{ color: "white" }}
-            />
-          );
-        }}
-        renderBubble={(props) => {
-          return (
-            <View>
-              <Text>{props.currentMessage.user.fakeId}</Text>
-              <Bubble
-                {...props}
-                textStyle={{
-                  right: {
-                    color: "white",
-                  },
-                  left: {
-                    color: "white",
-                  },
-                }}
-                wrapperStyle={{
-                  left: {
-                    backgroundColor: "chocolate",
-                  },
-                  right: {
-                    backgroundColor: "#3A13C3",
-                  },
-                }}
-              />
-            </View>
-          );
-        }}
+        renderInputToolbar={inputToolBar}
+        renderBubble={chatBubble}
         user={{
           _id: auth.currentUser?.uid,
           fakeId: fakeId,
