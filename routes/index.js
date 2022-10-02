@@ -32,7 +32,6 @@ const AppRouter = () => {
       >
         <Stack.Screen name="Login" component={LoginPage} />
         <Stack.Screen name="Register" component={RegisterPage} />
-        <Stack.Screen name="InGame" component={InGamePage} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordPage} />
         <Stack.Screen name="Chat" component={ChatPage} />
         <Stack.Screen name="Home" component={HomePage} />

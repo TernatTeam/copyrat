@@ -53,6 +53,14 @@ export const RegisterPage = ({ navigation }) => {
         <Button onPress={() => registration(name, email, password)}>
           Register
         </Button>
+
+        <Button
+          on Press={() => {
+                navigation.navigate("Login");
+          }}>
+
+          Log In
+        </Button>
       </>
       {/* </TouchableWithoutFeedback> */}
     </Center>
