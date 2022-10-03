@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   Text,
@@ -23,8 +23,11 @@ import {
 } from '../../config/firebase/firebase-key-config';
 
 import CopyratLogo from '../../assets/logo_trans.png';
+import { ModalKeyCode } from '../components/common';
 
 export const HomePage = ({ navigation }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const logOut = () => {
     signOut(auth).then(() => {
       navigation.reset({
@@ -49,6 +52,11 @@ export const HomePage = ({ navigation }) => {
         game_admin_uid: currentUser.uid,
       });
 
+      // set data for admin
+      await setDoc(doc(db, `games/${result}/players`, currentUser.uid), {
+        muie: 'dragos',
+      });
+
       navigation.navigate('Lobby', {
         roomKey: result,
       });
@@ -56,8 +64,35 @@ export const HomePage = ({ navigation }) => {
       console.log(err);
     }
   };
+
+  const joinGame = async (keyCode) => {
+    const currentUser = auth.currentUser;
+
+    try {
+      await setDoc(doc(db, `games/${keyCode}/players/${currentUser.uid}`), {
+        muie: 'dragos',
+      });
+
+      setIsModalOpen(false);
+
+      navigation.navigate('Lobby', {
+        roomKey: keyCode,
+      });
+    } catch (err) {
+      console.log('Err: ', err);
+    }
+  };
+
   return (
     <Box bg="primary1.500" h="100%" w="100%" position="relative">
+      <ModalKeyCode
+        show={isModalOpen}
+        onClose={(keyCode) => {
+          setIsModalOpen(false);
+          joinGame(keyCode);
+        }}
+      />
+
       <IconButton
         position="absolute"
         top="8"
@@ -96,7 +131,13 @@ export const HomePage = ({ navigation }) => {
             Create
           </Button>
 
-          <Button>Join</Button>
+          <Button
+            onPress={() => {
+              setIsModalOpen(true);
+            }}
+          >
+            Join
+          </Button>
         </HStack>
       </Center>
     </Box>

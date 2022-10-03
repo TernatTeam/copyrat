@@ -1,2 +1,2 @@
 export * from './FullPageLoader';
-export * from './ModalErrors';
+export * from './ModalKeyCode';

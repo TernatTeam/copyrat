@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 
-import { View, StyleSheet } from 'react-native';
-import { Box, Button, Text, Image } from 'native-base';
+import { Box, Button, Text } from 'native-base';
 
 // import {
 //   collection,
@@ -12,13 +11,32 @@ import { Box, Button, Text, Image } from 'native-base';
 // import { doc, updateDoc, increment } from 'firebase/firestore';
 // import { ImageBackground } from 'react-native';
 
-import background from '../../assets/background.png';
+import {
+  addDoc,
+  auth,
+  collection,
+  db,
+  doc,
+  setDoc,
+} from '../../config/firebase/firebase-key-config';
 
 // let uIds = [];
 
 export const LobbyPage = ({ navigation, route }) => {
   // const [playersDB, setPlayersDB] = useState([]);
   const { roomKey } = route.params;
+
+  const addPlayerToTheGame = async () => {
+    const currenUserUID = auth.currentUser.uid;
+
+    try {
+      await setDoc(doc(db, `games/${roomKey}/players/${currenUserUID}`), {
+        name: 'david',
+      });
+    } catch (err) {
+      console.log('Err: ', err);
+    }
+  };
 
   // const getPlayers = async () => {
   //   try {
@@ -107,14 +125,16 @@ export const LobbyPage = ({ navigation, route }) => {
     //   </Button>
     // </View>
     <Box w="100%" h="100%" position="relative">
-      <Image
+      {/* <Image
         w="full"
         h="full"
         position="absolute"
         source={background}
         alt="Background"
-      />
+      /> */}
       <Text>{roomKey}</Text>
+
+      <Button onPress={addPlayerToTheGame}>Apasa</Button>
     </Box>
   );
 };
