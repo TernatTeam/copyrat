@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 
-import { View, StyleSheet, Image } from 'react-native';
-import { Box, Button, Text } from 'native-base';
+import { View, StyleSheet } from 'react-native';
+import { Box, Button, Text, Image } from 'native-base';
 
 // import {
 //   collection,
@@ -10,7 +10,9 @@ import { Box, Button, Text } from 'native-base';
 // } from '../../config/firebase/firebase-key-config';
 // import { async } from '@firebase/util';
 // import { doc, updateDoc, increment } from 'firebase/firestore';
-import { ImageBackground } from 'react-native';
+// import { ImageBackground } from 'react-native';
+
+import background from '../../assets/background.png';
 
 // let uIds = [];
 
@@ -104,7 +106,14 @@ export const LobbyPage = ({ navigation, route }) => {
     //     Reset
     //   </Button>
     // </View>
-    <Box>
+    <Box w="100%" h="100%" position="relative">
+      <Image
+        w="full"
+        h="full"
+        position="absolute"
+        source={background}
+        alt="Background"
+      />
       <Text>{roomKey}</Text>
     </Box>
   );
