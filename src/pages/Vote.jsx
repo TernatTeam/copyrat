@@ -26,7 +26,8 @@ let uIDs = [];
 
 export const VotePage = ({ navigation }) => {
   const [playersDB, setPlayersDB] = useState([]);
-  const [{ keycode }] = useGlobal();
+  const [alreadyVoted, setAlreadyVoted] = useState(false);
+  const [{ keycode }] = useGlobal(); 
 
   const getPlayers = async () => {
     try {
@@ -56,7 +57,7 @@ export const VotePage = ({ navigation }) => {
     let messageIDs = [];
 
     try {
-      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/players`));
+      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/chat`));
 
       querySnapshot.forEach((doc) => {
         messageIDs.push(doc.id);
@@ -197,7 +198,7 @@ export const VotePage = ({ navigation }) => {
 
   //Assign roles
   const setRoles = () => {
-    let no_of_rats = playersDB.length / 2;
+    let no_of_rats = Math.floor(playersDB.length / 2);
     //arr of 3 rand index
     let arr = [];
     while (arr.length < no_of_rats) {
@@ -289,7 +290,10 @@ export const VotePage = ({ navigation }) => {
         padding="1px"
         bgColor="fuchsia.700"
         onPress={() => {
-          confirmVote();
+          if (alreadyVoted == false) {
+            confirmVote();
+            setAlreadyVoted(true);
+          }
         }}
       >
         Done
