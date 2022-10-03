@@ -45,7 +45,7 @@ export const LobbyPage = ({ navigation, route }) => {
 
   const getPlayers = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'games/abcd/players'));
+      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/players`));
       let playersArray = [];
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
@@ -64,7 +64,7 @@ export const LobbyPage = ({ navigation, route }) => {
   }, []);
 
   //Assign roles
-  const setRoles = () => {
+  const setRoles = async() => {
     let no_of_rats = playersDB.length / 2;
     //arr of 3 rand index
     var arr = [];
@@ -74,7 +74,7 @@ export const LobbyPage = ({ navigation, route }) => {
     }
     //update roles and fake_id
     for (let i = 0; i < no_of_rats; i++) {
-      updateDoc(doc(db, 'games/abcd/players/' + uIds[arr[i]]), {
+      await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[arr[i]]), {
         role: 'rat',
         fake_id: playersDB[arr[(i + 1) % no_of_rats]].name,
       });
@@ -82,14 +82,14 @@ export const LobbyPage = ({ navigation, route }) => {
   };
 
   //reset roles and fake_id
-  // const reset = () => {
-  //   for (let i = 0; i < playersDB.length; i++) {
-  //     updateDoc(doc(db, 'games/abcd/players/' + uIds[i]), {
-  //       role: 'cat',
-  //       fake_id: playersDB[i].name,
-  //     });
-  //   }
-  // };
+  const reset = async() => {
+    for (let i = 0; i < playersDB.length; i++) {
+      await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[i]), {
+        role: 'cat',
+        fake_id: playersDB[i].name,
+      });
+    }
+  };
 
   return (
     // <View
