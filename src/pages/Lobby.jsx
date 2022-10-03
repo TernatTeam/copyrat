@@ -1,17 +1,12 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useState, StyleSheet } from 'react';
 
 import { Box, Button, Icon, Input, Text } from 'native-base';
 
 import { Ionicons } from '@expo/vector-icons';
 
-// import {
-//   collection,
-//   db,
-//   getDocs,
-// } from '../../config/firebase/firebase-key-config';
-// import { async } from '@firebase/util';
-// import { doc, updateDoc, increment } from 'firebase/firestore';
-// import { ImageBackground } from 'react-native';
+import { async } from '@firebase/util';
+import { updateDoc, increment } from 'firebase/firestore';
+import { ImageBackground } from 'react-native';
 
 import {
   addDoc,
@@ -20,15 +15,16 @@ import {
   db,
   doc,
   setDoc,
+  getDocs,
 } from '../../config/firebase/firebase-key-config';
 import { useGlobal } from '../../state';
 
-// let uIds = [];
+let uIds = [];
 
-export const LobbyPage = ({ navigation }) => {
-  // const [playersDB, setPlayersDB] = useState([]);
+export const LobbyPage = ({ navigation, route }) => {
+  const [playersDB, setPlayersDB] = useState([]);
   const [username, setUsername] = useState('');
-  const [{ keycode }] = useGlobal();
+  const { keycode } = useGlobal();
 
   const addPlayerName = async () => {
     const currenUserUID = auth.currentUser.uid;
@@ -36,49 +32,54 @@ export const LobbyPage = ({ navigation }) => {
     try {
       await setDoc(doc(db, `games/${keycode.value}/players/${currenUserUID}`), {
         name: username,
+        fake_id: username,
+        role: 'cat',
+        no_of_votes: 0,
+        score: 0,
+        vote: null,
       });
     } catch (err) {
       console.log('Err: ', err);
     }
   };
 
-  // const getPlayers = async () => {
-  //   try {
-  //     const querySnapshot = await getDocs(collection(db, 'games/abcd/players'));
-  //     let playersArray = [];
-  //     querySnapshot.forEach((doc) => {
-  //       // doc.data() is never undefined for query doc snapshots
-  //       // console.log(doc.id, ' => ', doc.data());
-  //       playersArray.push(doc.data());
-  //       uIds.push(doc.id);
-  //     });
-  //     setPlayersDB(playersArray);
-  //   } catch (err) {
-  //     console.log('Error: ', err);
-  //   }
-  // };
+  const getPlayers = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'games/abcd/players'));
+      let playersArray = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        // console.log(doc.id, ' => ', doc.data());
+        playersArray.push(doc.data());
+        uIds.push(doc.id);
+      });
+      setPlayersDB(playersArray);
+    } catch (err) {
+      console.log('Error: ', err);
+    }
+  };
 
-  // useEffect(() => {
-  //   getPlayers();
-  // }, []);
+  useEffect(() => {
+    getPlayers();
+  }, []);
 
   //Assign roles
-  // const setRoles = () => {
-  //   let no_of_rats = playersDB.length / 2;
-  //   //arr of 3 rand index
-  //   var arr = [];
-  //   while (arr.length < no_of_rats) {
-  //     var r = Math.floor(Math.random() * (playersDB.length - 1)) + 1;
-  //     if (arr.indexOf(r) === -1) arr.push(r);
-  //   }
-  //   //update roles and fake_id
-  //   for (let i = 0; i < no_of_rats; i++) {
-  //     updateDoc(doc(db, 'games/abcd/players/' + uIds[arr[i]]), {
-  //       role: 'rat',
-  //       fake_id: playersDB[arr[(i + 1) % no_of_rats]].name,
-  //     });
-  //   }
-  // };
+  const setRoles = () => {
+    let no_of_rats = playersDB.length / 2;
+    //arr of 3 rand index
+    var arr = [];
+    while (arr.length < no_of_rats) {
+      var r = Math.floor(Math.random() * (playersDB.length - 1)) + 1;
+      if (arr.indexOf(r) === -1) arr.push(r);
+    }
+    //update roles and fake_id
+    for (let i = 0; i < no_of_rats; i++) {
+      updateDoc(doc(db, 'games/abcd/players/' + uIds[arr[i]]), {
+        role: 'rat',
+        fake_id: playersDB[arr[(i + 1) % no_of_rats]].name,
+      });
+    }
+  };
 
   //reset roles and fake_id
   // const reset = () => {
@@ -164,7 +165,24 @@ export const LobbyPage = ({ navigation }) => {
         }}
       />
 
-      <Button onPress={addPlayerName}>Apasa</Button>
+      <Button onPress={addPlayerName}>SetName</Button>
+      <Button
+        style={{ margin: 20 }}
+        onPress={() => {
+          setRoles();
+          navigation.navigate('Chat');
+        }}
+      >
+        Start
+      </Button>
+      <Button
+        style={{ margin: 100 }}
+        onPress={() => {
+          reset();
+        }}
+      >
+        Reset
+      </Button>
     </Box>
   );
 };
