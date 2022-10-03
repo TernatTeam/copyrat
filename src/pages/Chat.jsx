@@ -89,7 +89,9 @@ export const ChatPage = ({ navigation }) => {
       >
         <Button onPress={() => navigation.navigate("Vote")}>Vote</Button>
         <View>
-          <Text style={{ fontSize: 18 }}>You are playing as {fakeId}</Text>
+          <Text style={{ fontSize: 18, color: "white" }}>
+            You are playing as {fakeId}
+          </Text>
         </View>
         <Button onPress={() => navigation.navigate("Lobby")}>Exit</Button>
       </View>
