@@ -15,6 +15,7 @@ import {
   db,
   doc,
   setDoc,
+  getDoc,
   getDocs,
 } from '../../config/firebase/firebase-key-config';
 import { useGlobal } from '../../state';
@@ -168,8 +169,13 @@ export const LobbyPage = ({ navigation, route }) => {
       <Button onPress={addPlayerName}>SetName</Button>
       <Button
         style={{ margin: 20 }}
-        onPress={() => {
-          setRoles();
+        onPress={async () => {
+          const docSnap = await getDoc(doc(db, "games", keycode.value));
+
+          if (auth.currentUser.uid == docSnap.data().game_admin_uid) {
+            setRoles();
+          }
+
           navigation.navigate('Chat');
         }}
       >
