@@ -24,7 +24,7 @@ let uIds = [];
 export const LobbyPage = ({ navigation, route }) => {
   const [playersDB, setPlayersDB] = useState([]);
   const [username, setUsername] = useState('');
-  const { keycode } = useGlobal();
+  const [{ keycode }] = useGlobal();
 
   const addPlayerName = async () => {
     const currenUserUID = auth.currentUser.uid;
