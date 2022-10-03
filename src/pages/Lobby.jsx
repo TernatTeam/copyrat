@@ -1,6 +1,8 @@
 import React, { useEffect, useReducer, useState } from 'react';
 
-import { Box, Button, Text } from 'native-base';
+import { Box, Button, Icon, Input, Text } from 'native-base';
+
+import { Ionicons } from '@expo/vector-icons';
 
 // import {
 //   collection,
@@ -24,14 +26,15 @@ import {
 
 export const LobbyPage = ({ navigation, route }) => {
   // const [playersDB, setPlayersDB] = useState([]);
+  const [username, setUsername] = useState('');
   const { roomKey } = route.params;
 
-  const addPlayerToTheGame = async () => {
+  const addPlayerName = async () => {
     const currenUserUID = auth.currentUser.uid;
 
     try {
       await setDoc(doc(db, `games/${roomKey}/players/${currenUserUID}`), {
-        name: 'david',
+        name: username,
       });
     } catch (err) {
       console.log('Err: ', err);
@@ -124,7 +127,7 @@ export const LobbyPage = ({ navigation, route }) => {
     //     Reset
     //   </Button>
     // </View>
-    <Box w="100%" h="100%" position="relative">
+    <Box w="100%" h="100%" position="relative" bg="primary1.500" p="4">
       {/* <Image
         w="full"
         h="full"
@@ -134,7 +137,33 @@ export const LobbyPage = ({ navigation, route }) => {
       /> */}
       <Text>{roomKey}</Text>
 
-      <Button onPress={addPlayerToTheGame}>Apasa</Button>
+      <Input
+        mb="4"
+        borderBottomWidth={2}
+        borderBottomColor="black"
+        _focus={{
+          borderBottomColor: 'white',
+          placeholderTextColor: 'white',
+        }}
+        InputRightElement={
+          <Icon
+            as={<Ionicons name="person-outline" />}
+            size={6}
+            mr="2"
+            color="white"
+          />
+        }
+        variant="underlined"
+        placeholder="Room Key"
+        placeholderTextColor="black"
+        color="white"
+        value={username}
+        onChangeText={(value) => {
+          setUsername(value);
+        }}
+      />
+
+      <Button onPress={addPlayerName}>Apasa</Button>
     </Box>
   );
 };
