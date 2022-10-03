@@ -1,9 +1,9 @@
 const AppReducer = (state, action) => {
   switch (action.type) {
-    case 'TEST':
+    case 'KEYCODE':
       return {
         ...state,
-        test: {
+        keycode: {
           ...state.test,
           value: action.value,
         },

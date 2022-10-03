@@ -21,19 +21,20 @@ import {
   doc,
   setDoc,
 } from '../../config/firebase/firebase-key-config';
+import { useGlobal } from '../../state';
 
 // let uIds = [];
 
-export const LobbyPage = ({ navigation, route }) => {
+export const LobbyPage = ({ navigation }) => {
   // const [playersDB, setPlayersDB] = useState([]);
   const [username, setUsername] = useState('');
-  const { roomKey } = route.params;
+  const [{ keycode }] = useGlobal();
 
   const addPlayerName = async () => {
     const currenUserUID = auth.currentUser.uid;
 
     try {
-      await setDoc(doc(db, `games/${roomKey}/players/${currenUserUID}`), {
+      await setDoc(doc(db, `games/${keycode.value}/players/${currenUserUID}`), {
         name: username,
       });
     } catch (err) {
@@ -135,7 +136,7 @@ export const LobbyPage = ({ navigation, route }) => {
         source={background}
         alt="Background"
       /> */}
-      <Text>{roomKey}</Text>
+      <Text>{keycode.value}</Text>
 
       <Input
         mb="4"

@@ -24,9 +24,11 @@ import {
 
 import CopyratLogo from '../../assets/logo_trans.png';
 import { ModalKeyCode } from '../components/common';
+import { useGlobal } from '../../state';
 
 export const HomePage = ({ navigation }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [{}, dispatch] = useGlobal();
 
   const logOut = () => {
     signOut(auth).then(() => {
@@ -57,9 +59,12 @@ export const HomePage = ({ navigation }) => {
         muie: 'dragos',
       });
 
-      navigation.navigate('Lobby', {
-        roomKey: result,
+      dispatch({
+        type: 'KEYCODE',
+        value: result,
       });
+
+      navigation.navigate('Lobby');
     } catch (err) {
       console.log(err);
     }
@@ -75,9 +80,12 @@ export const HomePage = ({ navigation }) => {
 
       setIsModalOpen(false);
 
-      navigation.navigate('Lobby', {
-        roomKey: keyCode,
+      dispatch({
+        type: 'KEYCODE',
+        value: result,
       });
+
+      navigation.navigate('Lobby');
     } catch (err) {
       console.log('Err: ', err);
     }

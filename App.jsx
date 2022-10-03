@@ -37,7 +37,7 @@ export const App = () => {
   }, []);
 
   const initialState = {
-    test: {
+    keycode: {
       value: null,
     },
   };
