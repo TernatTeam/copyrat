@@ -16,8 +16,8 @@ import {
   getDoc,
 } from "../../config/firebase/firebase-key-config";
 import { query, onSnapshot, orderBy } from "firebase/firestore";
-import chatBubble from "./chatComponents/chatBubble";
-import inputToolBar from "./chatComponents/inputToolBar";
+import chatBubble from "../components/chatComponents/chatBubble";
+import inputToolBar from "../components/chatComponents/inputToolBar";
 import { useGlobal } from "../../state";
 
 export const ChatPage = ({ navigation }) => {
@@ -27,7 +27,13 @@ export const ChatPage = ({ navigation }) => {
 
   useLayoutEffect(() => {
     const getFakeId = async () => {
-      const docRef = doc(db, "games", keycode.value, "players", auth.currentUser.uid);
+      const docRef = doc(
+        db,
+        "games",
+        keycode.value,
+        "players",
+        auth.currentUser.uid
+      );
       const docSnap = await getDoc(docRef);
 
       setFakeId(docSnap.data().fake_id);
@@ -75,8 +81,18 @@ export const ChatPage = ({ navigation }) => {
 
   return (
     <View flex={1} backgroundColor={"#747474"}>
-      <View flexDirection={"row"} justifyContent={"space-around"}>
+      <View
+        flexDirection={"row"}
+        justifyContent={"space-around"}
+        alignItems={"center"}
+        marginTop={5}
+      >
         <Button onPress={() => navigation.navigate("Vote")}>Vote</Button>
+        <View>
+          <Text style={{ fontSize: 18, color: "white" }}>
+            You are playing as {fakeId}
+          </Text>
+        </View>
         <Button onPress={() => navigation.navigate("Lobby")}>Exit</Button>
       </View>
       <GiftedChat
