@@ -6,13 +6,14 @@ const inputToolBar = (props) => {
     <InputToolbar
       {...props}
       containerStyle={{
-        backgroundColor: "#74859a",
+        backgroundColor: "darkgray",
         borderRadius: 30,
         alignItems: "flex-end",
         flex: 1,
         margin: 5,
       }}
       textInputStyle={{ color: "white" }}
+      placeHolderColor={"white"}
     />
   );
 };
