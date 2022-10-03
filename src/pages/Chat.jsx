@@ -22,10 +22,11 @@ import inputToolBar from "./chatComponents/inputToolBar";
 export const ChatPage = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [fakeId, setFakeId] = useState();
+  const [{ keycode }] = useGlobal();
 
   useLayoutEffect(() => {
     const getFakeId = async () => {
-      const docRef = doc(db, "games", "abcd", "players", auth.currentUser.uid);
+      const docRef = doc(db, "games", keycode.value, "players", auth.currentUser.uid);
       const docSnap = await getDoc(docRef);
 
       setFakeId(docSnap.data().fake_id);
@@ -40,7 +41,7 @@ export const ChatPage = ({ navigation }) => {
 
     const { _id, createdAt, text, user } = messages[0];
 
-    const docRef = doc(db, "games", "abcd", "chat", _id);
+    const docRef = doc(db, "games", keycode.value, "chat", _id);
     setDoc(
       docRef,
       {
@@ -55,7 +56,7 @@ export const ChatPage = ({ navigation }) => {
 
   useLayoutEffect(() => {
     const q = query(
-      collection(db, "games/abcd/chat"),
+      collection(db, `games/${keycode.value}/chat`),
       orderBy("createdAt", "desc")
     );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
