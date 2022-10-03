@@ -36,14 +36,11 @@ export const VotePage = ({ navigation }) => {
       let playersArray = [];
 
       querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        // console.log(doc.id, ' => ', doc.data());
         playersArray.push(doc.data());
         uIDs.push(doc.id);
 
         if (doc.id == currentPlayerId) {
           currentPlayer = doc.data();
-          //console.log(currentPlayer);
         }
       });
 
@@ -81,20 +78,27 @@ export const VotePage = ({ navigation }) => {
     }
   };
 
+  const findIndexOfPlayer = (name) => {
+    for (let i = 0; i < playersDB.length; i++) {
+      if (playersDB[i].fake_id == name) {
+        return i;
+      }
+    }
+  }
+
   const voteFor = (playerName) => {
-    votedPlayerIndex = playersDB.findIndex(
-      (player) => player.fake_id == playerName,
-    );
+    votedPlayerIndex = findIndexOfPlayer(playerName);
+
     window.alert(`You are voting for ${playersDB[votedPlayerIndex].fake_id}`);
   };
 
-  const confirmVote = () => {
+  const confirmVote = async () => {
     if (votedPlayerIndex >= 0) {
-      updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[votedPlayerIndex]}`), {
+      await updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[votedPlayerIndex]}`), {
         no_of_votes: increment(1),
       });
 
-      updateDoc(doc(db, `games/${keycode.value}/players/${currentPlayerId}`), {
+      await updateDoc(doc(db, `games/${keycode.value}/players/${currentPlayerId}`), {
         vote: playersDB[votedPlayerIndex].fake_id,
       });
 
@@ -148,16 +152,12 @@ export const VotePage = ({ navigation }) => {
 
   const calculateScore = async () => {
     const nrOfPlayers = playersDB.length;
-    let newScore;
-
     for (let i = 0; i < nrOfPlayers; i++) {
-      newScore = 0;
+      let newScore = 0;
 
       if (playersDB[i].role == 'cat') {
         // real
-        let indexOfVoted = playersDB.findIndex(
-          (player) => player.fake_id == playersDB[i].vote,
-        );
+        let indexOfVoted = findIndexOfPlayer(playersDB[i].vote);
 
         if (playersDB[indexOfVoted]?.role == 'rat') {
           newScore += nrOfPlayers - 1 - playersDB[indexOfVoted].no_of_votes;
@@ -181,7 +181,6 @@ export const VotePage = ({ navigation }) => {
           newScore += 5;
         }
       }
-
       newScore = roundUp10((newScore * 76) / nrOfPlayers);
 
       await updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
@@ -334,6 +333,7 @@ export const VotePage = ({ navigation }) => {
           reset();
           setRoles();
           deleteChat();
+          setAlreadyVoted(false);
 
           setTimeout(() => {
             window.alert("Storing this round's scores...");

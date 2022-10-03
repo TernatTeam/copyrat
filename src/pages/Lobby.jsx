@@ -49,8 +49,6 @@ export const LobbyPage = ({ navigation, route }) => {
       const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/players`));
       let playersArray = [];
       querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        // console.log(doc.id, ' => ', doc.data());
         playersArray.push(doc.data());
         uIds.push(doc.id);
       });
@@ -95,51 +93,7 @@ export const LobbyPage = ({ navigation, route }) => {
   };
 
   return (
-    // <View
-    //   style={{
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    //     flex: 1,
-    //     backgroundColor: '#747474',
-    //   }}
-    // >
-    //   <ImageBackground
-    //     source={require('../../assets/logo_trans.png')}
-    //     style={{
-    //       width: 500,
-    //       height: 500,
-    //       backgroundColor: 'transparent',
-    //       opacity: 0.05,
-    //     }}
-    //   />
-    //   <Text style={{ fontSize: 30, fontWeight: 'bold' }}>Lobby Page</Text>
-    //   <Button
-    //     style={styles.buttonStyle}
-    //     onPress={() => {
-    //       setRoles();
-    //       navigation.navigate('Chat');
-    //     }}
-    //   >
-    //     Start
-    //   </Button>
-
-    //   <Button
-    //     style={styles.buttonStyle}
-    //     onPress={() => {
-    //       reset();
-    //     }}
-    //   >
-    //     Reset
-    //   </Button>
-    // </View>
     <Box w="100%" h="100%" position="relative" bg="primary1.500" p="4">
-      {/* <Image
-        w="full"
-        h="full"
-        position="absolute"
-        source={background}
-        alt="Background"
-      /> */}
       <Text>{keycode.value}</Text>
 
       <Input
@@ -194,27 +148,5 @@ export const LobbyPage = ({ navigation, route }) => {
     </Box>
   );
 };
-
-// const styles = StyleSheet.create({
-//   input: {
-//     padding: 10,
-//     margin: 4,
-//     width: '75%',
-//     fontSize: 15,
-//     backgroundColor: '#74859a',
-//     borderRadius: 10,
-//     margin: 5,
-//   },
-//   buttonStyle: {
-//     padding: 5,
-//     width: 120,
-//     height: 50,
-//     backgroundColor: '#74859a',
-//     borderRadius: 10,
-//     borderWidth: 2,
-//     borderColor: '#000000',
-//     margin: 10,
-//   },
-// });
 
 export default LobbyPage;
