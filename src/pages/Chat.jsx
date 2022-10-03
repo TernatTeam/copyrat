@@ -18,6 +18,7 @@ import {
 import { query, onSnapshot, orderBy } from "firebase/firestore";
 import chatBubble from "./chatComponents/chatBubble";
 import inputToolBar from "./chatComponents/inputToolBar";
+import { useGlobal } from "../../state";
 
 export const ChatPage = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
