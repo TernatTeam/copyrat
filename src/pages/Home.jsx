@@ -82,7 +82,7 @@ export const HomePage = ({ navigation }) => {
 
       dispatch({
         type: 'KEYCODE',
-        value: result,
+        value: keyCode,
       });
 
       navigation.navigate('Lobby');
