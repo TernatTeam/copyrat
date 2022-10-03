@@ -38,6 +38,7 @@ export const LobbyPage = ({ navigation, route }) => {
         no_of_votes: 0,
         score: 0,
         vote: null,
+        index: 0,
       });
     } catch (err) {
       console.log('Err: ', err);
@@ -64,15 +65,23 @@ export const LobbyPage = ({ navigation, route }) => {
 
   //Assign roles
   const setRoles = async() => {
+    //set index
+    for (let i = 0; i < playersDB.length; i++) {
+      updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[i]), {
+        index: i, 
+      });
+    }
+    
     let no_of_rats = Math.floor(playersDB.length / 2);
 
     //arr of 3 rand index
     var arr = [];
+    
     while (arr.length < no_of_rats) {
-      var r = Math.floor(Math.random() * (playersDB.length - 1)) + 1;
+      var r = Math.floor(Math.random() * (playersDB.length)) ;
       if (arr.indexOf(r) === -1) arr.push(r);
     }
-    
+    console.log(arr);
     //update roles and fake_id
     for (let i = 0; i < no_of_rats; i++) {
       await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[arr[i]]), {

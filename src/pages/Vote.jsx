@@ -68,11 +68,11 @@ export const VotePage = ({ navigation }) => {
     }
   };
 
-  const resetScoresFB = () => {
+  const resetScoresFB = async() => {
     const nrOfPlayers = playersDB.length;
 
     for (let i = 0; i < nrOfPlayers; i++) {
-      updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
+      await updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
         score: 0,
       });
     }
@@ -99,7 +99,7 @@ export const VotePage = ({ navigation }) => {
       });
 
       await updateDoc(doc(db, `games/${keycode.value}/players/${currentPlayerId}`), {
-        vote: playersDB[votedPlayerIndex].fake_id,
+        vote: votedPlayerIndex,
       });
 
       window.alert(`Locking in.. ${playersDB[votedPlayerIndex].fake_id}`);
@@ -150,34 +150,27 @@ export const VotePage = ({ navigation }) => {
     window.alert(rats);
   };
 
+//Scores
   const calculateScore = async () => {
     const nrOfPlayers = playersDB.length;
     for (let i = 0; i < nrOfPlayers; i++) {
       let newScore = 0;
-
-      if (playersDB[i].role == 'cat') {
-        // real
-        let indexOfVoted = findIndexOfPlayer(playersDB[i].vote);
-
-        if (playersDB[indexOfVoted]?.role == 'rat') {
-          newScore += nrOfPlayers - 1 - playersDB[indexOfVoted].no_of_votes;
+      if (playersDB[i].role == "cat") { // Real
+        if (playersDB[playersDB[i].vote]?.role == "rat") { //vot bun
+          newScore += nrOfPlayers - 1 - playersDB[playersDB[i].vote].no_of_votes;
         }
-
         if (newScore < 1) {
           newScore = 1;
         }
-
         newScore *= 10;
-
         if (newScore == 10 * (nrOfPlayers - 2)) {
           newScore += 5;
         }
-      } else {
-        // fake
+        
+      } else {// fake
         newScore += nrOfPlayers - 2 - playersDB[i].no_of_votes;
         newScore *= 10;
-
-        if (newScore == 10 * (nrOfPlayers - 2)) {
+        if (newScore == (nrOfPlayers - 2)) {
           newScore += 5;
         }
       }
