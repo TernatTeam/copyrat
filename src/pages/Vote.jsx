@@ -17,6 +17,7 @@ import {
   getDocs,
   auth,
 } from '../../config/firebase/firebase-key-config';
+import { useGlobal } from '../../state';
 
 let currentPlayerId = '';
 let currentPlayer = {};
@@ -25,10 +26,11 @@ let uIDs = [];
 
 export const VotePage = ({ navigation }) => {
   const [playersDB, setPlayersDB] = useState([]);
+  const [{ keycode }] = useGlobal();
 
   const getPlayers = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'games/abcd/players'));
+      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/players`));
       currentPlayerId = auth.currentUser.uid;
       let playersArray = [];
 
@@ -54,7 +56,7 @@ export const VotePage = ({ navigation }) => {
     let messageIDs = [];
 
     try {
-      const querySnapshot = await getDocs(collection(db, 'games/abcd/chat'));
+      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/players`));
 
       querySnapshot.forEach((doc) => {
         messageIDs.push(doc.id);
@@ -64,7 +66,7 @@ export const VotePage = ({ navigation }) => {
     }
 
     for (let i = 0; i < messageIDs.length; i++) {
-      deleteDoc(doc(db, 'games/abcd/chat/' + messageIDs[i]));
+      deleteDoc(doc(db, `games/${keycode.value}/chat/${messageIDs[i]}`));
     }
   };
 
@@ -72,7 +74,7 @@ export const VotePage = ({ navigation }) => {
     const nrOfPlayers = playersDB.length;
 
     for (let i = 0; i < nrOfPlayers; i++) {
-      updateDoc(doc(db, 'games/abcd/players/' + uIDs[i]), {
+      updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
         score: 0,
       });
     }
@@ -82,20 +84,20 @@ export const VotePage = ({ navigation }) => {
     votedPlayerIndex = playersDB.findIndex(
       (player) => player.fake_id == playerName,
     );
-    window.alert('You are voting for ' + playersDB[votedPlayerIndex].fake_id);
+    window.alert(`You are voting for ${playersDB[votedPlayerIndex].fake_id}`);
   };
 
   const confirmVote = () => {
     if (votedPlayerIndex >= 0) {
-      updateDoc(doc(db, 'games/abcd/players/' + uIDs[votedPlayerIndex]), {
+      updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[votedPlayerIndex]}`), {
         no_of_votes: increment(1),
       });
 
-      updateDoc(doc(db, 'games/abcd/players/' + currentPlayerId), {
+      updateDoc(doc(db, `games/${keycode.value}/players/${currentPlayerId}`), {
         vote: playersDB[votedPlayerIndex].fake_id,
       });
 
-      window.alert('Locking in.. ' + playersDB[votedPlayerIndex].fake_id);
+      window.alert(`Locking in.. ${playersDB[votedPlayerIndex].fake_id}`);
     } else {
       window.alert('You need to vote someone!');
     }
@@ -109,7 +111,7 @@ export const VotePage = ({ navigation }) => {
     let players = [];
 
     try {
-      const querySnapshot = await getDocs(collection(db, 'games/abcd/players'));
+      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/players`));
 
       querySnapshot.forEach((doc) => {
         players.push(doc.data());
@@ -181,7 +183,7 @@ export const VotePage = ({ navigation }) => {
 
       newScore = roundUp10((newScore * 76) / nrOfPlayers);
 
-      await updateDoc(doc(db, 'games/abcd/players/' + uIDs[i]), {
+      await updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
         score: increment(newScore),
       });
     }
@@ -204,7 +206,7 @@ export const VotePage = ({ navigation }) => {
     }
     //update roles and fake_id
     for (let i = 0; i < no_of_rats; i++) {
-      updateDoc(doc(db, 'games/abcd/players/' + uIDs[arr[i]]), {
+      updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[arr[i]]}`), {
         role: 'rat',
         fake_id: playersDB[arr[(i + 1) % no_of_rats]].name,
       });
@@ -214,7 +216,7 @@ export const VotePage = ({ navigation }) => {
   //reset roles, fake_id, vote, no_of_votes
   const reset = () => {
     for (let i = 0; i < playersDB.length; i++) {
-      updateDoc(doc(db, 'games/abcd/players/' + uIDs[i]), {
+      updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
         role: 'cat',
         fake_id: playersDB[i].name,
         vote: 0,
