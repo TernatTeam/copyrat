@@ -4,7 +4,6 @@ import {
   Text,
   Image,
   VStack,
-  Center,
   Icon,
   IconButton,
   Box,

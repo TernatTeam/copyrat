@@ -1,7 +1,9 @@
-import { Button, Center, Text, View } from 'native-base';
 import React, { useState, useCallback, useEffect } from 'react';
 
+import { Button, Text, View } from 'native-base';
+
 import { GiftedChat } from 'react-native-gifted-chat';
+
 import {
   collection,
   db,
@@ -10,10 +12,14 @@ import {
   auth,
   getDoc,
   deleteDoc,
+  query,
+  onSnapshot,
+  orderBy,
 } from '../../config/firebase/firebase-key-config';
-import { query, onSnapshot, orderBy } from 'firebase/firestore';
+
 import chatBubble from '../components/chatComponents/chatBubble';
 import inputToolBar from '../components/chatComponents/inputToolBar';
+
 import { useGlobal } from '../../state';
 
 export const ChatPage = ({ navigation }) => {

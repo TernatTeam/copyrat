@@ -7,9 +7,6 @@ import {
   updateDoc,
   increment,
   deleteDoc,
-  query,
-  where,
-  onSnapshot,
   getDoc,
 } from 'firebase/firestore';
 import {

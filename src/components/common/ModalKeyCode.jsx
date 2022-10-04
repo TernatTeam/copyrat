@@ -7,7 +7,7 @@ import { Box, Button, Icon, Input, Modal, Text, useToast } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 
 import { db, doc, getDoc } from '../../../config/firebase/firebase-key-config';
-import { TouchableWithoutFeedback } from 'react-native';
+// import { TouchableWithoutFeedback } from 'react-native';
 
 const joinGameSchema = yup.object({
   keyCode: yup.string().required('Key room is required'),
@@ -103,7 +103,7 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
           justifyContent="center"
         >
           <Text color="white" style={{ fontSize: 18, fontWeight: 'bold' }}>
-            Set your in game name
+            Room key
           </Text>
         </Modal.Header>
 

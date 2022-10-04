@@ -1,15 +1,10 @@
-import React, { useEffect, useReducer, useState, StyleSheet } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Box, Button, Icon, Input, Text } from 'native-base';
 
 import { Ionicons } from '@expo/vector-icons';
 
-import { async } from '@firebase/util';
-import { updateDoc, increment } from 'firebase/firestore';
-import { ImageBackground } from 'react-native';
-
 import {
-  addDoc,
   auth,
   collection,
   db,
@@ -17,12 +12,14 @@ import {
   setDoc,
   getDoc,
   getDocs,
+  updateDoc,
 } from '../../config/firebase/firebase-key-config';
+
 import { useGlobal } from '../../state';
 
 let uIds = [];
 
-export const LobbyPage = ({ navigation, route }) => {
+export const LobbyPage = ({ navigation }) => {
   const [playersDB, setPlayersDB] = useState([]);
   const [username, setUsername] = useState('');
   const [{ keycode }] = useGlobal();
@@ -136,7 +133,7 @@ export const LobbyPage = ({ navigation, route }) => {
           />
         }
         variant="underlined"
-        placeholder="Room Key"
+        placeholder="Name"
         placeholderTextColor="black"
         color="white"
         value={username}
