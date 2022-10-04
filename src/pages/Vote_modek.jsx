@@ -222,34 +222,6 @@ export const VotePage = ({ navigation }) => {
     }
   };
 
-  /*const finishRound = () => {
-    reset();
-    setRoles();
-    navigation.navigate("Chat");
-  }
-
-  const checkVotes = () => {
-    const q = query(collection(db, 'games/abcd/players'));
-    let cnt = 0;
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        if (doc.data().vote != " ") {
-          cnt++;
-        }
-      });
-
-      if (cnt == playersDB.length) {
-        finishRound();
-      }
-    });
-
-    return unsubscribe;
-  }
-
-  useEffect(() => {
-    checkVotes();
-  }, []);*/
-
   useEffect(() => {
     getPlayers();
   }, []);

@@ -72,7 +72,7 @@ export const LobbyPage = ({ navigation, route }) => {
       var r = Math.floor(Math.random() * (playersDB.length)) ;
       if (arr.indexOf(r) === -1) arr.push(r);
     }
-    console.log(arr);
+
     //update roles and fake_id
     for (let i = 0; i < no_of_rats; i++) {
       await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[arr[i]]), {
