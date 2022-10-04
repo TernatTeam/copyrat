@@ -1,14 +1,101 @@
 import React, { useState } from 'react';
 
-import { Button, Icon, Input, Modal, Text } from 'native-base';
+import * as yup from 'yup';
+
+import { Box, Button, Icon, Input, Modal, Text, useToast } from 'native-base';
 
 import { Ionicons } from '@expo/vector-icons';
 
+import { db, doc, getDoc } from '../../../config/firebase/firebase-key-config';
+import { TouchableWithoutFeedback } from 'react-native';
+
+const joinGameSchema = yup.object({
+  keyCode: yup.string().required('Key room is required'),
+});
+
 export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
   const [keyCode, setKeyCode] = useState('');
+  const [isInvalidKeyCode, setIsInvalidKeyCode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const toast = useToast();
+  const id = 'error-toasts';
+
+  const resetFieldsErrors = () => {
+    setIsInvalidKeyCode(true);
+
+    setTimeout(() => {
+      setIsInvalidKeyCode(false);
+    }, 2500);
+  };
+
+  const onSubmit = () => {
+    joinGameSchema
+      .isValid({
+        keyCode: keyCode,
+      })
+      .then(async (isValid) => {
+        if (isValid) {
+          setIsLoading(true);
+
+          const docSnap = await getDoc(doc(db, 'games', keyCode));
+          if (docSnap.exists()) {
+            onClose(keyCode);
+          } else {
+            if (!toast.isActive(id)) {
+              toast.show({
+                id,
+                duration: 2500,
+                placement: 'top',
+                render: () => {
+                  return (
+                    <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
+                      The room does not exist
+                    </Box>
+                  );
+                },
+              });
+            }
+
+            resetFieldsErrors();
+          }
+
+          setIsLoading(false);
+        }
+      });
+
+    joinGameSchema.validate({ keyCode: keyCode }).catch((err) => {
+      if (!toast.isActive(id)) {
+        toast.show({
+          id,
+          duration: 2500,
+          placement: 'top',
+          render: () => {
+            return (
+              <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
+                {err.message}
+              </Box>
+            );
+          },
+        });
+      }
+
+      if (err.path === 'keyCode') {
+        setIsInvalidKeyCode(true);
+      }
+    });
+  };
 
   return (
-    <Modal isOpen={show} size="xl" px="6">
+    <Modal
+      avoidKeyboard
+      isOpen={show}
+      onClose={() => {
+        onClose(null);
+      }}
+      justifyContent="center"
+      size="md"
+    >
       <Modal.Content borderRadius={15}>
         <Modal.Header
           bg="primary1.500"
@@ -27,25 +114,33 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
         >
           <Input
             borderBottomWidth={2}
-            borderBottomColor="black"
-            _focus={{
-              borderBottomColor: 'white',
-              placeholderTextColor: 'white',
-            }}
+            borderBottomColor={`${isInvalidKeyCode ? 'red.500' : 'black'}`}
+            _focus={
+              isInvalidKeyCode
+                ? {
+                    borderBottomColor: 'red.500',
+                    placeholderTextColor: 'red.500',
+                  }
+                : {
+                    borderBottomColor: 'white',
+                    placeholderTextColor: 'white',
+                  }
+            }
             InputRightElement={
               <Icon
                 as={<Ionicons name="key-outline" />}
                 size={6}
                 mr="2"
-                color="white"
+                color={isInvalidKeyCode ? `red.500` : 'white'}
               />
             }
             variant="underlined"
             placeholder="Room Key"
-            placeholderTextColor="black"
-            color="white"
+            placeholderTextColor={isInvalidKeyCode ? `red.500` : 'black'}
+            color={isInvalidKeyCode ? 'red.500' : 'white'}
             value={keyCode}
             onChangeText={(value) => {
+              setIsInvalidKeyCode(false);
               setKeyCode(value);
             }}
           />
@@ -53,17 +148,18 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
 
         <Modal.Footer bg="primary1.500">
           <Button
-            p="0"
-            bg="primary1.500"
-            _pressed={{ bg: 'primary1.500' }}
-            flex={1}
-            onPress={() => {
-              if (keyCode) {
-                onClose(keyCode);
-              }
-            }}
+            w="full"
+            bg="primary3.500"
+            _pressed={{ bg: 'primary3.600' }}
+            onPress={onSubmit}
+            disabled={isLoading}
+            isLoading={isLoading}
+            //the size didnt match so i had to do this..
+            _spinner={{ paddingY: '0.48' }}
           >
-            Done
+            <Text fontWeight="semibold" color="black">
+              Done
+            </Text>
           </Button>
         </Modal.Footer>
       </Modal.Content>
