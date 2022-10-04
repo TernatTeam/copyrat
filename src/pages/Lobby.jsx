@@ -67,7 +67,7 @@ export const LobbyPage = ({ navigation, route }) => {
   const setRoles = async() => {
     //set index
     for (let i = 0; i < playersDB.length; i++) {
-      updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[i]), {
+      await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[i]), {
         index: i, 
       });
     }
