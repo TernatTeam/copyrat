@@ -46,7 +46,7 @@ export const HomePage = ({ navigation }) => {
     setIsDisabled(true);
 
     let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const charactersLength = characters.length;
 
     const currentUser = auth.currentUser;

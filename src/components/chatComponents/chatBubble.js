@@ -1,81 +1,77 @@
-import { View, Text } from "react-native";
-import { Bubble } from "react-native-gifted-chat";
-import React from "react";
-import { auth } from "../../../config/firebase/firebase-key-config";
+import React from 'react';
+
+import { Box, Text } from 'native-base';
+
+import { Bubble } from 'react-native-gifted-chat';
+
+import { auth } from '../../../config/firebase/firebase-key-config';
 
 const chatBubble = (props) => {
-  if (
-    props.currentMessage.user._id == auth.currentUser.uid ||
-    props.previousMessage.user == props.currentMessage.user
-  ) {
+  if (props.currentMessage.user._id == auth.currentUser.uid) {
     return (
-      <View
-        style={{
-          borderRadius: 25,
-          borderTopRightRadius: 0,
-          maxWidth: "80%",
-        }}
+      <Box
+        maxWidth="80%"
+        backgroundColor="#DE6F6F"
+        borderRadius="xl"
+        borderTopRightRadius="0"
+        paddingRight="18"
+        marginTop="2"
       >
         <Bubble
           {...props}
           textStyle={{
             right: {
-              color: "white",
-              textAlign: "left",
+              color: 'white',
+              textAlign: 'left',
             },
           }}
           wrapperStyle={{
             right: {
-              backgroundColor: "#DE6F6F",
-              borderTopRightRadius: 0,
-              borderRadius: 25,
-              marginRight: "10%",
+              backgroundColor: '#DE6F6F',
+              marginRight: -10,
+              marginLeft: 0,
             },
           }}
         />
-      </View>
+      </Box>
     );
   }
-  return (
-    <View
-      style={{
-        maxWidth: "80%",
-        backgroundColor: "#DE6F6F",
-        flexShrink: 1,
-        borderRadius: 30,
-        borderTopLeftRadius: 0,
-      }}
-    >
-      <View marginLeft={"10%"}>
-        <Text
-          style={{
-            color: props.currentMessage.user.userNameColor,
-            fontSize: 15,
-          }}
-        >
-          {props.currentMessage.user.fakeId}
-        </Text>
-      </View>
 
-      {/* User colors: lightblue, black, antiquewhite, aqua,purple, darkmagenta, gainsboro*/}
+  return (
+    <Box
+      maxWidth="80%"
+      backgroundColor="#DE6F6F"
+      borderRadius="xl"
+      borderTopLeftRadius="0"
+      paddingLeft="18"
+      marginTop="2"
+    >
+      <Text
+        mt="1"
+        fontWeight="bold"
+        fontSize="md"
+        color={props.currentMessage.user.userNameColor}
+      >
+        {props.currentMessage.user.fakeId}
+      </Text>
 
       <Bubble
         {...props}
         textStyle={{
           left: {
-            color: "white",
+            color: 'white',
           },
         }}
         wrapperStyle={{
           left: {
-            backgroundColor: "#DE6F6F",
-            borderTopLeftRadius: 0,
-            borderRadius: 25,
-            marginLeft: "10%",
+            backgroundColor: '#DE6F6F',
+            marginLeft: -10,
+            marginRight: 0,
           },
         }}
+        time
       />
-    </View>
+    </Box>
   );
 };
 

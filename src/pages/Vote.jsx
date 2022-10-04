@@ -1,5 +1,5 @@
-import { View, Text, ScrollViewBase } from 'react-native';
-import React, { useEffect, useReducer, useState } from 'react';
+import { View, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'native-base';
 //import { playersDB } from "./Lobby";
 import {
@@ -27,11 +27,13 @@ let uIDs = [];
 export const VotePage = ({ navigation }) => {
   const [playersDB, setPlayersDB] = useState([]);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
-  const [{ keycode }] = useGlobal(); 
+  const [{ keycode }] = useGlobal();
 
   const getPlayers = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/players`));
+      const querySnapshot = await getDocs(
+        collection(db, `games/${keycode.value}/players`),
+      );
       currentPlayerId = auth.currentUser.uid;
       let playersArray = [];
 
@@ -54,7 +56,9 @@ export const VotePage = ({ navigation }) => {
     let messageIDs = [];
 
     try {
-      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/chat`));
+      const querySnapshot = await getDocs(
+        collection(db, `games/${keycode.value}/chat`),
+      );
 
       querySnapshot.forEach((doc) => {
         messageIDs.push(doc.id);
@@ -68,7 +72,7 @@ export const VotePage = ({ navigation }) => {
     }
   };
 
-  const resetScoresFB = async() => {
+  const resetScoresFB = async () => {
     const nrOfPlayers = playersDB.length;
 
     for (let i = 0; i < nrOfPlayers; i++) {
@@ -84,7 +88,7 @@ export const VotePage = ({ navigation }) => {
         return i;
       }
     }
-  }
+  };
 
   const voteFor = (playerName) => {
     votedPlayerIndex = findIndexOfPlayer(playerName);
@@ -94,13 +98,19 @@ export const VotePage = ({ navigation }) => {
 
   const confirmVote = async () => {
     if (votedPlayerIndex >= 0) {
-      await updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[votedPlayerIndex]}`), {
-        no_of_votes: increment(1),
-      });
+      await updateDoc(
+        doc(db, `games/${keycode.value}/players/${uIDs[votedPlayerIndex]}`),
+        {
+          no_of_votes: increment(1),
+        },
+      );
 
-      await updateDoc(doc(db, `games/${keycode.value}/players/${currentPlayerId}`), {
-        vote: votedPlayerIndex,
-      });
+      await updateDoc(
+        doc(db, `games/${keycode.value}/players/${currentPlayerId}`),
+        {
+          vote: votedPlayerIndex,
+        },
+      );
 
       window.alert(`Locking in.. ${playersDB[votedPlayerIndex].fake_id}`);
     } else {
@@ -116,7 +126,9 @@ export const VotePage = ({ navigation }) => {
     let players = [];
 
     try {
-      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/players`));
+      const querySnapshot = await getDocs(
+        collection(db, `games/${keycode.value}/players`),
+      );
 
       querySnapshot.forEach((doc) => {
         players.push(doc.data());
@@ -150,14 +162,17 @@ export const VotePage = ({ navigation }) => {
     window.alert(rats);
   };
 
-//Scores
+  //Scores
   const calculateScore = async () => {
     const nrOfPlayers = playersDB.length;
     for (let i = 0; i < nrOfPlayers; i++) {
       let newScore = 0;
-      if (playersDB[i].role == "cat") { // Real
-        if (playersDB[playersDB[i].vote]?.role == "rat") { //vot bun
-          newScore += nrOfPlayers - 1 - playersDB[playersDB[i].vote].no_of_votes;
+      if (playersDB[i].role == 'cat') {
+        // Real
+        if (playersDB[playersDB[i].vote]?.role == 'rat') {
+          //vot bun
+          newScore +=
+            nrOfPlayers - 1 - playersDB[playersDB[i].vote].no_of_votes;
         }
         if (newScore < 1) {
           newScore = 1;
@@ -166,11 +181,11 @@ export const VotePage = ({ navigation }) => {
         if (newScore == 10 * (nrOfPlayers - 2)) {
           newScore += 5;
         }
-        
-      } else {// fake
+      } else {
+        // fake
         newScore += nrOfPlayers - 2 - playersDB[i].no_of_votes;
         newScore *= 10;
-        if (newScore == (nrOfPlayers - 2)) {
+        if (newScore == nrOfPlayers - 2) {
           newScore += 5;
         }
       }
