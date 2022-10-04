@@ -69,7 +69,7 @@ export const VotePage = ({ navigation }) => {
     }
   };
 
-  const resetScoresFB = async() => {
+  /*const resetScoresFB = async() => {
     const nrOfPlayers = playersDB.length;
 
     for (let i = 0; i < nrOfPlayers; i++) {
@@ -77,7 +77,7 @@ export const VotePage = ({ navigation }) => {
         score: 0,
       });
     }
-  };
+  };*/
 
   const findIndexOfPlayer = (name) => {
     for (let i = 0; i < playersDB.length; i++) {
