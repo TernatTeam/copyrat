@@ -10,6 +10,7 @@ import {
   query,
   where,
   onSnapshot,
+  getDoc,
 } from 'firebase/firestore';
 import {
   collection,
@@ -164,9 +165,12 @@ export const VotePage = ({ navigation }) => {
 
   //Scores
   const calculateScore = async () => {
+    getPlayers();
     const nrOfPlayers = playersDB.length;
+    console.log(playersDB);
     for (let i = 0; i < nrOfPlayers; i++) {
       let newScore = 0;
+
       if (playersDB[i].role == 'cat') {
         // Real
         if (playersDB[playersDB[i].vote]?.role == 'rat') {
@@ -319,7 +323,7 @@ export const VotePage = ({ navigation }) => {
         Stop Vote!
       </Button>
 
-      <Button
+      {/*<Button
         w="20%"
         h="5%"
         marginBottom="4px"
@@ -330,17 +334,21 @@ export const VotePage = ({ navigation }) => {
         }}
       >
         Reset FB
-      </Button>
+      </Button>*/}
 
       <Button
         w="20%"
         h="5%"
         marginBottom="4px"
         padding="1px"
-        onPress={() => {
-          reset();
-          setRoles();
-          deleteChat();
+        onPress={async () => {
+          const docSnap = await getDoc(doc(db, 'games', keycode.value));
+
+          if (auth.currentUser.uid == docSnap.data().game_admin_uid) {
+            reset();
+            setRoles();
+            deleteChat();
+          }
           setAlreadyVoted(false);
 
           setTimeout(() => {

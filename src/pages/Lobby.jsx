@@ -1,12 +1,12 @@
-import React, { useEffect, useReducer, useState, StyleSheet } from "react";
+import React, { useEffect, useReducer, useState, StyleSheet } from 'react';
 
-import { Box, Button, Icon, Input, Text } from "native-base";
+import { Box, Button, Icon, Input, Text } from 'native-base';
 
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 
-import { async } from "@firebase/util";
-import { updateDoc, increment } from "firebase/firestore";
-import { ImageBackground } from "react-native";
+import { async } from '@firebase/util';
+import { updateDoc, increment } from 'firebase/firestore';
+import { ImageBackground } from 'react-native';
 
 import {
   addDoc,
@@ -17,22 +17,22 @@ import {
   setDoc,
   getDoc,
   getDocs,
-} from "../../config/firebase/firebase-key-config";
-import { useGlobal } from "../../state";
+} from '../../config/firebase/firebase-key-config';
+import { useGlobal } from '../../state';
 
 let uIds = [];
 
 export const LobbyPage = ({ navigation, route }) => {
   const [playersDB, setPlayersDB] = useState([]);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
   const [{ keycode }] = useGlobal();
   const userNameColors = [
-    "lightblue",
-    "black",
-    "antiquewhite",
-    "aqua,purple",
-    "darkmagenta",
-    "gainsboro",
+    'lightblue',
+    'black',
+    'antiquewhite',
+    'aqua,purple',
+    'darkmagenta',
+    'gainsboro',
   ];
 
   const addPlayerName = async () => {
@@ -42,7 +42,7 @@ export const LobbyPage = ({ navigation, route }) => {
       await setDoc(doc(db, `games/${keycode.value}/players/${currenUserUID}`), {
         name: username,
         fake_id: username,
-        role: "cat",
+        role: 'cat',
         no_of_votes: 0,
         score: 0,
         vote: null,
@@ -50,14 +50,14 @@ export const LobbyPage = ({ navigation, route }) => {
         userNameColor: userNameColors[Math.floor(Math.random() * 7)],
       });
     } catch (err) {
-      console.log("Err: ", err);
+      console.log('Err: ', err);
     }
   };
 
   const getPlayers = async () => {
     try {
       const querySnapshot = await getDocs(
-        collection(db, `games/${keycode.value}/players`)
+        collection(db, `games/${keycode.value}/players`),
       );
       let playersArray = [];
       querySnapshot.forEach((doc) => {
@@ -66,7 +66,7 @@ export const LobbyPage = ({ navigation, route }) => {
       });
       setPlayersDB(playersArray);
     } catch (err) {
-      console.log("Error: ", err);
+      console.log('Error: ', err);
     }
   };
 
@@ -78,7 +78,7 @@ export const LobbyPage = ({ navigation, route }) => {
   const setRoles = async () => {
     //set index
     for (let i = 0; i < playersDB.length; i++) {
-      updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[i]), {
+      await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[i]), {
         index: i,
       });
     }
@@ -98,9 +98,9 @@ export const LobbyPage = ({ navigation, route }) => {
       await updateDoc(
         doc(db, `games/${keycode.value}/players/` + uIds[arr[i]]),
         {
-          role: "rat",
+          role: 'rat',
           fake_id: playersDB[arr[(i + 1) % no_of_rats]].name,
-        }
+        },
       );
     }
   };
@@ -109,7 +109,7 @@ export const LobbyPage = ({ navigation, route }) => {
   const reset = async () => {
     for (let i = 0; i < playersDB.length; i++) {
       await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[i]), {
-        role: "cat",
+        role: 'cat',
         fake_id: playersDB[i].name,
       });
     }
@@ -124,8 +124,8 @@ export const LobbyPage = ({ navigation, route }) => {
         borderBottomWidth={2}
         borderBottomColor="black"
         _focus={{
-          borderBottomColor: "white",
-          placeholderTextColor: "white",
+          borderBottomColor: 'white',
+          placeholderTextColor: 'white',
         }}
         InputRightElement={
           <Icon
@@ -149,13 +149,13 @@ export const LobbyPage = ({ navigation, route }) => {
       <Button
         style={{ margin: 20 }}
         onPress={async () => {
-          const docSnap = await getDoc(doc(db, "games", keycode.value));
+          const docSnap = await getDoc(doc(db, 'games', keycode.value));
 
           if (auth.currentUser.uid == docSnap.data().game_admin_uid) {
             setRoles();
           }
 
-          navigation.navigate("Chat");
+          navigation.navigate('Chat');
         }}
       >
         Start
