@@ -14,6 +14,7 @@ import {
   setDoc,
   auth,
   getDoc,
+  deleteDoc,
 } from "../../config/firebase/firebase-key-config";
 import { query, onSnapshot, orderBy } from "firebase/firestore";
 import chatBubble from "../components/chatComponents/chatBubble";
@@ -23,10 +24,11 @@ import { useGlobal } from "../../state";
 export const ChatPage = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [fakeId, setFakeId] = useState();
+  const [userNameColor, setUserNameColor] = useState("");
   const [{ keycode }] = useGlobal();
 
   useLayoutEffect(() => {
-    const getFakeId = async () => {
+    const getFakeIdAndUsernameColor = async () => {
       const docRef = doc(
         db,
         "games",
@@ -37,8 +39,9 @@ export const ChatPage = ({ navigation }) => {
       const docSnap = await getDoc(docRef);
 
       setFakeId(docSnap.data().fake_id);
+      setUserNameColor(docSnap.data().userNameColor);
     };
-    return getFakeId;
+    return getFakeIdAndUsernameColor;
   });
 
   const onSend = useCallback((messages = []) => {
@@ -93,16 +96,27 @@ export const ChatPage = ({ navigation }) => {
             You are playing as {fakeId}
           </Text>
         </View>
-        <Button onPress={() => navigation.navigate("Lobby")}>Exit</Button>
+        <Button
+          onPress={async () => {
+            navigation.navigate("Lobby");
+            await deleteDoc(
+              doc(db, `games/${keycode.value}/players/${auth.currentUser.uid}`)
+            );
+          }}
+        >
+          Exit
+        </Button>
       </View>
       <GiftedChat
         messages={messages}
         onSend={(messages) => onSend(messages)}
         renderInputToolbar={inputToolBar}
         renderBubble={chatBubble}
+        renderAvatar={null}
         user={{
           _id: auth.currentUser?.uid,
           fakeId: fakeId,
+          userNameColor: userNameColor,
         }}
       />
     </View>

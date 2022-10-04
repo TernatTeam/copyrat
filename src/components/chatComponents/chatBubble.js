@@ -26,12 +26,27 @@ const chatBubble = (props) => {
     );
   }
   return (
-    <View style={{ maxWidth: "70%" }}>
-      <View>
-        <Text style={{ color: "rosybrown", fontSize: 15 }}>
+    <View
+      style={{
+        maxWidth: "70%",
+        backgroundColor: "#DE6F6F",
+        flexShrink: 1,
+        borderRadius: 30,
+        borderTopLeftRadius: 0,
+      }}
+    >
+      <View marginLeft={"10%"}>
+        <Text
+          style={{
+            color: props.currentMessage.user.userNameColor,
+            fontSize: 15,
+          }}
+        >
           {props.currentMessage.user.fakeId}
         </Text>
       </View>
+
+      {/* User colors: lightblue, black, antiquewhite, aqua,purple, darkmagenta, gainsboro*/}
 
       <Bubble
         {...props}
@@ -42,9 +57,10 @@ const chatBubble = (props) => {
         }}
         wrapperStyle={{
           left: {
-            backgroundColor: "rosybrown",
+            backgroundColor: "#DE6F6F",
             borderTopLeftRadius: 0,
             borderRadius: 25,
+            marginLeft: "10%",
           },
         }}
       />
