@@ -4,14 +4,24 @@ import React from "react";
 import { auth } from "../../../config/firebase/firebase-key-config";
 
 const chatBubble = (props) => {
-  if (props.currentMessage.user._id == auth.currentUser.uid) {
+  if (
+    props.currentMessage.user._id == auth.currentUser.uid ||
+    props.previousMessage.user == props.currentMessage.user
+  ) {
     return (
-      <View justifyContent="center">
+      <View
+        style={{
+          borderRadius: 25,
+          borderTopRightRadius: 0,
+          maxWidth: "80%",
+        }}
+      >
         <Bubble
           {...props}
           textStyle={{
             right: {
               color: "white",
+              textAlign: "left",
             },
           }}
           wrapperStyle={{
@@ -19,6 +29,7 @@ const chatBubble = (props) => {
               backgroundColor: "#DE6F6F",
               borderTopRightRadius: 0,
               borderRadius: 25,
+              marginRight: "10%",
             },
           }}
         />
@@ -28,7 +39,7 @@ const chatBubble = (props) => {
   return (
     <View
       style={{
-        maxWidth: "70%",
+        maxWidth: "80%",
         backgroundColor: "#DE6F6F",
         flexShrink: 1,
         borderRadius: 30,
