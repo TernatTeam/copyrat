@@ -34,11 +34,9 @@ export const LobbyPage = ({ navigation, route }) => {
       await setDoc(doc(db, `games/${keycode.value}/players/${currenUserUID}`), {
         name: username,
         fake_id: username,
-        role: 'cat',
         no_of_votes: 0,
         score: 0,
         vote: null,
-        index: 0,
       });
     } catch (err) {
       console.log('Err: ', err);
@@ -65,13 +63,6 @@ export const LobbyPage = ({ navigation, route }) => {
 
   //Assign roles
   const setRoles = async() => {
-    //set index
-    for (let i = 0; i < playersDB.length; i++) {
-      await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[i]), {
-        index: i, 
-      });
-    }
-    
     let no_of_rats = Math.floor(playersDB.length / 2);
 
     //arr of 3 rand index
@@ -85,18 +76,7 @@ export const LobbyPage = ({ navigation, route }) => {
     //update roles and fake_id
     for (let i = 0; i < no_of_rats; i++) {
       await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[arr[i]]), {
-        role: 'rat',
         fake_id: playersDB[arr[(i + 1) % no_of_rats]].name,
-      });
-    }
-  };
-
-  //reset roles and fake_id
-  const reset = async() => {
-    for (let i = 0; i < playersDB.length; i++) {
-      await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[i]), {
-        role: 'cat',
-        fake_id: playersDB[i].name,
       });
     }
   };
@@ -145,14 +125,6 @@ export const LobbyPage = ({ navigation, route }) => {
         }}
       >
         Start
-      </Button>
-      <Button
-        style={{ margin: 100 }}
-        onPress={() => {
-          reset();
-        }}
-      >
-        Reset
       </Button>
     </Box>
   );
