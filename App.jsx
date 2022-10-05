@@ -53,7 +53,7 @@ export const App = () => {
 
   return (
     <NativeBaseProvider theme={theme} fontStyle="RadioNewsman">
-      <StatusBar backgroundColor="black" />
+      <StatusBar backgroundColor="#747474" />
       <StateProvider initialState={initialState} reducer={AppReducer}>
         {isLoggedIn ? <Navigator page={isLoggedIn} /> : <FullPageLoader />}
       </StateProvider>

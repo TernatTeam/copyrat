@@ -66,7 +66,9 @@ export const HomePage = ({ navigation }) => {
       });
 
       setIsLoadingCreateRoom(false);
-      navigation.navigate('Lobby');
+      navigation.reset({
+        routes: [{ name: 'Lobby' }],
+      });
       setIsDisabled(false);
     } catch (err) {
       console.log(err);
@@ -75,6 +77,8 @@ export const HomePage = ({ navigation }) => {
 
   const joinGame = async (keyCode, gameAdminUid) => {
     setIsModalOpen(false);
+    setIsLoadingJoinRoom(true);
+    setIsDisabled(true);
 
     dispatch({
       type: 'ROOM_DATA',
@@ -82,7 +86,11 @@ export const HomePage = ({ navigation }) => {
       game_admin_uid: gameAdminUid,
     });
 
-    navigation.navigate('Lobby');
+    setIsLoadingJoinRoom(false);
+    navigation.reset({
+      routes: [{ name: 'Lobby' }],
+    });
+    setIsDisabled(false);
   };
 
   return (
@@ -101,7 +109,7 @@ export const HomePage = ({ navigation }) => {
       <IconButton
         position="absolute"
         top="4"
-        left="6"
+        left="7"
         icon={<Icon as={<Ionicons name="settings-outline" />} />}
         borderRadius="full"
         _icon={{
@@ -131,9 +139,9 @@ export const HomePage = ({ navigation }) => {
         justifyContent="center"
         alignItems="flex-end"
         w="full"
-        h="35%"
+        h="45%"
       >
-        <Box w="full" alignItems="flex-start" mb="16">
+        <Box w="full" alignItems="flex-start" mb="20">
           <Button
             w="50%"
             title="Create Room"
