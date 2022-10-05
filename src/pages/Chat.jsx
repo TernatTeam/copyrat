@@ -86,7 +86,7 @@ export const ChatPage = ({ navigation }) => {
         flexDirection={'row'}
         justifyContent={'space-around'}
         alignItems={'center'}
-        marginTop={5}
+        marginTop={10}
       >
         <Button onPress={() => navigation.navigate('Vote')}>Vote</Button>
         <View>
