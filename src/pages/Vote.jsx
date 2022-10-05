@@ -87,7 +87,6 @@ export const VotePage = ({navigation}) => {
       vote: indexOfVoted
     });
     getPlayers();
-    
   }
 
   const calculateScore = async () => { // functia care calculeaza punctajele la final de runda
@@ -172,60 +171,6 @@ export const VotePage = ({navigation}) => {
     window.alert(results);
   };
 
-  const roundReset = async () => { // functia care reseteaza fieldurile no_of_votes, vote, fake_id
-    let newFakeIds = []; // in acest array construim noile fake_id uri
-
-    for (let i = 0; i < playersDB.length; i++) {
-      newFakeIds.push(playersDB[i].name);
-    }
-
-    let no_of_rats = Math.floor(playersDB.length / 2); // iau numarul de rati
-    let ratsIndex = []; // arrayul cu indecsii generati la intamplare
-
-    while (ratsIndex.length < no_of_rats) { // generare indecsi
-      let newRatIndex = Math.floor(Math.random() * (playersDB.length - 1)) + 1;
-      
-      if (ratsIndex.indexOf(newRatIndex) == -1) {
-        ratsIndex.push(newRatIndex);
-      }
-    }
-
-    // actualizam fake_id urile in vectorul auxiliar pentru a le schimba pe toate odata in baza de date
-    let firstRatId = newFakeIds[ratsIndex[0]];
-
-    for (let i = 0; i < no_of_rats - 1; i++) {
-      newFakeIds[ratsIndex[i]] = newFakeIds[ratsIndex[i + 1]]; // schimbam noile id uri in mod
-    }                                                          // circular intre rati, 2 cate 2                                                 
-    
-    newFakeIds[ratsIndex[no_of_rats - 1]] = firstRatId;
-
-    for (let i = 0; i < playersDB.length; i++) { // actualizez baza de date
-      await updateDoc(doc(db, `games/${roomData.keyCode}/players/${playerIDs[i]}`), {
-        fake_id: newFakeIds[i],
-        no_of_votes: 0,
-        vote: -1
-      })
-    }
-  }
-
-  const deleteChat = async () => { // stergem din baza de date chatul de runda trecuta
-    let messageIDs = [];
-
-    try {
-      const querySnapshot = await getDocs(collection(db, `games/${roomData.keyCode}/chat`));
-
-      querySnapshot.forEach((doc) => {
-        messageIDs.push(doc.id); // luam id ul fiecarui mesaj din colectia chat
-      });                        // corespunzatoare camerei de joc
-    } catch (err) {
-      console.log('Error: ', err);
-    }
-
-    for (let i = 0; i < messageIDs.length; i++) {
-      deleteDoc(doc(db, `games/${roomData.keyCode}/chat/${messageIDs[i]}`)); // il stergem
-    }
-  }
-
   useEffect(() => {
     getPlayers(); // cand se incarca prima data pagina, luam din baza de date
     getAdminId(); // playerii si id urile lor, cat si pe al admin ului
@@ -290,42 +235,23 @@ export const VotePage = ({navigation}) => {
             getPlayers(); // actualizam arrayul de playeri
 
             calculateScore(); // calculam scorurile                    
-          
-            showRats(); // apoi afisam ratii de tura aceasta
-
+            
             setTimeout(() => {
-              showScore(); // si scorurile cumulate
-            }, 1500);
+              showRats(); // apoi afisam ratii de tura aceasta
+            }, 1000);
+  
+            setTimeout(() => {
+              window.alert('Calculating scores...');
+            }, 3000);
+  
+            setTimeout(() => {
+              navigation.navigate('Scoreboard'); // ne mutam pe pagina cu leaderboard ul
+            }, 5000);
           } else {
             window.alert('Wait! Only the game creator can stop the voting.'); // altfel, este anuntat ca
           }                                                                   // nu are acest drept
         }}
       >Stop Vote!</Button>
-
-      <Button
-        w="20%"
-        h="5%"
-        marginBottom="4px"
-        padding="1px"
-        onPress={() => { // butonul care va incepe o noua runda
-          if (auth.currentUser.uid == adminId) { // acest lucru e posibil doar daca playerul care apasa are rolul de admin
-            roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote    
-            deleteChat(); // stergem chatul de tura trecuta
-          }
-
-          setTimeout(() => {
-            window.alert("Storing this round's scores...");
-          }, 1000);
-
-          setTimeout(() => {
-            window.alert('Preparing new roles...');
-          }, 3000);
-
-          setTimeout(() => {
-            navigation.navigate('Scoreboard'); // ne intoarcem la chat
-          }, 5000);
-        }}
-      >Next Round</Button>
 
     </View>
   );
