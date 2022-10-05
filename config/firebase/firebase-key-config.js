@@ -7,6 +7,11 @@ import {
   addDoc,
   getDocs,
   getDoc,
+  deleteDoc,
+  query,
+  onSnapshot,
+  orderBy,
+  updateDoc,
 } from 'firebase/firestore';
 import {
   createUserWithEmailAndPassword,
@@ -48,4 +53,9 @@ export {
   addDoc,
   getDocs,
   getDoc,
+  deleteDoc,
+  query,
+  onSnapshot,
+  orderBy,
+  updateDoc,
 };

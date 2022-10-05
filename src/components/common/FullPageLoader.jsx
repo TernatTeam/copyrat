@@ -15,7 +15,7 @@ export const FullPageLoader = () => {
         />
 
         <Text fontSize="3xl" fontFamily="RadioNewsman" color="black">
-          Copy Rat
+          copyrat
         </Text>
       </VStack>
       <Spinner

@@ -37,8 +37,9 @@ export const App = () => {
   }, []);
 
   const initialState = {
-    keycode: {
-      value: null,
+    roomData: {
+      keyCode: null,
+      game_admin_uid: null,
     },
   };
 
@@ -52,7 +53,7 @@ export const App = () => {
 
   return (
     <NativeBaseProvider theme={theme} fontStyle="RadioNewsman">
-      <StatusBar backgroundColor="black" />
+      <StatusBar backgroundColor="#747474" />
       <StateProvider initialState={initialState} reducer={AppReducer}>
         {isLoggedIn ? <Navigator page={isLoggedIn} /> : <FullPageLoader />}
       </StateProvider>

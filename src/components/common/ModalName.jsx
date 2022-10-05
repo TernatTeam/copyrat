@@ -6,41 +6,74 @@ import { Box, Button, Icon, Input, Modal, Text, useToast } from 'native-base';
 
 import { Ionicons } from '@expo/vector-icons';
 
-import { db, doc, getDoc } from '../../../config/firebase/firebase-key-config';
+import {
+  auth,
+  db,
+  doc,
+  setDoc,
+} from '../../../config/firebase/firebase-key-config';
 // import { TouchableWithoutFeedback } from 'react-native';
 
 const joinGameSchema = yup.object({
-  keyCode: yup.string().required('Key room is required'),
+  name: yup.string().required('Name is required'),
 });
 
-export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
-  const [keyCode, setKeyCode] = useState('');
-  const [isInvalidKeyCode, setIsInvalidKeyCode] = useState(false);
+export const ModalName = ({
+  show = false,
+  onClose = () => {},
+  keyCode,
+  userNameColors,
+}) => {
+  const [name, setName] = useState('');
+  const [isNameInvalid, setIsInvalidName] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
   const id = 'error-toasts';
 
   const resetFieldsErrors = () => {
-    setIsInvalidKeyCode(true);
+    setIsInvalidName(true);
 
     setTimeout(() => {
-      setIsInvalidKeyCode(false);
+      setIsInvalidName(false);
     }, 2500);
+  };
+
+  const addPlayerName = async () => {
+    const currenUserUID = auth.currentUser.uid;
+
+    try {
+      await setDoc(doc(db, `games/${keyCode}/players/${currenUserUID}`), {
+        name: name,
+        fake_id: name,
+        role: 'cat',
+        no_of_votes: 0,
+        score: 0,
+        vote: null,
+        index: 0,
+        userNameColor: userNameColors[Math.floor(Math.random() * 7)],
+      });
+
+      return true;
+    } catch (err) {
+      console.log('Err: ', err);
+      return false;
+    }
   };
 
   const onSubmit = () => {
     joinGameSchema
       .isValid({
-        keyCode: keyCode,
+        name: name,
       })
       .then(async (isValid) => {
         if (isValid) {
           setIsLoading(true);
 
-          const docSnap = await getDoc(doc(db, 'games', keyCode));
-          if (docSnap.exists()) {
-            onClose(keyCode, docSnap.data().game_admin_uid);
+          const response = await addPlayerName();
+
+          if (response) {
+            onClose();
           } else {
             if (!toast.isActive(id)) {
               toast.show({
@@ -50,7 +83,7 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
                 render: () => {
                   return (
                     <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
-                      The room does not exist
+                      Something went wrong
                     </Box>
                   );
                 },
@@ -64,7 +97,7 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
         }
       });
 
-    joinGameSchema.validate({ keyCode: keyCode }).catch((err) => {
+    joinGameSchema.validate({ name: name }).catch((err) => {
       if (!toast.isActive(id)) {
         toast.show({
           id,
@@ -80,22 +113,14 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
         });
       }
 
-      if (err.path === 'keyCode') {
-        setIsInvalidKeyCode(true);
+      if (err.path === 'name') {
+        setIsInvalidName(true);
       }
     });
   };
 
   return (
-    <Modal
-      avoidKeyboard
-      isOpen={show}
-      onClose={() => {
-        onClose(null);
-      }}
-      justifyContent="center"
-      size="md"
-    >
+    <Modal isOpen={show} justifyContent="center" size="md">
       <Modal.Content borderRadius={15}>
         <Modal.Header
           bg="primary1.500"
@@ -103,7 +128,7 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
           justifyContent="center"
         >
           <Text color="white" style={{ fontSize: 18, fontWeight: 'bold' }}>
-            Room key
+            Name
           </Text>
         </Modal.Header>
 
@@ -114,9 +139,9 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
         >
           <Input
             borderBottomWidth={2}
-            borderBottomColor={`${isInvalidKeyCode ? 'red.500' : 'black'}`}
+            borderBottomColor={`${isNameInvalid ? 'red.500' : 'black'}`}
             _focus={
-              isInvalidKeyCode
+              isNameInvalid
                 ? {
                     borderBottomColor: 'red.500',
                     placeholderTextColor: 'red.500',
@@ -128,20 +153,20 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
             }
             InputRightElement={
               <Icon
-                as={<Ionicons name="key-outline" />}
+                as={<Ionicons name="person-outline" />}
                 size={6}
                 mr="2"
-                color={isInvalidKeyCode ? `red.500` : 'white'}
+                color={isNameInvalid ? `red.500` : 'white'}
               />
             }
             variant="underlined"
-            placeholder="Room Key"
-            placeholderTextColor={isInvalidKeyCode ? `red.500` : 'black'}
-            color={isInvalidKeyCode ? 'red.500' : 'white'}
-            value={keyCode}
+            placeholder="Name"
+            placeholderTextColor={isNameInvalid ? `red.500` : 'black'}
+            color={isNameInvalid ? 'red.500' : 'white'}
+            value={name}
             onChangeText={(value) => {
-              setIsInvalidKeyCode(false);
-              setKeyCode(value);
+              setIsInvalidName(false);
+              setName(value);
             }}
           />
         </Modal.Body>
@@ -167,4 +192,4 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
   );
 };
 
-export default ModalKeyCode;
+export default ModalName;

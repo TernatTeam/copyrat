@@ -1,5 +1,5 @@
-import { View, Text, ScrollViewBase } from 'react-native';
-import React, { useEffect, useReducer, useState } from 'react';
+import { View, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'native-base';
 //import { playersDB } from "./Lobby";
 import {
@@ -7,9 +7,6 @@ import {
   updateDoc,
   increment,
   deleteDoc,
-  query,
-  where,
-  onSnapshot,
   getDoc,
 } from 'firebase/firestore';
 import {
@@ -28,11 +25,13 @@ let uIDs = [];
 export const VotePage = ({ navigation }) => {
   const [playersDB, setPlayersDB] = useState([]);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
-  const [{ keycode }] = useGlobal(); 
+  const [{ roomData }] = useGlobal();
 
   const getPlayers = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/players`));
+      const querySnapshot = await getDocs(
+        collection(db, `games/${roomData.keyCode}/players`),
+      );
       currentPlayerId = auth.currentUser.uid;
       let playersArray = [];
 
@@ -55,7 +54,9 @@ export const VotePage = ({ navigation }) => {
     let messageIDs = [];
 
     try {
-      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/chat`));
+      const querySnapshot = await getDocs(
+        collection(db, `games/${roomData.keyCode}/chat`),
+      );
 
       querySnapshot.forEach((doc) => {
         messageIDs.push(doc.id);
@@ -65,15 +66,15 @@ export const VotePage = ({ navigation }) => {
     }
 
     for (let i = 0; i < messageIDs.length; i++) {
-      deleteDoc(doc(db, `games/${keycode.value}/chat/${messageIDs[i]}`));
+      deleteDoc(doc(db, `games/${roomData.keyCode}/chat/${messageIDs[i]}`));
     }
   };
 
-  const resetScoresFB = async() => {
+  const resetScoresFB = async () => {
     const nrOfPlayers = playersDB.length;
 
     for (let i = 0; i < nrOfPlayers; i++) {
-      await updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
+      await updateDoc(doc(db, `games/${roomData.keyCode}/players/${uIDs[i]}`), {
         score: 0,
       });
     }
@@ -85,7 +86,7 @@ export const VotePage = ({ navigation }) => {
         return i;
       }
     }
-  }
+  };
 
   const voteFor = (playerName) => {
     votedPlayerIndex = findIndexOfPlayer(playerName);
@@ -95,13 +96,19 @@ export const VotePage = ({ navigation }) => {
 
   const confirmVote = async () => {
     if (votedPlayerIndex >= 0) {
-      await updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[votedPlayerIndex]}`), {
-        no_of_votes: increment(1),
-      });
+      await updateDoc(
+        doc(db, `games/${roomData.keyCode}/players/${uIDs[votedPlayerIndex]}`),
+        {
+          no_of_votes: increment(1),
+        },
+      );
 
-      await updateDoc(doc(db, `games/${keycode.value}/players/${currentPlayerId}`), {
-        vote: votedPlayerIndex,
-      });
+      await updateDoc(
+        doc(db, `games/${roomData.keyCode}/players/${currentPlayerId}`),
+        {
+          vote: votedPlayerIndex,
+        },
+      );
 
       window.alert(`Locking in.. ${playersDB[votedPlayerIndex].fake_id}`);
     } else {
@@ -117,7 +124,9 @@ export const VotePage = ({ navigation }) => {
     let players = [];
 
     try {
-      const querySnapshot = await getDocs(collection(db, `games/${keycode.value}/players`));
+      const querySnapshot = await getDocs(
+        collection(db, `games/${roomData.keyCode}/players`),
+      );
 
       querySnapshot.forEach((doc) => {
         players.push(doc.data());
@@ -151,17 +160,20 @@ export const VotePage = ({ navigation }) => {
     window.alert(rats);
   };
 
-//Scores
+  //Scores
   const calculateScore = async () => {
     getPlayers();
     const nrOfPlayers = playersDB.length;
     console.log(playersDB);
     for (let i = 0; i < nrOfPlayers; i++) {
       let newScore = 0;
-      
-      if (playersDB[i].role == "cat") { // Real
-        if (playersDB[playersDB[i].vote]?.role == "rat") { //vot bun
-          newScore += nrOfPlayers - 1 - playersDB[playersDB[i].vote].no_of_votes;
+
+      if (playersDB[i].role == 'cat') {
+        // Real
+        if (playersDB[playersDB[i].vote]?.role == 'rat') {
+          //vot bun
+          newScore +=
+            nrOfPlayers - 1 - playersDB[playersDB[i].vote].no_of_votes;
         }
         if (newScore < 1) {
           newScore = 1;
@@ -170,17 +182,17 @@ export const VotePage = ({ navigation }) => {
         if (newScore == 10 * (nrOfPlayers - 2)) {
           newScore += 5;
         }
-        
-      } else {// fake
+      } else {
+        // fake
         newScore += nrOfPlayers - 2 - playersDB[i].no_of_votes;
         newScore *= 10;
-        if (newScore == (nrOfPlayers - 2)) {
+        if (newScore == nrOfPlayers - 2) {
           newScore += 5;
         }
       }
       newScore = roundUp10((newScore * 76) / nrOfPlayers);
 
-      await updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
+      await updateDoc(doc(db, `games/${roomData.keyCode}/players/${uIDs[i]}`), {
         score: increment(newScore),
       });
     }
@@ -203,7 +215,7 @@ export const VotePage = ({ navigation }) => {
     }
     //update roles and fake_id
     for (let i = 0; i < no_of_rats; i++) {
-      updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[arr[i]]}`), {
+      updateDoc(doc(db, `games/${roomData.keyCode}/players/${uIDs[arr[i]]}`), {
         role: 'rat',
         fake_id: playersDB[arr[(i + 1) % no_of_rats]].name,
       });
@@ -213,7 +225,7 @@ export const VotePage = ({ navigation }) => {
   //reset roles, fake_id, vote, no_of_votes
   const reset = () => {
     for (let i = 0; i < playersDB.length; i++) {
-      updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
+      updateDoc(doc(db, `games/${roomData.keyCode}/players/${uIDs[i]}`), {
         role: 'cat',
         fake_id: playersDB[i].name,
         vote: 0,
@@ -278,7 +290,7 @@ export const VotePage = ({ navigation }) => {
             </Button>
           );
       })}
-       
+
       <Button
         w="20%"
         h="5%"
@@ -302,7 +314,7 @@ export const VotePage = ({ navigation }) => {
         padding="1px"
         bgColor="emerald.600"
         onPress={() => {
-            calculateScore();
+          calculateScore();
         }}
       >
         Stop Vote!
@@ -327,14 +339,14 @@ export const VotePage = ({ navigation }) => {
         marginBottom="4px"
         padding="1px"
         onPress={async () => {
-          const docSnap = await getDoc(doc(db, "games", keycode.value));
+          const docSnap = await getDoc(doc(db, 'games', roomData.keyCode));
 
           if (auth.currentUser.uid == docSnap.data().game_admin_uid) {
             reset();
             setRoles();
             deleteChat();
           }
-            setAlreadyVoted(false);
+          setAlreadyVoted(false);
 
           setTimeout(() => {
             window.alert("Storing this round's scores...");
