@@ -75,6 +75,10 @@ export const LobbyPage = ({ navigation }) => {
   const setRoles = async () => {
     setIsLoadingButton(true);
 
+    await updateDoc(doc(db, 'games', roomData.keyCode), {
+      is_game_ready: true,
+    });
+
     let no_of_rats = Math.floor(players.length / 2);
 
     //arr of 3 rand index
@@ -161,6 +165,23 @@ export const LobbyPage = ({ navigation }) => {
       }
     }
   }, [hasLeft]);
+
+  useEffect(() => {
+    const q = query(collection(db, `games`));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'modified') {
+          navigation.reset({
+            routes: [{ name: 'Chat' }],
+          });
+        }
+      });
+    });
+
+    return async () => {
+      unsubscribe();
+    };
+  }, []);
 
   const PlayersLoader = () => {
     const loaderArray = [];
@@ -295,7 +316,6 @@ export const LobbyPage = ({ navigation }) => {
             onPress={() => {
               if (auth.currentUser.uid == roomData.game_admin_uid) {
                 setRoles();
-                navigation.navigate('Chat');
               }
             }}
             title="Start"
