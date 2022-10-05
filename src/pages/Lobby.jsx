@@ -119,6 +119,18 @@ export const LobbyPage = ({ navigation }) => {
           setIsLoading(false);
         }
 
+        if (change.type === 'modified') {
+          const newState = players.map((player) => {
+            if (change.doc.id == player.uid) {
+              return { ...player, name: player.name };
+            }
+
+            return player;
+          });
+
+          setPlayers(newState);
+        }
+
         if (change.type === 'removed') {
           setPlayers((oldValues) =>
             oldValues.filter(
