@@ -42,12 +42,13 @@ export const LobbyPage = ({ navigation }) => {
   const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [{ roomData }] = useGlobal();
   const userNameColors = [
-    'lightblue',
-    'antiquewhite',
-    'aqua',
-    'purple',
-    'darkmagenta',
-    'gainsboro',
+    '#EBD500',
+    '#59EB00',
+    '#00EB6A',
+    '#00E9EB',
+    '#0041EB',
+    '#8D00EB',
+    '#D6003D',
   ];
   const toast = useToast();
   const id = 'copy-clipboard-toast';

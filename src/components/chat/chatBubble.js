@@ -11,7 +11,7 @@ const chatBubble = (props) => {
     return (
       <Box
         maxWidth="80%"
-        backgroundColor="#DE6F6F"
+        backgroundColor="#a4a4a4"
         borderRadius="xl"
         borderTopRightRadius="0"
         paddingRight="18"
@@ -27,7 +27,7 @@ const chatBubble = (props) => {
           }}
           wrapperStyle={{
             right: {
-              backgroundColor: '#DE6F6F',
+              backgroundColor: '#a4a4a4',
               marginRight: -10,
               marginLeft: 0,
             },
@@ -40,7 +40,7 @@ const chatBubble = (props) => {
   return (
     <Box
       maxWidth="80%"
-      backgroundColor="#DE6F6F"
+      backgroundColor="#a4a4a4"
       borderRadius="xl"
       borderTopLeftRadius="0"
       paddingLeft="18"
@@ -64,7 +64,7 @@ const chatBubble = (props) => {
         }}
         wrapperStyle={{
           left: {
-            backgroundColor: '#DE6F6F',
+            backgroundColor: '#a4a4a4',
             marginLeft: -10,
             marginRight: 0,
           },

@@ -49,7 +49,7 @@ export const ModalName = ({
         no_of_votes: 0,
         score: 0,
         vote: -1,
-        userNameColor: userNameColors[Math.floor(Math.random() * 6)],
+        userNameColor: userNameColors[Math.floor(Math.random() * 7)],
       });
 
       return true;
