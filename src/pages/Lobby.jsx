@@ -69,45 +69,43 @@ export const LobbyPage = ({ navigation }) => {
     }
   };
 
-  const getPlayers = async () => {
-    try {
-      const querySnapshot = await getDocs(
-        collection(db, `games/${roomData.keyCode}/players`),
-      );
-      let playersArray = [];
-      querySnapshot.forEach((doc) => {
-        playersArray.push(doc.data());
-        uIds.push(doc.id);
-      });
-      setPlayersDB(playersArray);
-    } catch (err) {
-      console.log('Error: ', err);
-    }
-  };
+  // const getPlayers = async () => {
+  //   try {
+  //     const querySnapshot = await getDocs(
+  //       collection(db, `games/${roomData.keyCode}/players`),
+  //     );
+  //     let playersArray = [];
+  //     querySnapshot.forEach((doc) => {
+  //       playersArray.push(doc.data());
+  //       uIds.push(doc.id);
+  //     });
+  //     setPlayersDB(playersArray);
+  //   } catch (err) {
+  //     console.log('Error: ', err);
+  //   }
+  // };
 
   //Assign roles
-  const setRoles = async() => {
+  const setRoles = async () => {
     let no_of_rats = Math.floor(players.length / 2);
 
     //arr of 3 rand index
-    var arr = [];
-    
+    let arr = [];
+
     while (arr.length < no_of_rats) {
-      var r = Math.floor(Math.random() * (players.length)) ;
+      let r = Math.floor(Math.random() * players.length);
       if (arr.indexOf(r) === -1) arr.push(r);
     }
-    
+
     //update roles and fake_id
     for (let i = 0; i < no_of_rats; i++) {
-      try {
-        await updateDoc(doc(db, `games/${roomData.keyCode}/players/` + uIds[arr[i]]), {
+      await updateDoc(
+        doc(db, `games/${roomData.keyCode}/players/${uIds[arr[i]]}`),
+        {
+          role: 'rat',
           fake_id: players[arr[(i + 1) % no_of_rats]].name,
-        });
-      }
-      catch (err){
-        console.log(err);
-      }
-      
+        },
+      );
     }
   };
 
@@ -122,20 +120,20 @@ export const LobbyPage = ({ navigation }) => {
   // };
 
   useEffect(() => {
-    // getPlayers();
     const q = query(collection(db, `games/${roomData.keyCode}/players`));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
+          console.log('ceva');
           uIds.push(change.doc.id);
           // console.log('cv');
           setPlayers((oldValues) => [...oldValues, change.doc.data()]);
           // console.log('bagat', change.doc.data());
         }
 
-        if (change.type === 'modified') {
-          // console.log('baga', change.doc.data());
-        }
+        // if (change.type === 'modified') {
+        //   // console.log('baga', change.doc.data());
+        // }
 
         if (change.type === 'removed') {
           setPlayers((oldValues) =>
@@ -146,17 +144,17 @@ export const LobbyPage = ({ navigation }) => {
         }
       });
     });
-/*
-    return async () => {
-      unsubscribe();
-      try {
-        await deleteDoc(
-          doc(db, `games/${roomData.keyCode}/players`, auth.currentUser.uid),
-        );
-      } catch (err) {
-        console.log('Err: ', err);
-      }
-    };*/
+
+    // return async () => {
+    //   unsubscribe();
+    //   try {
+    //     await deleteDoc(
+    //       doc(db, `games/${roomData.keyCode}/players`, auth.currentUser.uid),
+    //     );
+    //   } catch (err) {
+    //     console.log('Err: ', err);
+    //   }
+    // };
   }, []);
 
   return (
@@ -213,7 +211,6 @@ export const LobbyPage = ({ navigation }) => {
                 style={{ margin: 20 }}
                 onPress={() => {
                   if (auth.currentUser.uid == roomData.game_admin_uid) {
-                    console.log(players);
                     setRoles();
                     navigation.navigate('Chat');
                   }

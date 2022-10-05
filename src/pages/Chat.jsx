@@ -94,19 +94,6 @@ export const ChatPage = ({ navigation }) => {
             You are playing as {fakeId}
           </Text>
         </View>
-        <Button
-          onPress={async () => {
-            navigation.navigate('Lobby');
-            await deleteDoc(
-              doc(
-                db,
-                `games/${roomData.keyCode}/players/${auth.currentUser.uid}`,
-              ),
-            );
-          }}
-        >
-          Exit
-        </Button>
       </View>
 
       <GiftedChat
