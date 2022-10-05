@@ -31,13 +31,13 @@ import {
 import { useGlobal } from '../../state';
 import { Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { ModalName } from '../components/common';
-import { async } from '@firebase/util';
 
 let uIds = [];
 
 export const LobbyPage = ({ navigation }) => {
   const [players, setPlayers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [{ roomData }] = useGlobal();
   const userNameColors = [
     'lightblue',
@@ -67,22 +67,6 @@ export const LobbyPage = ({ navigation }) => {
           );
         },
       });
-    }
-  };
-
-  const getPlayers = async () => {
-    try {
-      const querySnapshot = await getDocs(
-        collection(db, `games/${roomData.keyCode}/players`),
-      );
-      let playersArray = [];
-      querySnapshot.forEach((doc) => {
-        playersArray.push(doc.data());
-        uIds.push(doc.id);
-      });
-      setPlayersDB(playersArray);
-    } catch (err) {
-      console.log('Error: ', err);
     }
   };
 
@@ -128,14 +112,28 @@ export const LobbyPage = ({ navigation }) => {
   // };
 
   useEffect(() => {
-    // getPlayers();
     const q = query(collection(db, `games/${roomData.keyCode}/players`));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
-          // console.log('cv');
           setPlayers((oldValues) => [...oldValues, change.doc.data()]);
-          // console.log('bagat', change.doc.data());
+          uIds.push(change.doc.id);
+
+          if (isFirstLoad === false) {
+            console.log('ceva');
+            toast.show({
+              id,
+              duration: 2500,
+              placement: 'top',
+              render: () => {
+                return (
+                  <Box bg="green.500" px="2" py="1" rounded="sm" mb={4}>
+                    {change.doc.data().name} joined the room
+                  </Box>
+                );
+              },
+            });
+          }
         }
 
         if (change.type === 'modified') {
@@ -148,9 +146,26 @@ export const LobbyPage = ({ navigation }) => {
               (player) => player.name !== change.doc.data().name,
             ),
           );
+
+          if (!toast.isActive(id)) {
+            toast.show({
+              id,
+              duration: 2500,
+              placement: 'top',
+              render: () => {
+                return (
+                  <Box flex={1} bg="red.500" px="2" py="1" rounded="sm" mb={4}>
+                    <Text>{change.doc.data().name} left the room</Text>
+                  </Box>
+                );
+              },
+            });
+          }
         }
       });
     });
+
+    setIsFirstLoad(false);
 
     return async () => {
       unsubscribe();
@@ -163,6 +178,10 @@ export const LobbyPage = ({ navigation }) => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    console.log(isFirstLoad);
+  }, [isFirstLoad]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
