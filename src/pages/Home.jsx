@@ -58,6 +58,7 @@ export const HomePage = ({ navigation }) => {
       await setDoc(doc(db, 'games', result), {
         game_admin_uid: currentUser.uid,
         is_game_ready: false,
+        round_number: 1,
       });
 
       dispatch({

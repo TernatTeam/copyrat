@@ -35,8 +35,10 @@ export const VotePage = ({ navigation }) => {
   -> keycode = retine cheia camerei de joc in "keycode.value"
   -> currentPlayer = odata initializat, retine informatiile despre playerul curent
   -> adminId = id ul playerului care a creat camera
+  -> roundNo = numarul rundei curente
 */
 
+  const [roundNo, setRoundNo] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState({});
   const [adminId, setAdminId] = useState("");
   const [{ roomData }] = useGlobal();
@@ -70,12 +72,11 @@ export const VotePage = ({ navigation }) => {
     }
   };
 
-  const getAdminIdAndRound = async () => {
-    // functie care retine id ul adminului si runda, se apeleaza o data la
+  const getAdminIdAndRound = async () => { // functie care retine id ul adminului si runda, se apeleaza o data la
     const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
     setAdminId(docSnap.data().game_admin_uid);
     setRoundNo(docSnap.data().round_number);
-  };
+  }
 
   const voteFor = (index) => {
     // retine ultima optiune de votare a playerului curent
@@ -94,12 +95,10 @@ export const VotePage = ({ navigation }) => {
       }
     );
 
-    await updateDoc(
-      doc(db, `games/${roomData.keyCode}/players/${auth.currentUser.uid}`),
-      {
-        vote: indexOfVoted,
-      }
-    );
+    await updateDoc(doc(db, `games/${roomData.keyCode}/players/${auth.currentUser.uid}`), {
+      vote: indexOfVoted
+    });
+    
     getPlayers();
   };
 
@@ -146,7 +145,7 @@ export const VotePage = ({ navigation }) => {
         score *= 1.5;
       }
 
-      newScores.push(score); // incarc in vectorul auxiliar fiecare scor nou
+      newScores.push(score);  // incarc in vectorul auxiliar fiecare scor nou
 
       //console.log(playersDB[i].name, score);
     }
@@ -178,8 +177,9 @@ export const VotePage = ({ navigation }) => {
 
   useEffect(() => {
     getPlayers(); // cand se incarca prima data pagina, luam din baza de date
-    getAdminIdAndRound(); // playerii si id urile lor, cat si pe al admin ului
-  }, []);
+
+    getAdminIdAndRound(); // playerii si id urile lor, cat si pe al admin ului si numarul rundei
+  }, []);         
 
   return (
     <Center
@@ -309,11 +309,11 @@ export const VotePage = ({ navigation }) => {
             }, 1000);
 
             setTimeout(() => {
-              window.alert("Calculating scores...");
+              window.alert('Calculating scores...');
             }, 4000);
-
+  
             setTimeout(() => {
-              navigation.navigate("Scoreboard"); // ne mutam pe pagina cu leaderboard ul
+              navigation.navigate('Scoreboard'); // ne mutam pe pagina cu leaderboard ul
             }, 6000);
           } else {
             window.alert("Wait! Only the game creator can stop the voting."); // altfel, este anuntat ca
