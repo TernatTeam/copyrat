@@ -31,7 +31,6 @@ import {
 import { useGlobal } from '../../state';
 import { Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { ModalName } from '../components/common';
-import { async } from '@firebase/util';
 
 let uIds = [];
 
@@ -97,12 +96,18 @@ export const LobbyPage = ({ navigation }) => {
       var r = Math.floor(Math.random() * (players.length)) ;
       if (arr.indexOf(r) === -1) arr.push(r);
     }
-    console.log(uIds);
+    
     //update roles and fake_id
     for (let i = 0; i < no_of_rats; i++) {
-      await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[arr[i]]), {
-        fake_id: players[arr[(i + 1) % no_of_rats]].name,
-      });
+      try {
+        await updateDoc(doc(db, `games/${roomData.keyCode}/players/` + uIds[arr[i]]), {
+          fake_id: players[arr[(i + 1) % no_of_rats]].name,
+        });
+      }
+      catch (err){
+        console.log(err);
+      }
+      
     }
   };
 
@@ -122,6 +127,7 @@ export const LobbyPage = ({ navigation }) => {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
+          uIds.push(change.doc.id);
           // console.log('cv');
           setPlayers((oldValues) => [...oldValues, change.doc.data()]);
           // console.log('bagat', change.doc.data());
