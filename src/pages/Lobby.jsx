@@ -102,7 +102,6 @@ export const LobbyPage = ({ navigation }) => {
       await updateDoc(
         doc(db, `games/${roomData.keyCode}/players/${uIds[arr[i]]}`),
         {
-          role: 'rat',
           fake_id: players[arr[(i + 1) % no_of_rats]].name,
         },
       );
@@ -124,7 +123,6 @@ export const LobbyPage = ({ navigation }) => {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
-          console.log('ceva');
           uIds.push(change.doc.id);
           // console.log('cv');
           setPlayers((oldValues) => [...oldValues, change.doc.data()]);

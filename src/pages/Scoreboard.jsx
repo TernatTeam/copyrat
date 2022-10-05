@@ -16,7 +16,7 @@ import {
 } from '../../config/firebase/firebase-key-config';
 import {useGlobal} from '../../state';
 
-export const VotePage = ({navigation}) => {
+export const ScorePage = ({navigation}) => {
 
 /* variabile carora li se modifica valoarea pe parcursul jocului:
   -> playersDB = array ul cu playeri, luat din baza de date
@@ -322,7 +322,7 @@ export const VotePage = ({navigation}) => {
           }, 3000);
 
           setTimeout(() => {
-            navigation.navigate('Scoreboard'); // ne intoarcem la chat
+            navigation.navigate('Chat'); // ne intoarcem la chat
           }, 5000);
         }}
       >Next Round</Button>
@@ -331,4 +331,4 @@ export const VotePage = ({navigation}) => {
   );
 };
 
-export default VotePage;
+export default ScorePage;
