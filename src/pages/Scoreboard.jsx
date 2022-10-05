@@ -124,10 +124,10 @@ export const ScorePage = ({navigation}) => {
   useEffect(() => {
     getSortedPlayers();
     getAdminId();
-  });
+  }, []);
 
   return (
-    <Box safeArea bg="primary1.500" h="100%" w="100%">
+    <Box bg="primary1.500" h="100%" w="100%">
       <Box px="5" w="full" justifyContent="center" alignItems="flex-start">
         <Box w="full" alignItems="center" justifyContent="center">
           <Heading size="2xl" fontWeight="500" color="black">
@@ -150,9 +150,7 @@ export const ScorePage = ({navigation}) => {
         marginBottom="4px"
         padding="1px"
         onPress={() => { // butonul care va incepe o noua runda
-          console.log('hehe');
           if (auth.currentUser.uid == adminId) { // acest lucru e posibil doar daca playerul care apasa are rolul de admin
-            console.log('ok');
             roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote    
             deleteChat(); // stergem chatul de tura trecuta
           }
