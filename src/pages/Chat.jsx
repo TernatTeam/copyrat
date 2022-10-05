@@ -17,8 +17,8 @@ import {
   orderBy,
 } from '../../config/firebase/firebase-key-config';
 
-import chatBubble from '../components/chatComponents/chatBubble';
-import inputToolBar from '../components/chatComponents/inputToolBar';
+import chatBubble from '../components/chat/chatBubble';
+import inputToolBar from '../components/chat/inputToolBar';
 
 import { useGlobal } from '../../state';
 
@@ -26,12 +26,12 @@ export const ChatPage = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [fakeId, setFakeId] = useState();
   const [userNameColor, setUserNameColor] = useState('');
-  const [{ keycode }] = useGlobal();
+  const [{ roomData }] = useGlobal();
 
   const getFakeIdAndUsernameColor = useCallback(async () => {
     const docRef = doc(
       db,
-      `games/${keycode.value}/players`,
+      `games/${roomData.keyCode}/players`,
       auth.currentUser.uid,
     );
     const docSnap = await getDoc(docRef);
@@ -51,7 +51,7 @@ export const ChatPage = ({ navigation }) => {
 
     const { _id, createdAt, text, user } = messages[0];
 
-    const docRef = doc(db, 'games', keycode.value, 'chat', _id);
+    const docRef = doc(db, 'games', roomData.keyCode, 'chat', _id);
     setDoc(docRef, {
       _id,
       createdAt,
@@ -62,7 +62,7 @@ export const ChatPage = ({ navigation }) => {
 
   useEffect(() => {
     const q = query(
-      collection(db, `games/${keycode.value}/chat`),
+      collection(db, `games/${roomData.keyCode}/chat`),
       orderBy('createdAt', 'desc'),
     );
 
@@ -77,7 +77,7 @@ export const ChatPage = ({ navigation }) => {
       );
     });
 
-    return () => unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -98,7 +98,10 @@ export const ChatPage = ({ navigation }) => {
           onPress={async () => {
             navigation.navigate('Lobby');
             await deleteDoc(
-              doc(db, `games/${keycode.value}/players/${auth.currentUser.uid}`),
+              doc(
+                db,
+                `games/${roomData.keyCode}/players/${auth.currentUser.uid}`,
+              ),
             );
           }}
         >

@@ -37,8 +37,9 @@ export const App = () => {
   }, []);
 
   const initialState = {
-    keycode: {
-      value: null,
+    roomData: {
+      keyCode: null,
+      game_admin_uid: null,
     },
   };
 

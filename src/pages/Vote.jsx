@@ -25,12 +25,12 @@ let uIDs = [];
 export const VotePage = ({ navigation }) => {
   const [playersDB, setPlayersDB] = useState([]);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
-  const [{ keycode }] = useGlobal();
+  const [{ roomData }] = useGlobal();
 
   const getPlayers = async () => {
     try {
       const querySnapshot = await getDocs(
-        collection(db, `games/${keycode.value}/players`),
+        collection(db, `games/${roomData.keyCode}/players`),
       );
       currentPlayerId = auth.currentUser.uid;
       let playersArray = [];
@@ -55,7 +55,7 @@ export const VotePage = ({ navigation }) => {
 
     try {
       const querySnapshot = await getDocs(
-        collection(db, `games/${keycode.value}/chat`),
+        collection(db, `games/${roomData.keyCode}/chat`),
       );
 
       querySnapshot.forEach((doc) => {
@@ -66,7 +66,7 @@ export const VotePage = ({ navigation }) => {
     }
 
     for (let i = 0; i < messageIDs.length; i++) {
-      deleteDoc(doc(db, `games/${keycode.value}/chat/${messageIDs[i]}`));
+      deleteDoc(doc(db, `games/${roomData.keyCode}/chat/${messageIDs[i]}`));
     }
   };
 
@@ -74,7 +74,7 @@ export const VotePage = ({ navigation }) => {
     const nrOfPlayers = playersDB.length;
 
     for (let i = 0; i < nrOfPlayers; i++) {
-      await updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
+      await updateDoc(doc(db, `games/${roomData.keyCode}/players/${uIDs[i]}`), {
         score: 0,
       });
     }
@@ -97,14 +97,14 @@ export const VotePage = ({ navigation }) => {
   const confirmVote = async () => {
     if (votedPlayerIndex >= 0) {
       await updateDoc(
-        doc(db, `games/${keycode.value}/players/${uIDs[votedPlayerIndex]}`),
+        doc(db, `games/${roomData.keyCode}/players/${uIDs[votedPlayerIndex]}`),
         {
           no_of_votes: increment(1),
         },
       );
 
       await updateDoc(
-        doc(db, `games/${keycode.value}/players/${currentPlayerId}`),
+        doc(db, `games/${roomData.keyCode}/players/${currentPlayerId}`),
         {
           vote: votedPlayerIndex,
         },
@@ -125,7 +125,7 @@ export const VotePage = ({ navigation }) => {
 
     try {
       const querySnapshot = await getDocs(
-        collection(db, `games/${keycode.value}/players`),
+        collection(db, `games/${roomData.keyCode}/players`),
       );
 
       querySnapshot.forEach((doc) => {
@@ -192,7 +192,7 @@ export const VotePage = ({ navigation }) => {
       }
       newScore = roundUp10((newScore * 76) / nrOfPlayers);
 
-      await updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
+      await updateDoc(doc(db, `games/${roomData.keyCode}/players/${uIDs[i]}`), {
         score: increment(newScore),
       });
     }
@@ -215,7 +215,7 @@ export const VotePage = ({ navigation }) => {
     }
     //update roles and fake_id
     for (let i = 0; i < no_of_rats; i++) {
-      updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[arr[i]]}`), {
+      updateDoc(doc(db, `games/${roomData.keyCode}/players/${uIDs[arr[i]]}`), {
         role: 'rat',
         fake_id: playersDB[arr[(i + 1) % no_of_rats]].name,
       });
@@ -225,7 +225,7 @@ export const VotePage = ({ navigation }) => {
   //reset roles, fake_id, vote, no_of_votes
   const reset = () => {
     for (let i = 0; i < playersDB.length; i++) {
-      updateDoc(doc(db, `games/${keycode.value}/players/${uIDs[i]}`), {
+      updateDoc(doc(db, `games/${roomData.keyCode}/players/${uIDs[i]}`), {
         role: 'cat',
         fake_id: playersDB[i].name,
         vote: 0,
@@ -339,7 +339,7 @@ export const VotePage = ({ navigation }) => {
         marginBottom="4px"
         padding="1px"
         onPress={async () => {
-          const docSnap = await getDoc(doc(db, 'games', keycode.value));
+          const docSnap = await getDoc(doc(db, 'games', roomData.keyCode));
 
           if (auth.currentUser.uid == docSnap.data().game_admin_uid) {
             reset();

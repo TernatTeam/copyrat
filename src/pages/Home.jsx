@@ -59,14 +59,10 @@ export const HomePage = ({ navigation }) => {
         game_admin_uid: currentUser.uid,
       });
 
-      // set data for admin
-      await setDoc(doc(db, `games/${result}/players`, currentUser.uid), {
-        muie: 'dragos',
-      });
-
       dispatch({
-        type: 'KEYCODE',
-        value: result,
+        type: 'ROOM_DATA',
+        keyCode: result,
+        game_admin_uid: currentUser.uid,
       });
 
       setIsLoadingCreateRoom(false);
@@ -77,41 +73,27 @@ export const HomePage = ({ navigation }) => {
     }
   };
 
-  const joinGame = async (keyCode) => {
-    setIsLoadingJoinRoom(true);
-    setIsDisabled(true);
+  const joinGame = async (keyCode, gameAdminUid) => {
+    setIsModalOpen(false);
 
-    const currentUser = auth.currentUser;
+    dispatch({
+      type: 'ROOM_DATA',
+      keyCode: keyCode,
+      game_admin_uid: gameAdminUid,
+    });
 
-    try {
-      await setDoc(doc(db, `games/${keyCode}/players/${currentUser.uid}`), {
-        muie: 'dragos',
-      });
-
-      setIsModalOpen(false);
-
-      dispatch({
-        type: 'KEYCODE',
-        value: keyCode,
-      });
-
-      setIsLoadingJoinRoom(false);
-      navigation.navigate('Lobby');
-      setIsDisabled(false);
-    } catch (err) {
-      console.log('Err: ', err);
-    }
+    navigation.navigate('Lobby');
   };
 
   return (
     <Box bg="primary1.500" h="100%" w="100%" position="relative" px="12">
       <ModalKeyCode
         show={isModalOpen}
-        onClose={(keyCode) => {
+        onClose={(keyCode, gameAdminUid) => {
           setIsModalOpen(false);
 
-          if (keyCode) {
-            joinGame(keyCode);
+          if (keyCode && gameAdminUid) {
+            joinGame(keyCode, gameAdminUid);
           }
         }}
       />

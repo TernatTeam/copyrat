@@ -1,11 +1,12 @@
 const AppReducer = (state, action) => {
   switch (action.type) {
-    case 'KEYCODE':
+    case 'ROOM_DATA':
       return {
         ...state,
-        keycode: {
-          ...state.test,
-          value: action.value,
+        roomData: {
+          ...state.roomData,
+          keyCode: action.keyCode,
+          game_admin_uid: action.game_admin_uid,
         },
       };
 
