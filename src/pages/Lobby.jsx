@@ -87,33 +87,22 @@ export const LobbyPage = ({ navigation }) => {
   };
 
   //Assign roles
-  const setRoles = async () => {
-    //set index
-    for (let i = 0; i < playersDB.length; i++) {
-      await updateDoc(doc(db, `games/${roomData.keyCode}/players/` + uIds[i]), {
-        index: i,
-      });
-    }
-
-    let no_of_rats = Math.floor(playersDB.length / 2);
+  const setRoles = async() => {
+    let no_of_rats = Math.floor(players.length / 2);
 
     //arr of 3 rand index
     var arr = [];
-
+    
     while (arr.length < no_of_rats) {
-      var r = Math.floor(Math.random() * playersDB.length);
+      var r = Math.floor(Math.random() * (players.length)) ;
       if (arr.indexOf(r) === -1) arr.push(r);
     }
-    console.log(arr);
+    console.log(uIds);
     //update roles and fake_id
     for (let i = 0; i < no_of_rats; i++) {
-      await updateDoc(
-        doc(db, `games/${roomData.keyCode}/players/` + uIds[arr[i]]),
-        {
-          role: 'rat',
-          fake_id: playersDB[arr[(i + 1) % no_of_rats]].name,
-        },
-      );
+      await updateDoc(doc(db, `games/${keycode.value}/players/` + uIds[arr[i]]), {
+        fake_id: players[arr[(i + 1) % no_of_rats]].name,
+      });
     }
   };
 
@@ -151,7 +140,7 @@ export const LobbyPage = ({ navigation }) => {
         }
       });
     });
-
+/*
     return async () => {
       unsubscribe();
       try {
@@ -161,7 +150,7 @@ export const LobbyPage = ({ navigation }) => {
       } catch (err) {
         console.log('Err: ', err);
       }
-    };
+    };*/
   }, []);
 
   return (
@@ -218,8 +207,9 @@ export const LobbyPage = ({ navigation }) => {
                 style={{ margin: 20 }}
                 onPress={() => {
                   if (auth.currentUser.uid == roomData.game_admin_uid) {
+                    console.log(players);
                     setRoles();
-                    // navigation.navigate('Chat');
+                    navigation.navigate('Chat');
                   }
                 }}
               >
