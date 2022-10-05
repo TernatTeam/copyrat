@@ -46,11 +46,9 @@ export const ModalName = ({
       await setDoc(doc(db, `games/${keyCode}/players/${currenUserUID}`), {
         name: name,
         fake_id: name,
-        //role: 'cat',
         no_of_votes: 0,
         score: 0,
         vote: -1,
-        //index: 0,
         userNameColor: userNameColors[Math.floor(Math.random() * 7)],
       });
 
