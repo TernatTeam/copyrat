@@ -70,10 +70,11 @@ export const VotePage = ({ navigation }) => {
     }
   };
 
-  const getAdminId = async () => {
-    // functie care retine id ul adminului, se apeleaza o data la
+  const getAdminIdAndRound = async () => {
+    // functie care retine id ul adminului si runda, se apeleaza o data la
     const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
     setAdminId(docSnap.data().game_admin_uid);
+    setRoundNo(docSnap.data().round_number);
   };
 
   const voteFor = (index) => {
@@ -141,6 +142,10 @@ export const VotePage = ({ navigation }) => {
       score = (score * 76) / nrOfPlayers;
       score = Math.ceil(score / 10) * 10;
 
+      if (roundNo == 3) {
+        score *= 1.5;
+      }
+
       newScores.push(score); // incarc in vectorul auxiliar fiecare scor nou
 
       //console.log(playersDB[i].name, score);
@@ -173,7 +178,7 @@ export const VotePage = ({ navigation }) => {
 
   useEffect(() => {
     getPlayers(); // cand se incarca prima data pagina, luam din baza de date
-    getAdminId(); // playerii si id urile lor, cat si pe al admin ului
+    getAdminIdAndRound(); // playerii si id urile lor, cat si pe al admin ului
   }, []);
 
   return (
@@ -305,11 +310,11 @@ export const VotePage = ({ navigation }) => {
 
             setTimeout(() => {
               window.alert("Calculating scores...");
-            }, 3000);
+            }, 4000);
 
             setTimeout(() => {
               navigation.navigate("Scoreboard"); // ne mutam pe pagina cu leaderboard ul
-            }, 5000);
+            }, 6000);
           } else {
             window.alert("Wait! Only the game creator can stop the voting."); // altfel, este anuntat ca
           } // nu are acest drept
