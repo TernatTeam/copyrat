@@ -27,8 +27,11 @@ export const ScorePage = ({navigation}) => {
 /* variabile carora nu li se modifica valoarea pe parcursul jocului:
   -> roomData = variabila globala care retine informatii despre jocul curent
   -> adminId = id ul playerului care a creat camera
+  -> currentPlayer = obiectul cu informatiile despre un player (divera pe fiecare device)
+  -> roundNo = numarul rundei curente
 */
 
+  const [roundNo, setRoundNo] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState({});
   const [adminId, setAdminId] = useState("");
   const [{ roomData }] = useGlobal();
@@ -116,14 +119,21 @@ export const ScorePage = ({navigation}) => {
     }
   }
 
-  const getAdminId = async () => { // functie care retine id ul adminului, se apeleaza o data la
+  const getAdminIdAndRound = async () => { // functie care retine id ul adminului si runda, se apeleaza o data la
     const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
     setAdminId(docSnap.data().game_admin_uid);
+    setRoundNo(docSnap.data().round_number);
+  }
+
+  const countNextRound = async () => {
+    await updateDoc(doc(db, `games/${roomData.keyCode}`), {
+      round_number: increment(1),
+    });
   }
 
   useEffect(() => {
     getSortedPlayers();
-    getAdminId();
+    getAdminIdAndRound();
   }, []);
 
   return (
@@ -153,15 +163,24 @@ export const ScorePage = ({navigation}) => {
           if (auth.currentUser.uid == adminId) { // acest lucru e posibil doar daca playerul care apasa are rolul de admin
             roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote    
             deleteChat(); // stergem chatul de tura trecuta
+            countNextRound(); // actualizez numarul rundei
           }
 
-          setTimeout(() => {
-            window.alert('Preparing new roles...');
-          }, 1000);
+          if (roundNo < 3) {
+            setTimeout(() => {
+              window.alert('Preparing new roles...');
+            }, 1000);
 
-          setTimeout(() => {
-            navigation.navigate('Chat'); // ne intoarcem la chat
-          }, 3000);
+            setTimeout(() => {
+              navigation.navigate('Chat'); // ne intoarcem la chat
+            }, 3000);
+          } else {
+            window.alert('Well done! See you again soon!');
+      
+            setTimeout(() => {
+              navigation.navigate('Home'); // ne intoarcem la home
+            }, 3000);
+          }
         }}
       >Next Round</Button>
     </Box>
