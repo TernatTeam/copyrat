@@ -94,7 +94,7 @@ export const HomePage = ({ navigation }) => {
   };
 
   return (
-    <Box bg="primary1.500" h="100%" w="100%" position="relative" px="12">
+    <Box safeArea bg="primary1.500" h="100%" w="100%">
       <ModalKeyCode
         show={isModalOpen}
         onClose={(keyCode, gameAdminUid) => {
@@ -106,83 +106,84 @@ export const HomePage = ({ navigation }) => {
         }}
       />
 
-      <IconButton
-        position="absolute"
-        top="4"
-        left="7"
-        icon={<Icon as={<Ionicons name="settings-outline" />} />}
-        borderRadius="full"
-        _icon={{
-          color: 'white',
-          size: '8',
-        }}
-        _pressed={{
-          bg: 'primary3.600',
-        }}
-        onPress={logOut}
-      />
-
-      <VStack justifyContent="flex-start" alignItems="center" my="16">
-        <Image
-          alt="Copy Rat Logo"
-          source={CopyratLogo}
-          style={{ width: 150, height: 150 }}
+      <Box px="6" w="full" justifyContent="center" alignItems="flex-start">
+        <IconButton
+          icon={<Icon as={<Ionicons name="settings-outline" />} />}
+          borderRadius="full"
+          _icon={{
+            color: 'white',
+            size: '8',
+          }}
+          _pressed={{
+            bg: 'primary3.600',
+          }}
+          onPress={logOut}
         />
+      </Box>
 
-        <Text fontSize="5xl" fontFamily="RadioNewsman" color="black">
-          copyrat
-        </Text>
-      </VStack>
+      <Box px="12">
+        <VStack justifyContent="flex-start" alignItems="center" my="16">
+          <Image
+            alt="Copy Rat Logo"
+            source={CopyratLogo}
+            style={{ width: 150, height: 150 }}
+          />
 
-      <HStack
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="flex-end"
-        w="full"
-        h="45%"
-      >
-        <Box w="full" alignItems="flex-start" mb="20">
-          <Button
-            w="50%"
-            title="Create Room"
-            rounded="lg"
-            medium
-            bg="primary3.500"
-            _pressed={{ bg: 'primary3.600' }}
-            onPress={() => {
-              generateRoomKey(4);
-            }}
-            disabled={isDisabled}
-            isLoading={isLoadingCreateRoom}
-            _spinner={{ paddingY: '0.45' }}
-          >
-            <Text fontWeight="semibold" color="black">
-              Create room
-            </Text>
-          </Button>
-        </Box>
+          <Text fontSize="5xl" fontFamily="RadioNewsman" color="black">
+            copyrat
+          </Text>
+        </VStack>
 
-        <Box w="full" alignItems="flex-end">
-          <Button
-            w="50%"
-            title="Join Room"
-            rounded="lg"
-            medium
-            bg="primary3.500"
-            _pressed={{ bg: 'primary3.600' }}
-            onPress={() => {
-              setIsModalOpen(true);
-            }}
-            disabled={isDisabled}
-            isLoading={isLoadingJoinRoom}
-            _spinner={{ paddingY: '0.45' }}
-          >
-            <Text fontWeight="semibold" color="black">
-              Join room
-            </Text>
-          </Button>
-        </Box>
-      </HStack>
+        <HStack
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="flex-end"
+          w="full"
+          h="45%"
+        >
+          <Box w="full" alignItems="flex-start" mb="20">
+            <Button
+              w="50%"
+              title="Create Room"
+              rounded="lg"
+              medium
+              bg="primary3.500"
+              _pressed={{ bg: 'primary3.600' }}
+              onPress={() => {
+                generateRoomKey(4);
+              }}
+              disabled={isDisabled}
+              isLoading={isLoadingCreateRoom}
+              _spinner={{ paddingY: '0.45' }}
+            >
+              <Text fontWeight="semibold" color="black">
+                Create room
+              </Text>
+            </Button>
+          </Box>
+
+          <Box w="full" alignItems="flex-end">
+            <Button
+              w="50%"
+              title="Join Room"
+              rounded="lg"
+              medium
+              bg="primary3.500"
+              _pressed={{ bg: 'primary3.600' }}
+              onPress={() => {
+                setIsModalOpen(true);
+              }}
+              disabled={isDisabled}
+              isLoading={isLoadingJoinRoom}
+              _spinner={{ paddingY: '0.45' }}
+            >
+              <Text fontWeight="semibold" color="black">
+                Join room
+              </Text>
+            </Button>
+          </Box>
+        </HStack>
+      </Box>
     </Box>
   );
 };

@@ -75,13 +75,6 @@ export const LobbyPage = ({ navigation }) => {
   const setRoles = async () => {
     setIsLoadingButton(true);
 
-    //set index
-    for (let i = 0; i < players.length; i++) {
-      await updateDoc(doc(db, `games/${roomData.keyCode}/players/` + uIds[i]), {
-        index: i,
-      });
-    }
-
     let no_of_rats = Math.floor(players.length / 2);
 
     //arr of 3 rand index
@@ -285,9 +278,9 @@ export const LobbyPage = ({ navigation }) => {
                     w="full"
                   >
                     <Text fontWeight="bold">{player.name}</Text>
-                    {auth.currentUser.uid == player.uid && (
+                    {auth.currentUser.uid == roomData.game_admin_uid ? (
                       <Text fontWeight="extrabold">Room Admin</Text>
-                    )}
+                    ) : null}
                   </Flex>
                 );
               })}
