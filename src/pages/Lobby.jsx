@@ -43,9 +43,9 @@ export const LobbyPage = ({ navigation }) => {
   const [{ roomData }] = useGlobal();
   const userNameColors = [
     'lightblue',
-    'black',
     'antiquewhite',
-    'aqua,purple',
+    'aqua',
+    'purple',
     'darkmagenta',
     'gainsboro',
   ];
