@@ -1,5 +1,5 @@
 import {Text} from 'react-native';
-import {Box, Heading} from 'native-base';
+import {Box, Heading, Button} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {
   doc,
@@ -20,10 +20,17 @@ export const ScorePage = ({navigation}) => {
 
 /* variabile carora li se modifica valoarea pe parcursul jocului:
   -> playersDB = array ul cu playeri, luat din baza de date
+*/
+  const [playersDB, setPlayersDB] = useState([]);
+  const [playerIDs, setPlayerIDs] = useState([]);
+  
+/* variabile carora nu li se modifica valoarea pe parcursul jocului:
   -> roomData = variabila globala care retine informatii despre jocul curent
+  -> adminId = id ul playerului care a creat camera
 */
 
-  const [playersDB, setPlayersDB] = useState([]);
+  const [currentPlayer, setCurrentPlayer] = useState({});
+  const [adminId, setAdminId] = useState("");
   const [{ roomData }] = useGlobal();
 
   const getSortedPlayers = async () => { // functie care ia din baza de date arrayul cu playeri si ii sorteaza dupa scor
@@ -32,9 +39,16 @@ export const ScorePage = ({navigation}) => {
       const querySnapshot = await getDocs(collection(db, `games/${roomData.keyCode}/players`));
       // ii pun in arrayul playersArray pentru a updata valoarea arrayului playersDB
       let playersArray = [];
+      // la fel si pentru id ul acestora
+      let idArray = [];
 
       querySnapshot.forEach((doc) => { // pentru fiecare player luat din baza de data
-        playersArray.push(doc.data()); // il retin in array ul auxiliar       
+        playersArray.push(doc.data()); // il retin in array ul auxiliar
+        idArray.push(doc.id); // retinem si id urile playerilor in array ul auxiliar
+     
+        if (doc.id == auth.currentUser.uid) { // daca am gasit playeryl cu id ul curent, il retinem in
+         setCurrentPlayer(doc.data());    // variabila currentPlayer pentru a avea acces usor la date
+        }                                 // cand cream butoanele de votare  
       });
 
       playersArray.sort((a, b) => {
@@ -42,6 +56,7 @@ export const ScorePage = ({navigation}) => {
       });
 
       setPlayersDB(playersArray); // modific arrayul in care tin minte playerii
+      setPlayerIDs(idArray); // modific arrayul in care tin minte id urile
     } catch(err) {
       console.log(`Error: ${err}`);
     }
@@ -101,8 +116,14 @@ export const ScorePage = ({navigation}) => {
     }
   }
 
+  const getAdminId = async () => { // functie care retine id ul adminului, se apeleaza o data la
+    const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
+    setAdminId(docSnap.data().game_admin_uid);
+  }
+
   useEffect(() => {
     getSortedPlayers();
+    getAdminId();
   });
 
   return (
@@ -117,7 +138,7 @@ export const ScorePage = ({navigation}) => {
         {
           playersDB.map((player, index) => {
             return (
-              <Text>{index + 1}. {player.name} .. {player.score}</Text>
+              <Text key={index}>{index + 1}. {player.name} .. {player.score}</Text>
             );
           })
         }
@@ -129,22 +150,20 @@ export const ScorePage = ({navigation}) => {
         marginBottom="4px"
         padding="1px"
         onPress={() => { // butonul care va incepe o noua runda
+          console.log('hehe');
           if (auth.currentUser.uid == adminId) { // acest lucru e posibil doar daca playerul care apasa are rolul de admin
+            console.log('ok');
             roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote    
             deleteChat(); // stergem chatul de tura trecuta
           }
 
           setTimeout(() => {
-            window.alert("Storing this round's scores...");
+            window.alert('Preparing new roles...');
           }, 1000);
 
           setTimeout(() => {
-            window.alert('Preparing new roles...');
-          }, 3000);
-
-          setTimeout(() => {
             navigation.navigate('Chat'); // ne intoarcem la chat
-          }, 5000);
+          }, 3000);
         }}
       >Next Round</Button>
     </Box>

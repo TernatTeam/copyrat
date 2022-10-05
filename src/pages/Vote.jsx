@@ -145,32 +145,6 @@ export const VotePage = ({navigation}) => {
     window.alert(rats);
   }
 
-  const showScore = async () => { // functia care afiseaza scorurile in ordine descrescatoare
-    let players = []; // vom da un update array ului de playeri pentru a lua scorurile
-
-    try {
-      const querySnapshot = await getDocs(collection(db, `games/${roomData.keyCode}/players`));
-
-      querySnapshot.forEach((doc) => {
-        players.push(doc.data());
-      });
-    } catch (err) {
-      console.log('Error: ', err);
-    }
-
-    players.sort((a, b) => {
-      return a.score < b.score;
-    });
-
-    let results = 'Scoreboard:';
-
-    players.map((player) => {
-      results += '\n' + player.name + ': ' + player.score;
-    });
-
-    window.alert(results);
-  };
-
   useEffect(() => {
     getPlayers(); // cand se incarca prima data pagina, luam din baza de date
     getAdminId(); // playerii si id urile lor, cat si pe al admin ului
