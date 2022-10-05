@@ -84,19 +84,18 @@ export const LobbyPage = ({ navigation }) => {
     let no_of_rats = Math.floor(players.length / 2);
 
     //arr of 3 rand index
-    var arr = [];
+    let arr = [];
 
     while (arr.length < no_of_rats) {
-      var r = Math.floor(Math.random() * players.length);
+      let r = Math.floor(Math.random() * players.length);
       if (arr.indexOf(r) === -1) arr.push(r);
     }
 
     //update roles and fake_id
     for (let i = 0; i < no_of_rats; i++) {
       await updateDoc(
-        doc(db, `games/${roomData.keyCode}/players/` + uIds[arr[i]]),
+        doc(db, `games/${roomData.keyCode}/players/${uIds[arr[i]]}`),
         {
-          role: 'rat',
           fake_id: players[arr[(i + 1) % no_of_rats]].name,
         },
       );
