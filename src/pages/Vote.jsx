@@ -7,6 +7,7 @@ import {
   updateDoc,
   deleteDoc,
   increment,
+  serverTimestamp,
 } from "firebase/firestore";
 import {
   db,
@@ -277,6 +278,9 @@ export const VotePage = ({ navigation }) => {
               confirmVote(); // pe "Done" (variabila alreadyVoted are valoarea false)
               setAlreadyVoted(true);
               window.alert(`Locking in ... ${playersDB[indexOfVoted].fake_id}`);
+              setTimeout(() => {
+                  window.alert("All set! Muie :D");
+              }, 3000);
             } else {
               window.alert("You already locked in your vote!");
             }
@@ -300,9 +304,10 @@ export const VotePage = ({ navigation }) => {
           // butonul care calculeaza si afiseaza scorurile, si da update in baza de date
           if (auth.currentUser.uid == adminId) {
             // acest lucru e posibil doar daca playerul care apasa are rolul de admin
-            getPlayers(); // actualizam arrayul de playeri
-
-            calculateScore(); // calculam scorurile
+            setTimeout(() => {
+              calculateScore(); // calculam scorurile  
+            }, 2000);
+            
 
             setTimeout(() => {
               showRats(); // apoi afisam ratii de tura aceasta
