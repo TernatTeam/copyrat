@@ -12,8 +12,11 @@ import {
   db,
   collection,
   auth,
-  getDocs
-} from '../../config/firebase/firebase-key-config';
+  getDocs,
+  addDoc,
+  query,
+  onSnapshot,
+} from "../../config/firebase/firebase-key-config";
 import {useGlobal} from '../../state';
 
 export const ScorePage = ({navigation}) => {
@@ -35,6 +38,23 @@ export const ScorePage = ({navigation}) => {
   const [currentPlayer, setCurrentPlayer] = useState({});
   const [adminId, setAdminId] = useState("");
   const [{ roomData }] = useGlobal();
+
+  useEffect(() => {
+    const q = query(collection(db, `games`, roomData.keyCode, "admin"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+          navigation.reset({
+            routes: [{ name: "Chat" }],
+          });
+        }
+      });
+    });
+
+    return async () => {
+      unsubscribe();
+    };
+  }, []);
 
   const getSortedPlayers = async () => { // functie care ia din baza de date arrayul cu playeri si ii sorteaza dupa scor
     try {
@@ -171,8 +191,14 @@ export const ScorePage = ({navigation}) => {
               window.alert('Preparing new roles...');
             }, 1000);
 
-            setTimeout(() => {
+            setTimeout(async() => {
               navigation.navigate('Chat'); // ne intoarcem la chat
+              await updateDoc(
+                doc(db, "games", roomData.keyCode, "admin", "gameState"),
+                {
+                  navToScore: true,
+                }
+              );
             }, 3000);
           } else {
             window.alert('Well done! See you again soon!');
