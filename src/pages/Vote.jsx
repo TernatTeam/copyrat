@@ -14,10 +14,14 @@ import {
   collection,
   auth,
   getDocs,
+  addDoc,
+  query,
+  onSnapshot,
 } from "../../config/firebase/firebase-key-config";
 import { useGlobal } from "../../state";
 import { Ionicons } from "@expo/vector-icons";
 import { Icon } from "native-base";
+import { async } from "@firebase/util";
 
 export const VotePage = ({ navigation }) => {
   /* variabile carora li se modifica valoarea pe parcursul jocului:
@@ -26,7 +30,6 @@ export const VotePage = ({ navigation }) => {
   -> indexOfVoted = indexul playerului cu care doresti sa votezi, pana confirmi votul
   -> alreadyVoted = variabila de stare, care indica daca playerul si a confirmat sau nu votul
 */
-
   const [playersDB, setPlayersDB] = useState([]);
   const [playerIDs, setPlayerIDs] = useState([]);
   const [indexOfVoted, setIndexOfVoted] = useState(null);
@@ -43,6 +46,30 @@ export const VotePage = ({ navigation }) => {
   const [currentPlayer, setCurrentPlayer] = useState({});
   const [adminId, setAdminId] = useState("");
   const [{ roomData }] = useGlobal();
+
+  useEffect(() => {
+    updateDoc(doc(db, "games", roomData.keyCode, "admin", "gameState"), {
+      navToScore: false,
+    });
+    console.log("LOBBY");
+  }, []);
+
+  useEffect(() => {
+    const q = query(collection(db, `games`, roomData.keyCode, "admin"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+          navigation.reset({
+            routes: [{ name: "Scoreboard" }],
+          });
+        }
+      });
+    });
+
+    return async () => {
+      unsubscribe();
+    };
+  }, []);
 
   const getPlayers = async () => {
     try {
@@ -73,11 +100,12 @@ export const VotePage = ({ navigation }) => {
     }
   };
 
-  const getAdminIdAndRound = async () => { // functie care retine id ul adminului si runda, se apeleaza o data la
+  const getAdminIdAndRound = async () => {
+    // functie care retine id ul adminului si runda, se apeleaza o data la
     const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
     setAdminId(docSnap.data().game_admin_uid);
     setRoundNo(docSnap.data().round_number);
-  }
+  };
 
   const voteFor = (index) => {
     // retine ultima optiune de votare a playerului curent
@@ -96,10 +124,13 @@ export const VotePage = ({ navigation }) => {
       }
     );
 
-    await updateDoc(doc(db, `games/${roomData.keyCode}/players/${auth.currentUser.uid}`), {
-      vote: indexOfVoted
-    });
-    
+    await updateDoc(
+      doc(db, `games/${roomData.keyCode}/players/${auth.currentUser.uid}`),
+      {
+        vote: indexOfVoted,
+      }
+    );
+
     getPlayers();
   };
 
@@ -146,7 +177,7 @@ export const VotePage = ({ navigation }) => {
         score *= 1.5;
       }
 
-      newScores.push(score);  // incarc in vectorul auxiliar fiecare scor nou
+      newScores.push(score); // incarc in vectorul auxiliar fiecare scor nou
 
       //console.log(playersDB[i].name, score);
     }
@@ -180,7 +211,7 @@ export const VotePage = ({ navigation }) => {
     getPlayers(); // cand se incarca prima data pagina, luam din baza de date
 
     getAdminIdAndRound(); // playerii si id urile lor, cat si pe al admin ului si numarul rundei
-  }, []);         
+  }, []);
 
   return (
     <Center
@@ -299,34 +330,39 @@ export const VotePage = ({ navigation }) => {
         _pressed={{ bg: "red.500" }}
         onPress={() => {
           // butonul care calculeaza si afiseaza scorurile, si da update in baza de date
-          
-          if (auth.currentUser.uid == adminId) { 
+
+          if (auth.currentUser.uid == adminId) {
             getPlayers();
             window.alert("Checking votes...");
             setTimeout(() => {
               let all_voted = true;
-            for(let i = 0; i < playersDB.length; i++) {
-              if(playersDB[i].vote < 0) 
-                all_voted = false;
-            }
-            if (!all_voted) { //daca nu si-a facut update
-              window.alert("Votes not locked in! Please try again!");
-            }
-            else {
-              // acest lucru e posibil doar daca playerul care apasa are rolul de admin
-              calculateScore(); // calculam scorurile  
-              setTimeout(() => {
-                showRats(); // apoi afisam ratii de tura aceasta
-              }, 1000);
+              for (let i = 0; i < playersDB.length; i++) {
+                if (playersDB[i].vote < 0) all_voted = false;
+              }
+              if (!all_voted) {
+                //daca nu si-a facut update
+                window.alert("Votes not locked in! Please try again!");
+              } else {
+                // acest lucru e posibil doar daca playerul care apasa are rolul de admin
+                calculateScore(); // calculam scorurile
+                setTimeout(() => {
+                  showRats(); // apoi afisam ratii de tura aceasta
+                }, 1000);
 
-              setTimeout(() => {
-                window.alert('Calculating scores...');
-              }, 4000);
-    
-              setTimeout(() => {
-                navigation.navigate('Scoreboard'); // ne mutam pe pagina cu leaderboard ul
-              }, 6000);
-            }
+                setTimeout(() => {
+                  window.alert("Calculating scores...");
+                }, 4000);
+
+                setTimeout(async () => {
+                  // navigation.navigate("Scoreboard"); // ne mutam pe pagina cu leaderboard ul
+                  await updateDoc(
+                    doc(db, "games", roomData.keyCode, "admin", "gameState"),
+                    {
+                      navToScore: true,
+                    }
+                  );
+                }, 6000);
+              }
             }, 3000);
           } else {
             window.alert("Wait! Only the game creator can stop the voting."); // altfel, este anuntat ca

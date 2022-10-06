@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import * as yup from 'yup';
+import * as yup from "yup";
 
-import { Box, Button, Icon, Input, Modal, Text, useToast } from 'native-base';
+import { Box, Button, Icon, Input, Modal, Text, useToast } from "native-base";
 
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
-import { db, doc, getDoc } from '../../../config/firebase/firebase-key-config';
+import { db, doc, getDoc } from "../../../config/firebase/firebase-key-config";
 // import { TouchableWithoutFeedback } from 'react-native';
 
 const joinGameSchema = yup.object({
-  keyCode: yup.string().required('Key room is required'),
+  keyCode: yup.string().required("Key room is required"),
 });
 
 export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
-  const [keyCode, setKeyCode] = useState('');
+  const [keyCode, setKeyCode] = useState("");
   const [isInvalidKeyCode, setIsInvalidKeyCode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
-  const id = 'error-toasts';
+  const id = "error-toasts";
 
   const resetFieldsErrors = () => {
     setIsInvalidKeyCode(true);
@@ -38,16 +38,19 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
         if (isValid) {
           setIsLoading(true);
 
-          const docSnap = await getDoc(doc(db, 'games', keyCode));
+          const docSnap = await getDoc(
+            doc(db, "games", keyCode, "admin", "gameState")
+          );
+          const docSnap2 = await getDoc(doc(db, "games", keyCode));
           if (docSnap.exists()) {
             if (docSnap.data().is_game_ready === false) {
-              onClose(keyCode, docSnap.data().game_admin_uid);
+              onClose(keyCode, docSnap2.data().game_admin_uid);
             } else {
               if (!toast.isActive(id)) {
                 toast.show({
                   id,
                   duration: 2500,
-                  placement: 'top',
+                  placement: "top",
                   render: () => {
                     return (
                       <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
@@ -63,7 +66,7 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
               toast.show({
                 id,
                 duration: 2500,
-                placement: 'top',
+                placement: "top",
                 render: () => {
                   return (
                     <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
@@ -86,7 +89,7 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
         toast.show({
           id,
           duration: 2500,
-          placement: 'top',
+          placement: "top",
           render: () => {
             return (
               <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
@@ -97,7 +100,7 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
         });
       }
 
-      if (err.path === 'keyCode') {
+      if (err.path === "keyCode") {
         setIsInvalidKeyCode(true);
       }
     });
@@ -119,7 +122,7 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
           alignItems="center"
           justifyContent="center"
         >
-          <Text color="white" style={{ fontSize: 18, fontWeight: 'bold' }}>
+          <Text color="white" style={{ fontSize: 18, fontWeight: "bold" }}>
             Room key
           </Text>
         </Modal.Header>
@@ -131,16 +134,16 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
         >
           <Input
             borderBottomWidth={2}
-            borderBottomColor={`${isInvalidKeyCode ? 'red.500' : 'black'}`}
+            borderBottomColor={`${isInvalidKeyCode ? "red.500" : "black"}`}
             _focus={
               isInvalidKeyCode
                 ? {
-                    borderBottomColor: 'red.500',
-                    placeholderTextColor: 'red.500',
+                    borderBottomColor: "red.500",
+                    placeholderTextColor: "red.500",
                   }
                 : {
-                    borderBottomColor: 'white',
-                    placeholderTextColor: 'white',
+                    borderBottomColor: "white",
+                    placeholderTextColor: "white",
                   }
             }
             InputRightElement={
@@ -148,13 +151,13 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
                 as={<Ionicons name="key-outline" />}
                 size={6}
                 mr="2"
-                color={isInvalidKeyCode ? `red.500` : 'white'}
+                color={isInvalidKeyCode ? `red.500` : "white"}
               />
             }
             variant="underlined"
             placeholder="Room Key"
-            placeholderTextColor={isInvalidKeyCode ? `red.500` : 'black'}
-            color={isInvalidKeyCode ? 'red.500' : 'white'}
+            placeholderTextColor={isInvalidKeyCode ? `red.500` : "black"}
+            color={isInvalidKeyCode ? "red.500" : "white"}
             value={keyCode}
             onChangeText={(value) => {
               setIsInvalidKeyCode(false);
@@ -167,12 +170,12 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
           <Button
             w="full"
             bg="primary3.500"
-            _pressed={{ bg: 'primary3.600' }}
+            _pressed={{ bg: "primary3.600" }}
             onPress={onSubmit}
             disabled={isLoading}
             isLoading={isLoading}
             //the size didnt match so i had to do this..
-            _spinner={{ paddingY: '0.48' }}
+            _spinner={{ paddingY: "0.48" }}
           >
             <Text fontWeight="semibold" color="black">
               Done
