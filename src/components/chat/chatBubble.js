@@ -14,8 +14,8 @@ const chatBubble = (props) => {
         backgroundColor="#a4a4a4"
         borderRadius="xl"
         borderTopRightRadius="0"
-        paddingRight="18"
-        marginTop="2"
+        pr="18"
+        mt="2"
       >
         <Bubble
           {...props}
@@ -43,14 +43,17 @@ const chatBubble = (props) => {
       backgroundColor="#a4a4a4"
       borderRadius="xl"
       borderTopLeftRadius="0"
-      paddingLeft="18"
-      marginTop="2"
+      pl="18"
+      mt="2"
     >
       <Text
         mt="1"
+        mr="4"
         fontWeight="bold"
         fontSize="md"
         color={props.currentMessage.user.userNameColor}
+        isTruncated={true}
+        maxWidth="100%"
       >
         {props.currentMessage.user.fakeId}
       </Text>

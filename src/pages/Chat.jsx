@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
-import { Button, Text, View } from 'native-base';
+import { Box, Button, Center, Divider, HStack, Text } from 'native-base';
 
 import { GiftedChat } from 'react-native-gifted-chat';
 
@@ -11,7 +11,6 @@ import {
   setDoc,
   auth,
   getDoc,
-  deleteDoc,
   query,
   onSnapshot,
   orderBy,
@@ -81,22 +80,42 @@ export const ChatPage = ({ navigation }) => {
   }, []);
 
   return (
-    <View flex={1} backgroundColor={'#747474'}>
-      <View
-        flexDirection={'row'}
-        justifyContent={'space-around'}
-        alignItems={'center'}
-        marginTop={10}
-      >
-        <Button onPress={() => navigation.navigate('Vote')}>Vote</Button>
-        <View>
-          <Text style={{ fontSize: 18, color: 'white' }}>
-            You are playing as {fakeId}
-          </Text>
-        </View>
-      </View>
+    <Box w="100%" h="100%" safeArea backgroundColor="#747474" py="4" px="4">
+      <Center py="2">
+        <HStack justifyContent="space-between" alignItems="center" w="full">
+          <Box w="30%">
+            <Button
+              title="Vote"
+              rounded="lg"
+              size="sm"
+              bg="primary3.500"
+              _pressed={{ bg: 'primary3.600' }}
+              onPress={() => navigation.navigate('Vote')}
+            >
+              <Text fontWeight="semibold" color="black">
+                Vote
+              </Text>
+            </Button>
+          </Box>
+
+          <Box w="68%" alignSelf="center">
+            <Text
+              isTruncated={true}
+              fontWeight="bold"
+              color="white"
+              fontSize="xl"
+            >
+              Playing as <Text color={userNameColor}>{fakeId}</Text>
+            </Text>
+          </Box>
+        </HStack>
+      </Center>
+
+      <Divider h="0.5" bgColor="white" />
 
       <GiftedChat
+        placeholder="Who is the rat?"
+        alwaysShowSend={true}
         renderUsernameOnMessage={true}
         messages={messages}
         onSend={(messages) => onSend(messages)}
@@ -109,7 +128,7 @@ export const ChatPage = ({ navigation }) => {
           userNameColor: userNameColor,
         }}
       />
-    </View>
+    </Box>
   );
 };
 

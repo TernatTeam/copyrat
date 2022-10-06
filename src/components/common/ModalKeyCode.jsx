@@ -40,7 +40,24 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
 
           const docSnap = await getDoc(doc(db, 'games', keyCode));
           if (docSnap.exists()) {
-            onClose(keyCode, docSnap.data().game_admin_uid);
+            if (docSnap.data().is_game_ready === false) {
+              onClose(keyCode, docSnap.data().game_admin_uid);
+            } else {
+              if (!toast.isActive(id)) {
+                toast.show({
+                  id,
+                  duration: 2500,
+                  placement: 'top',
+                  render: () => {
+                    return (
+                      <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
+                        The game already started
+                      </Box>
+                    );
+                  },
+                });
+              }
+            }
           } else {
             if (!toast.isActive(id)) {
               toast.show({
