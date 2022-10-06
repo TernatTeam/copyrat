@@ -44,9 +44,15 @@ export const ScorePage = ({navigation}) => {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "modified") {
-          navigation.reset({
-            routes: [{ name: "Chat" }],
-          });
+          if (roundNo < 3) {
+            navigation.reset({
+              routes: [{ name: "Chat" }],
+            });
+          } else {
+            navigation.reset({
+              routes: [{ name: "Home" }],
+            });
+          }
         }
       });
     });
@@ -192,19 +198,25 @@ export const ScorePage = ({navigation}) => {
             }, 1000);
 
             setTimeout(async() => {
-              navigation.navigate('Chat'); // ne intoarcem la chat
               await updateDoc(
                 doc(db, "games", roomData.keyCode, "admin", "gameState"),
                 {
-                  navToScore: true,
+                  navToScore: false,
                 }
               );
             }, 3000);
           } else {
-            window.alert('Well done! See you again soon!');
-      
             setTimeout(() => {
-              navigation.navigate('Home'); // ne intoarcem la home
+              window.alert('Well done! See you again soon!');
+            });
+            
+            setTimeout(async() => {
+              await updateDoc(
+                doc(db, "games", roomData.keyCode, "admin", "gameState"),
+                {
+                  navToScore: false,
+                }
+              );
             }, 3000);
           }
         }}
