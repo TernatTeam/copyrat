@@ -278,9 +278,6 @@ export const VotePage = ({ navigation }) => {
               confirmVote(); // pe "Done" (variabila alreadyVoted are valoarea false)
               setAlreadyVoted(true);
               window.alert(`Locking in ... ${playersDB[indexOfVoted].fake_id}`);
-              setTimeout(() => {
-                  window.alert("All set! Muie :D");
-              }, 3000);
             } else {
               window.alert("You already locked in your vote!");
             }
@@ -302,24 +299,35 @@ export const VotePage = ({ navigation }) => {
         _pressed={{ bg: "red.500" }}
         onPress={() => {
           // butonul care calculeaza si afiseaza scorurile, si da update in baza de date
-          if (auth.currentUser.uid == adminId) {
-            // acest lucru e posibil doar daca playerul care apasa are rolul de admin
+          
+          if (auth.currentUser.uid == adminId) { 
+            getPlayers();
+            window.alert("Checking votes...");
             setTimeout(() => {
+              let all_voted = true;
+            for(let i = 0; i < playersDB.length; i++) {
+              if(playersDB[i].vote < 0) 
+                all_voted = false;
+            }
+            if (!all_voted) { //daca nu si-a facut update
+              window.alert("Votes not locked in! Please try again!");
+            }
+            else {
+              // acest lucru e posibil doar daca playerul care apasa are rolul de admin
               calculateScore(); // calculam scorurile  
-            }, 2000);
-            
+              setTimeout(() => {
+                showRats(); // apoi afisam ratii de tura aceasta
+              }, 1000);
 
-            setTimeout(() => {
-              showRats(); // apoi afisam ratii de tura aceasta
-            }, 1000);
-
-            setTimeout(() => {
-              window.alert('Calculating scores...');
-            }, 4000);
-  
-            setTimeout(() => {
-              navigation.navigate('Scoreboard'); // ne mutam pe pagina cu leaderboard ul
-            }, 6000);
+              setTimeout(() => {
+                window.alert('Calculating scores...');
+              }, 4000);
+    
+              setTimeout(() => {
+                navigation.navigate('Scoreboard'); // ne mutam pe pagina cu leaderboard ul
+              }, 6000);
+            }
+            }, 3000);
           } else {
             window.alert("Wait! Only the game creator can stop the voting."); // altfel, este anuntat ca
           } // nu are acest drept
