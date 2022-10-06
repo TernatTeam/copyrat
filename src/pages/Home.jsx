@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 import {
   Text,
@@ -9,9 +9,9 @@ import {
   Box,
   Button,
   HStack,
-} from 'native-base';
+} from "native-base";
 
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
 import {
   auth,
@@ -19,11 +19,11 @@ import {
   doc,
   setDoc,
   signOut,
-} from '../../config/firebase/firebase-key-config';
+} from "../../config/firebase/firebase-key-config";
 
-import CopyratLogo from '../../assets/logo_trans.png';
-import { ModalKeyCode } from '../components/common';
-import { useGlobal } from '../../state';
+import CopyratLogo from "../../assets/logo_trans.png";
+import { ModalKeyCode } from "../components/common";
+import { useGlobal } from "../../state";
 
 export const HomePage = ({ navigation }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,7 +35,7 @@ export const HomePage = ({ navigation }) => {
   const logOut = () => {
     signOut(auth).then(() => {
       navigation.reset({
-        routes: [{ name: 'Login' }],
+        routes: [{ name: "Login" }],
       });
     });
   };
@@ -44,8 +44,8 @@ export const HomePage = ({ navigation }) => {
     setIsLoadingCreateRoom(true);
     setIsDisabled(true);
 
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let result = "";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const charactersLength = characters.length;
 
     const currentUser = auth.currentUser;
@@ -55,21 +55,26 @@ export const HomePage = ({ navigation }) => {
     }
 
     try {
-      await setDoc(doc(db, 'games', result), {
+      await setDoc(doc(db, "games", result), {
         game_admin_uid: currentUser.uid,
-        is_game_ready: false,
+
         round_number: 1,
       });
 
+      await setDoc(doc(db, "games", result, "admin", "gameState"), {
+        is_game_ready: false,
+        navToScore: false,
+      });
+
       dispatch({
-        type: 'ROOM_DATA',
+        type: "ROOM_DATA",
         keyCode: result,
         game_admin_uid: currentUser.uid,
       });
 
       setIsLoadingCreateRoom(false);
       navigation.reset({
-        routes: [{ name: 'Lobby' }],
+        routes: [{ name: "Lobby" }],
       });
       setIsDisabled(false);
     } catch (err) {
@@ -83,14 +88,14 @@ export const HomePage = ({ navigation }) => {
     setIsDisabled(true);
 
     dispatch({
-      type: 'ROOM_DATA',
+      type: "ROOM_DATA",
       keyCode: keyCode,
       game_admin_uid: gameAdminUid,
     });
 
     setIsLoadingJoinRoom(false);
     navigation.reset({
-      routes: [{ name: 'Lobby' }],
+      routes: [{ name: "Lobby" }],
     });
     setIsDisabled(false);
   };
@@ -113,11 +118,11 @@ export const HomePage = ({ navigation }) => {
           icon={<Icon as={<Ionicons name="settings-outline" />} />}
           borderRadius="full"
           _icon={{
-            color: 'white',
-            size: '8',
+            color: "white",
+            size: "8",
           }}
           _pressed={{
-            bg: 'primary3.600',
+            bg: "primary3.600",
           }}
           onPress={logOut}
         />
@@ -150,13 +155,13 @@ export const HomePage = ({ navigation }) => {
               rounded="lg"
               medium
               bg="primary3.500"
-              _pressed={{ bg: 'primary3.600' }}
+              _pressed={{ bg: "primary3.600" }}
               onPress={() => {
                 generateRoomKey(4);
               }}
               disabled={isDisabled}
               isLoading={isLoadingCreateRoom}
-              _spinner={{ paddingY: '0.45' }}
+              _spinner={{ paddingY: "0.45" }}
             >
               <Text fontWeight="semibold" color="black">
                 Create room
@@ -171,13 +176,13 @@ export const HomePage = ({ navigation }) => {
               rounded="lg"
               medium
               bg="primary3.500"
-              _pressed={{ bg: 'primary3.600' }}
+              _pressed={{ bg: "primary3.600" }}
               onPress={() => {
                 setIsModalOpen(true);
               }}
               disabled={isDisabled}
               isLoading={isLoadingJoinRoom}
-              _spinner={{ paddingY: '0.45' }}
+              _spinner={{ paddingY: "0.45" }}
             >
               <Text fontWeight="semibold" color="black">
                 Join room
