@@ -249,6 +249,7 @@ export const ScorePage = ({ navigation }) => {
           bg="primary3.500"
           _pressed={{ bg: 'primary3.600' }}
           onPress={() => {
+            getAdminIdAndRound();
             // butonul care va incepe o noua runda
             if (auth.currentUser.uid == adminId) {
               // acest lucru e posibil doar daca playerul care apasa are rolul de admin

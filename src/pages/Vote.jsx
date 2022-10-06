@@ -478,7 +478,7 @@ export const VotePage = ({ navigation }) => {
                             flex={1}
                           >
                             <Text fontSize="md" fontWeight="bold">
-                              Calculating scores...
+                              Calculating scores... Muie :D
                             </Text>
                           </Box>
                         );
