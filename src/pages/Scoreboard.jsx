@@ -274,16 +274,6 @@ export const ScorePage = ({ navigation }) => {
                   });
                 }
               }, 1000);
-
-              setTimeout(async () => {
-                navigation.navigate('Chat'); // ne intoarcem la chat
-                await updateDoc(
-                  doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
-                  {
-                    navToScore: true,
-                  },
-                );
-              }, 3000);
             } else {
               if (!toast.isActive(id)) {
                 toast.show({
@@ -299,13 +289,16 @@ export const ScorePage = ({ navigation }) => {
                   },
                 });
               }
-              setTimeout(() => {
-                navigation.reset({
-                  routes: [{ name: 'Home' }],
-                });
-                // ne intoarcem la home
-              }, 3000);
             }
+
+            setTimeout(async () => {
+              await updateDoc(
+                doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
+                {
+                  navToScore: false,
+                },
+              );
+            }, 3000);
           }}
         >
           <Text fontWeight="semibold" color="black">

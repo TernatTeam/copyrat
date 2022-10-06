@@ -72,7 +72,6 @@ export const chatBubble = (props) => {
             marginRight: 0,
           },
         }}
-        time
       />
     </Box>
   );

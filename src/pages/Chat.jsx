@@ -36,7 +36,7 @@ export const ChatPage = ({ navigation }) => {
 
     setFakeId(docSnap.data().fake_id);
     setUserNameColor(docSnap.data().userNameColor);
-  }, []);
+  }, [fakeId]);
 
   useEffect(() => {
     getFakeIdAndUsernameColor();
