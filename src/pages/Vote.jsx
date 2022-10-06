@@ -212,20 +212,6 @@ export const VotePage = ({ navigation }) => {
     }
   };
 
-  const showRats = () => {
-    // functia care afiseaza jucatorii care au avut rolul de "rat"
-    let rats = 'The rats this round were:';
-
-    playersDB.map((player) => {
-      // verificam prin array ul de playeri
-      if (player.name != player.fake_id) {
-        rats += '\n' + player.name; // retinem numele celor cu numele si fake_id ul diferit
-      }
-    });
-
-    window.alert(rats);
-  };
-
   useEffect(() => {
     getPlayers(); // cand se incarca prima data pagina, luam din baza de date
 
@@ -471,9 +457,6 @@ export const VotePage = ({ navigation }) => {
               } else {
                 // acest lucru e posibil doar daca playerul care apasa are rolul de admin
                 calculateScore(); // calculam scorurile
-                setTimeout(() => {
-                  showRats(); // apoi afisam ratii de tura aceasta
-                }, 1000);
 
                 setTimeout(() => {
                   if (!toast.isActive(id)) {
