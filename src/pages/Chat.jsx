@@ -92,7 +92,7 @@ export const ChatPage = ({ navigation }) => {
               onPress={() => navigation.navigate('Vote')}
             >
               <Text fontWeight="semibold" color="black">
-                Vote
+                Penis!
               </Text>
             </Button>
           </Box>
