@@ -4,7 +4,7 @@ import { Box } from 'native-base';
 
 import { InputToolbar } from 'react-native-gifted-chat';
 
-const inputToolBar = (props) => {
+export const inputToolBar = (props) => {
   return (
     <Box h="50px" w="full" py="4">
       <InputToolbar

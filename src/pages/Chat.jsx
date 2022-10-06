@@ -16,8 +16,7 @@ import {
   orderBy,
 } from '../../config/firebase/firebase-key-config';
 
-import chatBubble from '../components/chat/chatBubble';
-import inputToolBar from '../components/chat/inputToolBar';
+import { chatBubble, inputToolBar } from '../components/chat';
 
 import { useGlobal } from '../../state';
 
@@ -80,7 +79,7 @@ export const ChatPage = ({ navigation }) => {
   }, []);
 
   return (
-    <Box w="100%" h="100%" safeArea backgroundColor="#747474" py="4" px="4">
+    <Box h="100%" w="100%" safeArea backgroundColor="#747474" py="4" px="4">
       <Center py="2">
         <HStack justifyContent="space-between" alignItems="center" w="full">
           <Box w="30%">
@@ -98,7 +97,7 @@ export const ChatPage = ({ navigation }) => {
             </Button>
           </Box>
 
-          <Box w="68%" alignSelf="center">
+          <Box w="68%" justifyContent="center" alignItems="flex-end">
             <Text
               isTruncated={true}
               fontWeight="bold"
@@ -114,6 +113,10 @@ export const ChatPage = ({ navigation }) => {
       <Divider h="0.5" bgColor="white" />
 
       <GiftedChat
+        timeTextStyle={{
+          left: { color: 'white', marginLeft: -30 },
+          right: { color: 'white' },
+        }}
         placeholder="Who is the rat?"
         alwaysShowSend={true}
         renderUsernameOnMessage={true}

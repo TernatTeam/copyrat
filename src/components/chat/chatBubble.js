@@ -6,7 +6,7 @@ import { Bubble } from 'react-native-gifted-chat';
 
 import { auth } from '../../../config/firebase/firebase-key-config';
 
-const chatBubble = (props) => {
+export const chatBubble = (props) => {
   if (props.currentMessage.user._id == auth.currentUser.uid) {
     return (
       <Box
