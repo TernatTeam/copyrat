@@ -117,12 +117,13 @@ export const LobbyPage = ({ navigation }) => {
       return false;
     }
   };
-
+/*
+  on master before merge. idk why
   const setGameReady = async () => {
     await updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
       is_game_ready: true,
     });
-
+*/
     setIsLoadingButton(false);
   };
 
