@@ -117,7 +117,7 @@ export const ScorePage = ({ navigation }) => {
 
     while (ratsIndex.length < no_of_rats) {
       // generare indecsi
-      let newRatIndex = Math.floor(Math.random() * (playersDB.length - 1)) + 1;
+      let newRatIndex = Math.floor(Math.random() * (playersDB.length));
 
       if (ratsIndex.indexOf(newRatIndex) == -1) {
         ratsIndex.push(newRatIndex);

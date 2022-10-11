@@ -485,7 +485,7 @@ export const VotePage = ({ navigation }) => {
                       },
                     });
                   }
-                }, 4000);
+                }, 1000);
 
                 setTimeout(async () => {
                   // navigation.navigate("Scoreboard"); // ne mutam pe pagina cu leaderboard ul
@@ -495,9 +495,9 @@ export const VotePage = ({ navigation }) => {
                       navToScore: true,
                     },
                   );
-                }, 6000);
+                }, 1000);
               }
-            }, 3000);
+            }, 2000);
           } else {
             if (!toast.isActive(id)) {
               toast.show({

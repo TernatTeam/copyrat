@@ -99,7 +99,7 @@ export const LobbyPage = ({ navigation }) => {
         },
       );
     }
-
+    
     setIsLoadingButton(false);
   };
 
