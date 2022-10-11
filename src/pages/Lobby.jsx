@@ -76,30 +76,54 @@ export const LobbyPage = ({ navigation }) => {
   const setRoles = async () => {
     setIsLoadingButton(true);
 
+    try {
+      let newFakeId = [];
+
+      for (let i = 0; i < players.length; i++) {
+        newFakeId.push(players[i].name);
+      }
+
+      let no_of_rats = Math.floor(players.length / 2);
+
+      //arr of 3 rand index
+      let arr = [];
+
+      while (arr.length < no_of_rats) {
+        let r = Math.floor(Math.random() * (players.length - 1)) + 1;
+        if (arr.indexOf(r) === -1) arr.push(r);
+      }
+
+      let aux = newFakeId[arr[no_of_rats - 1]];
+
+      for (let i = 1; i < no_of_rats; i++) {
+        newFakeId[arr[i]] = newFakeId[arr[i - 1]];
+      }
+
+      newFakeId[arr[0]] = aux;
+
+      //update roles and fake_id
+      for (let i = 0; i < players.length; i++) {
+        await updateDoc(
+          doc(db, `games/${roomData.keyCode}/players/${uIds[i]}`),
+          {
+            fake_id: newFakeId[i],
+          },
+        );
+      }
+
+      await setGameReady();
+    } catch (err) {
+      console.log('ERR', err);
+      return false;
+    }
+  };
+/*
+  on master before merge. idk why
+  const setGameReady = async () => {
     await updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
       is_game_ready: true,
     });
-
-    let no_of_rats = Math.floor(players.length / 2);
-
-    //arr of 3 rand index
-    let arr = [];
-
-    while (arr.length < no_of_rats) {
-      let r = Math.floor(Math.random() * players.length);
-      if (arr.indexOf(r) === -1) arr.push(r);
-    }
-
-    //update roles and fake_id
-    for (let i = 0; i < no_of_rats; i++) {
-      await updateDoc(
-        doc(db, `games/${roomData.keyCode}/players/${uIds[arr[i]]}`),
-        {
-          fake_id: players[arr[(i + 1) % no_of_rats]].name,
-        },
-      );
-    }
-    
+*/
     setIsLoadingButton(false);
   };
 
