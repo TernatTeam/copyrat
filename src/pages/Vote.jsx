@@ -38,14 +38,12 @@ export const VotePage = ({ navigation }) => {
 
   const [roundNo, setRoundNo] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState({});
-  const [adminId, setAdminId] = useState('');
   const [{ roomData }] = useGlobal();
 
   useEffect(() => {
     updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
       navToScore: false,
     });
-    console.log('LOBBY');
   }, []);
 
   useEffect(() => {
@@ -67,7 +65,6 @@ export const VotePage = ({ navigation }) => {
 
   const getPlayers = async () => {
     try {
-      // iau playerii jocului curent
       const querySnapshot = await getDocs(
         collection(db, `games/${roomData.keyCode}/players`),
       );
@@ -75,9 +72,7 @@ export const VotePage = ({ navigation }) => {
       let playersArray = [];
       // la fel si pentru id ul acestora
       let idArray = [];
-
       querySnapshot.forEach((doc) => {
-        // pentru fiecare player luat din baza de data
         playersArray.push(doc.data()); // il retin in array ul auxiliar
         idArray.push(doc.id); // retinem si id urile playerilor in array ul auxiliar
 
@@ -94,10 +89,9 @@ export const VotePage = ({ navigation }) => {
     }
   };
 
+  // used to get round only
   const getAdminIdAndRound = async () => {
-    // functie care retine id ul adminului si runda, se apeleaza o data la
     const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
-    setAdminId(docSnap.data().game_admin_uid);
     setRoundNo(docSnap.data().round_number);
   };
 
@@ -149,16 +143,12 @@ export const VotePage = ({ navigation }) => {
         vote: indexOfVoted,
       },
     );
-
-    getPlayers();
   };
 
   const calculateScore = async () => {
     // functia care calculeaza punctajele la final de runda
     let newScores = []; // array auxiliar in care stocam scorurile de runda asta
     const nrOfPlayers = playersDB.length;
-
-    console.log(playersDB);
 
     for (let i = 0; i < nrOfPlayers; i++) {
       // calculam pentru fiecare player
@@ -197,8 +187,6 @@ export const VotePage = ({ navigation }) => {
       }
 
       newScores.push(score); // incarc in vectorul auxiliar fiecare scor nou
-
-      //console.log(playersDB[i].name, score);
     }
 
     for (let i = 0; i < nrOfPlayers; i++) {
@@ -214,7 +202,6 @@ export const VotePage = ({ navigation }) => {
 
   useEffect(() => {
     getPlayers(); // cand se incarca prima data pagina, luam din baza de date
-
     getAdminIdAndRound(); // playerii si id urile lor, cat si pe al admin ului si numarul rundei
   }, []);
 
@@ -235,32 +222,16 @@ export const VotePage = ({ navigation }) => {
       {
         // generare butoane de votare
         playersDB?.map((player, index) => {
-          // parcurg array ul de playeri
+          // checking valid vote button
           if (
             player.name != currentPlayer.name &&
             player.name != currentPlayer.fake_id
           ) {
-            // verificare sa nu fie playerul curent
             return (
-              // (sau ala drept care se da, in cazul ratilor)
-              // <Button
-              //   w="20%"
-              //   h="5%"
-              //   marginBottom="4px"
-              //   padding="1px"
-              //   key={index}
-              //   onPress={() => {
-              //     // la apasare, se apeleaza functia care
-              //     voteFor(index); // retine ultima optiune de votare a playerului curent
-              //   }}
-              // >
-              //   {player.fake_id}
-              // </Button>
               <TouchableOpacity
                 key={index}
                 onPress={() => {
-                  //     // la apasare, se apeleaza functia care
-                  voteFor(index); // retine ultima optiune de votare a playerului curent
+                  voteFor(index); // save vote 
                 }}
                 style={{
                   width: '80%',
@@ -305,7 +276,7 @@ export const VotePage = ({ navigation }) => {
         })
       }
 
-      <Button // butonul cu dare confirmi votul final
+      <Button // confirm vote
         title="LockIn"
         marginTop={6}
         marginBottom={3}
@@ -417,88 +388,81 @@ export const VotePage = ({ navigation }) => {
         medium
         bg="rosybrown"
         _pressed={{ bg: 'red.500' }}
-        onPress={() => {
+        onPress={async() => {
           // butonul care calculeaza si afiseaza scorurile, si da update in baza de date
-          if (auth.currentUser.uid == adminId) {
-            getPlayers();
-            setTimeout(() => {
-              let all_voted = true;
-              for (let i = 0; i < playersDB.length; i++) {
-                if (playersDB[i].vote < 0) all_voted = false;
+          if (auth.currentUser.uid == roomData.game_admin_uid) {
+            await getPlayers();
+            let all_voted = true;
+            for (let i = 0; i < playersDB.length; i++) {
+              if (playersDB[i].vote < 0) all_voted = false;
+            }
+            if (!all_voted) { //daca nu si-a facut update
+              if (!toast.isActive(id)) {
+                toast.show({
+                  id,
+                  duration: 2500,
+                  placement: 'top',
+                  render: () => {
+                    return (
+                      <Box
+                        textAlign="center"
+                        bg="rosybrown"
+                        px="2"
+                        py="1"
+                        rounded="sm"
+                        mb={5}
+                        justifyContent="center"
+                        alignItems="center"
+                        flex={1}
+                      >
+                        <Text fontSize="md" fontWeight="bold">
+                          Votes not locked in! Please try again
+                        </Text>
+                      </Box>
+                    );
+                  },
+                });
               }
-              if (!all_voted) {
-                //daca nu si-a facut update
-                if (!toast.isActive(id)) {
-                  toast.show({
-                    id,
-                    duration: 2500,
-                    placement: 'top',
-                    render: () => {
-                      return (
-                        <Box
-                          textAlign="center"
-                          bg="rosybrown"
-                          px="2"
-                          py="1"
-                          rounded="sm"
-                          mb={5}
-                          justifyContent="center"
-                          alignItems="center"
-                          flex={1}
-                        >
-                          <Text fontSize="md" fontWeight="bold">
-                            Votes not locked in! Please try again
-                          </Text>
-                        </Box>
-                      );
-                    },
-                  });
-                }
-              } else {
-                // acest lucru e posibil doar daca playerul care apasa are rolul de admin
-                calculateScore(); // calculam scorurile
-
-                setTimeout(() => {
-                  if (!toast.isActive(id)) {
-                    toast.show({
-                      id,
-                      duration: 2500,
-                      placement: 'top',
-                      render: () => {
-                        return (
-                          <Box
-                            textAlign="center"
-                            bg="rosybrown"
-                            px="2"
-                            py="1"
-                            rounded="sm"
-                            mb={5}
-                            justifyContent="center"
-                            alignItems="center"
-                            flex={1}
-                          >
-                            <Text fontSize="md" fontWeight="bold">
-                              Calculating scores... Muie :D
-                            </Text>
-                          </Box>
-                        );
-                      },
-                    });
-                  }
-                }, 1000);
-
-                setTimeout(async () => {
-                  // navigation.navigate("Scoreboard"); // ne mutam pe pagina cu leaderboard ul
-                  await updateDoc(
-                    doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
-                    {
-                      navToScore: true,
-                    },
-                  );
-                }, 1000);
+            } else {
+              // if votes locked in
+              calculateScore(); // scores
+              if (!toast.isActive(id)) {
+                toast.show({
+                  id,
+                  duration: 2500,
+                  placement: 'top',
+                  render: () => {
+                    return (
+                      <Box
+                        textAlign="center"
+                        bg="rosybrown"
+                        px="2"
+                        py="1"
+                        rounded="sm"
+                        mb={5}
+                        justifyContent="center"
+                        alignItems="center"
+                        flex={1}
+                      >
+                        <Text fontSize="md" fontWeight="bold">
+                          Calculating scores... Muie :D
+                        </Text>
+                      </Box>
+                    );
+                  },
+                });
               }
-            }, 2000);
-          } else {
+              // ne mutam pe pagina cu leaderboard ul
+              setTimeout(async () => { // wait for votes b4  leaving page
+                await updateDoc(
+                  doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
+                  {
+                    navToScore: true,
+                  },
+                );
+              }, 1000);
+            } 
+          } else { // if not admin -> show message
             if (!toast.isActive(id)) {
               toast.show({
                 id,
@@ -525,8 +489,7 @@ export const VotePage = ({ navigation }) => {
                 },
               });
             }
-            // altfel, este anuntat ca
-          } // nu are acest drept
+          } 
         }}
       >
         <Text style={{ fontWeight: 'semibold', color: 'black', fontSize: 16 }}>
