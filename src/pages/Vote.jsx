@@ -158,8 +158,6 @@ export const VotePage = ({ navigation }) => {
     let newScores = []; // array auxiliar in care stocam scorurile de runda asta
     const nrOfPlayers = playersDB.length;
 
-    console.log(playersDB);
-
     for (let i = 0; i < nrOfPlayers; i++) {
       // calculam pentru fiecare player
       let score = 0;
@@ -417,10 +415,10 @@ export const VotePage = ({ navigation }) => {
         medium
         bg="rosybrown"
         _pressed={{ bg: 'red.500' }}
-        onPress={() => {
+        onPress={async() => {
           // butonul care calculeaza si afiseaza scorurile, si da update in baza de date
           if (auth.currentUser.uid == adminId) {
-            getPlayers();
+            await getPlayers();
             setTimeout(() => {
               let all_voted = true;
               for (let i = 0; i < playersDB.length; i++) {
@@ -457,7 +455,7 @@ export const VotePage = ({ navigation }) => {
               } else {
                 // acest lucru e posibil doar daca playerul care apasa are rolul de admin
                 calculateScore(); // calculam scorurile
-
+                console.log("aaa");
                 setTimeout(() => {
                   if (!toast.isActive(id)) {
                     toast.show({

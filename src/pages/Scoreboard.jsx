@@ -26,6 +26,8 @@ import {
 } from '../../config/firebase/firebase-key-config';
 import { useGlobal } from '../../state';
 
+let route = "Chat";
+
 export const ScorePage = ({ navigation }) => {
   const toast = useToast();
   const id = 'scoreboard-toasts';
@@ -44,23 +46,16 @@ export const ScorePage = ({ navigation }) => {
 
   const [roundNo, setRoundNo] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState({});
-  const [adminId, setAdminId] = useState('');
   const [{ roomData }] = useGlobal();
 
-  useEffect(() => {
+  useEffect(() => { console.log(route);
     const q = query(collection(db, `games`, roomData.keyCode, 'admin'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        if (change.type === "modified") {
-          if (roundNo < 3) {
-            navigation.reset({
-              routes: [{ name: "Chat" }],
-            });
-          } else {
-            navigation.reset({
-              routes: [{ name: "Home" }],
-            });
-          }
+        if (change.type === "modified") { 
+          navigation.reset({
+            routes: [{ name: route }],
+          });
         }
       });
     });
@@ -138,7 +133,7 @@ export const ScorePage = ({ navigation }) => {
       await updateDoc(
         doc(db, `games/${roomData.keyCode}/players/${playerIDs[i]}`),
         {
-          fake_id: newFakeIds[i],
+          //fake_id: newFakeIds[i],
           no_of_votes: 0,
           vote: -1,
         },
@@ -170,8 +165,9 @@ export const ScorePage = ({ navigation }) => {
   const getAdminIdAndRound = async () => {
     // functie care retine id ul adminului si runda, se apeleaza o data la
     const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
-    setAdminId(docSnap.data().game_admin_uid);
+    //setAdminId(docSnap.data().game_admin_uid);
     setRoundNo(docSnap.data().round_number);
+    
   };
 
   const countNextRound = async () => {
@@ -190,18 +186,22 @@ export const ScorePage = ({ navigation }) => {
         rats += '\n' + player.name; // retinem numele celor cu numele si fake_id ul diferit
       }
     });
-
     window.alert(rats);
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     getSortedPlayers();
-    getAdminIdAndRound();
-
+    
     setTimeout(() => {
       showRats(); // arata ratii din runda asta
     }, 1000);
   }, []);
+  
+  {
+    getAdminIdAndRound();
+    if(roundNo > 2)
+      route = "Home";
+  }
 
   return (
     <Box safeArea bg="primary1.500" h="100%" w="100%">
@@ -249,9 +249,9 @@ export const ScorePage = ({ navigation }) => {
           bg="primary3.500"
           _pressed={{ bg: 'primary3.600' }}
           onPress={() => {
-            getAdminIdAndRound();
+            //getAdminIdAndRound();
             // butonul care va incepe o noua runda
-            if (auth.currentUser.uid == adminId) {
+            if (auth.currentUser.uid == roomData.game_admin_uid) {
               // acest lucru e posibil doar daca playerul care apasa are rolul de admin
               roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote
               deleteChat(); // stergem chatul de tura trecuta
@@ -275,7 +275,7 @@ export const ScorePage = ({ navigation }) => {
                   });
                 }
               }, 1000);
-            } else {
+            } else { 
               if (!toast.isActive(id)) {
                 toast.show({
                   id,
@@ -299,7 +299,7 @@ export const ScorePage = ({ navigation }) => {
                   navToScore: false,
                 },
               );
-            }, 3000);
+            }, 1000);
           }}
         >
           <Text fontWeight="semibold" color="black">
