@@ -17,6 +17,7 @@ import {
 } from '../../config/firebase/firebase-key-config';
 
 import { chatBubble, inputToolBar } from '../components/chat';
+import { FullPageLoader } from '../components/common/FullPageLoader';
 
 import { useGlobal } from '../../state';
 
@@ -25,6 +26,8 @@ export const ChatPage = ({ navigation }) => {
   const [fakeId, setFakeId] = useState();
   const [userNameColor, setUserNameColor] = useState('');
   const [{ roomData }] = useGlobal();
+
+  console.log(fakeId);
 
   const getFakeIdAndUsernameColor = useCallback(async () => {
     const docRef = doc(
@@ -36,7 +39,7 @@ export const ChatPage = ({ navigation }) => {
 
     setFakeId(docSnap.data().fake_id);
     setUserNameColor(docSnap.data().userNameColor);
-  }, [fakeId]);
+  }, []);
 
   useEffect(() => {
     getFakeIdAndUsernameColor();
@@ -78,7 +81,7 @@ export const ChatPage = ({ navigation }) => {
     return () => unsubscribe();
   }, []);
 
-  return (
+  return fakeId ? (
     <Box h="100%" w="100%" safeArea backgroundColor="#747474" py="4" px="4">
       <Center py="2">
         <HStack justifyContent="space-between" alignItems="center" w="full">
@@ -92,7 +95,7 @@ export const ChatPage = ({ navigation }) => {
               onPress={() => navigation.navigate('Vote')}
             >
               <Text fontWeight="semibold" color="black">
-                Penis!
+                Vote
               </Text>
             </Button>
           </Box>
@@ -132,6 +135,8 @@ export const ChatPage = ({ navigation }) => {
         }}
       />
     </Box>
+  ) : (
+    <FullPageLoader />
   );
 };
 
