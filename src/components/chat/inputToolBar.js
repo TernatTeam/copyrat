@@ -6,15 +6,15 @@ import { InputToolbar } from 'react-native-gifted-chat';
 
 export const inputToolBar = (props) => {
   return (
-    <Box h="50px" w="full" py="4">
+    <Box h="50px" w="full">
       <InputToolbar
         {...props}
+        placeholderTextColor="white"
         containerStyle={{
           color: 'black',
           backgroundColor: 'darkgray',
           borderRadius: 15,
-          paddingHorizontal: 2,
-          height: 45,
+          paddingHorizontal: 4,
         }}
         textInputStyle={{
           color: 'white',

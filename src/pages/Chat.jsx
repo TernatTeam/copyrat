@@ -16,7 +16,7 @@ import {
   orderBy,
 } from '../../config/firebase/firebase-key-config';
 
-import { chatBubble, inputToolBar } from '../components/chat';
+import { chatBubble, inputToolBar, sendButton } from '../components/chat';
 import { FullPageLoader } from '../components/common/FullPageLoader';
 
 import { useGlobal } from '../../state';
@@ -130,6 +130,7 @@ export const ChatPage = ({ navigation }) => {
         renderUsernameOnMessage={true}
         messages={messages}
         onSend={(messages) => onSend(messages)}
+        renderSend={sendButton}
         renderInputToolbar={inputToolBar}
         renderBubble={chatBubble}
         renderAvatar={null}
