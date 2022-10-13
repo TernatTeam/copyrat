@@ -44,11 +44,11 @@ export const ScorePage = ({ navigation }) => {
   -> roundNo = numarul rundei curente
 */
 
-  const [roundNo, setRoundNo] = useState(null);
+ 
   const [currentPlayer, setCurrentPlayer] = useState({});
   const [{ roomData }] = useGlobal();
 
-  useEffect(() => { console.log(route);
+  useEffect(() => { //console.log(route);
     const q = query(collection(db, `games`, roomData.keyCode, 'admin'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
@@ -162,13 +162,6 @@ export const ScorePage = ({ navigation }) => {
     }
   };
 
-  const getAdminIdAndRound = async () => {
-    // functie care retine id ul adminului si runda, se apeleaza o data la
-    const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
-    //setAdminId(docSnap.data().game_admin_uid);
-    setRoundNo(docSnap.data().round_number);
-    
-  };
 
   const countNextRound = async () => {
     await updateDoc(doc(db, `games/${roomData.keyCode}`), {
@@ -197,11 +190,16 @@ export const ScorePage = ({ navigation }) => {
     }, 1000);
   }, []);
   
-  {
-    getAdminIdAndRound();
-    if(roundNo > 2)
-      route = "Home";
-  }
+  let roundNo = 1;
+  useEffect(() => {
+    const checkRound = async () => {
+      const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
+      roundNo = docSnap.data().round_number;
+      if(roundNo > 2) 
+        route = "Home";
+    };
+    checkRound();
+  }, []);
 
   return (
     <Box safeArea bg="primary1.500" h="100%" w="100%">
@@ -249,7 +247,6 @@ export const ScorePage = ({ navigation }) => {
           bg="primary3.500"
           _pressed={{ bg: 'primary3.600' }}
           onPress={() => {
-            //getAdminIdAndRound();
             // butonul care va incepe o noua runda
             if (auth.currentUser.uid == roomData.game_admin_uid) {
               // acest lucru e posibil doar daca playerul care apasa are rolul de admin
