@@ -86,7 +86,7 @@ export const ChatPage = ({ navigation }) => {
     setMessages([]);
   }, []);
 
-  return fakeId && messages.length !== 0 ? (
+  return fakeId ? (
     <Box h="100%" w="100%" safeArea backgroundColor="#747474" py="4" px="4">
       <Center py="2">
         <HStack justifyContent="space-between" alignItems="center" w="full">
