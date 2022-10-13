@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  Center,
   Flex,
   Heading,
   Icon,
@@ -13,6 +14,8 @@ import {
   useToast,
   VStack,
 } from 'native-base';
+
+import { Keyboard } from 'react-native';
 
 import * as Clipboard from 'expo-clipboard';
 
@@ -40,6 +43,7 @@ export const LobbyPage = ({ navigation }) => {
   const [hasLeft, setHasLeft] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingButton, setIsLoadingButton] = useState(false);
+  const [keyboardStatus, setKeyboardStatus] = useState(false);
   const [{ roomData }] = useGlobal();
   const userNameColors = [
     '#EBD500',
@@ -95,11 +99,10 @@ export const LobbyPage = ({ navigation }) => {
         },
       );
     }
-    
+
     await updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
       is_game_ready: true,
     });
-
 
     setIsLoadingButton(false);
   };
@@ -184,6 +187,25 @@ export const LobbyPage = ({ navigation }) => {
       unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    const subscribeShow = Keyboard.addListener(
+      'keyboardDidShow',
+      _keyboardDidShow,
+    );
+    const subscribeHide = Keyboard.addListener(
+      'keyboardDidHide',
+      _keyboardDidHide,
+    );
+
+    return () => {
+      subscribeShow.remove();
+      subscribeHide.remove();
+    };
+  }, []);
+
+  const _keyboardDidShow = () => setKeyboardStatus(true);
+  const _keyboardDidHide = () => setKeyboardStatus(false);
 
   const PlayersLoader = () => {
     const loaderArray = [];
@@ -281,8 +303,8 @@ export const LobbyPage = ({ navigation }) => {
         </Heading>
       </Box>
 
-      <Box px="4" mt="2" h="60%">
-        <ScrollView w="full">
+      <Box px="4" mt="2">
+        <ScrollView w="full" h="60%">
           {isLoading ? (
             <PlayersLoader />
           ) : (
@@ -312,29 +334,31 @@ export const LobbyPage = ({ navigation }) => {
         </ScrollView>
       </Box>
 
-      <Box mt="auto" p="6">
-        {auth.currentUser.uid == roomData.game_admin_uid && (
-          <Button
-            onPress={() => {
-              if (auth.currentUser.uid == roomData.game_admin_uid) {
-                setRoles();
-              }
-            }}
-            title="Start"
-            rounded="lg"
-            medium
-            bg="primary3.500"
-            _pressed={{ bg: 'primary3.600' }}
-            disabled={isLoadingButton}
-            isLoading={isLoadingButton}
-            _spinner={{ paddingY: '0.45' }}
-          >
-            <Text fontWeight="semibold" color="black">
-              Start
-            </Text>
-          </Button>
-        )}
-      </Box>
+      {keyboardStatus === false && (
+        <Box mt="auto" p="6">
+          {auth.currentUser.uid == roomData.game_admin_uid && (
+            <Button
+              onPress={() => {
+                if (auth.currentUser.uid == roomData.game_admin_uid) {
+                  setRoles();
+                }
+              }}
+              title="Start"
+              rounded="lg"
+              medium
+              bg="primary3.500"
+              _pressed={{ bg: 'primary3.600' }}
+              disabled={isLoadingButton}
+              isLoading={isLoadingButton}
+              _spinner={{ paddingY: '0.45' }}
+            >
+              <Text fontWeight="semibold" color="black">
+                Start
+              </Text>
+            </Button>
+          )}
+        </Box>
+      )}
     </Box>
   );
 };

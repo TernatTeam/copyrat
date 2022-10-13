@@ -11,6 +11,7 @@ import {
   Image,
   Input,
   Text,
+  ScrollView,
   useToast,
   VStack,
 } from 'native-base';
@@ -131,76 +132,77 @@ export const ForgotPasswordPage = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <Center bg="primary1.500" h="100%" w="100%">
-        <Box safeArea w="full" px="16">
-          <Center w="full">
-            <Image
-              alt="Copy Rat Logo"
-              source={CopyratLogo}
-              style={{ width: 150, height: 150 }}
-            />
-          </Center>
+        <ScrollView w="full" h="full" px="16">
+          <Box safeArea pt="16" pb="2">
+            <Center w="full" mb="4">
+              <Image
+                alt="Copy Rat Logo"
+                source={CopyratLogo}
+                style={{ width: 150, height: 150 }}
+              />
+            </Center>
 
-          <Heading size="lg" fontWeight="600" color="black">
-            Welcome
-          </Heading>
+            <Heading size="lg" fontWeight="600" color="black">
+              Welcome
+            </Heading>
 
-          <Heading mt="1" size="xs" fontWeight="semibold" color="black">
-            Reset your password to continue!
-          </Heading>
+            <Heading mt="1" size="xs" fontWeight="semibold" color="black">
+              Reset your password to continue!
+            </Heading>
 
-          <VStack space={4} mt="4">
-            <Input
-              borderBottomWidth={2}
-              borderBottomColor={`${isInvalidEmail ? 'red.500' : 'black'}`}
-              _focus={
-                isInvalidEmail
-                  ? {
-                      borderBottomColor: 'red.500',
-                      placeholderTextColor: 'red.500',
-                    }
-                  : {
-                      borderBottomColor: 'white',
-                      placeholderTextColor: 'white',
-                    }
-              }
-              InputRightElement={
-                <Icon
-                  as={<Ionicons name="mail-outline" />}
-                  size={6}
-                  mr="2"
-                  color={isInvalidEmail ? `red.500` : 'white'}
-                />
-              }
-              variant="underlined"
-              placeholder="Email"
-              placeholderTextColor={isInvalidEmail ? `red.500` : 'black'}
-              color={isInvalidEmail ? 'red.500' : 'white'}
-              value={email}
-              onChangeText={(value) => {
-                setIsInvalidEmail(false);
-                setEmail(value);
-              }}
-            />
+            <VStack space={4} mt="4">
+              <Input
+                borderBottomWidth={2}
+                borderBottomColor={`${isInvalidEmail ? 'red.500' : 'black'}`}
+                _focus={
+                  isInvalidEmail
+                    ? {
+                        borderBottomColor: 'red.500',
+                        placeholderTextColor: 'red.500',
+                      }
+                    : {
+                        borderBottomColor: 'white',
+                        placeholderTextColor: 'white',
+                      }
+                }
+                InputRightElement={
+                  <Icon
+                    as={<Ionicons name="mail-outline" />}
+                    size={6}
+                    mr="2"
+                    color={isInvalidEmail ? `red.500` : 'white'}
+                  />
+                }
+                variant="underlined"
+                placeholder="Email"
+                placeholderTextColor={isInvalidEmail ? `red.500` : 'black'}
+                color={isInvalidEmail ? 'red.500' : 'white'}
+                value={email}
+                onChangeText={(value) => {
+                  setIsInvalidEmail(false);
+                  setEmail(value);
+                }}
+              />
 
-            <Button
-              title="Send"
-              rounded="lg"
-              mt="2"
-              medium
-              bg="primary3.500"
-              _pressed={{ bg: 'primary3.600' }}
-              onPress={onSubmit}
-              disabled={isLoading}
-              isLoading={isLoading}
-              //the size didnt match so i had to do this..
-              _spinner={{ paddingY: '0.45' }}
-            >
-              <Text fontWeight="semibold" color="black">
-                Send
-              </Text>
-            </Button>
-          </VStack>
-        </Box>
+              <Button
+                title="Send"
+                rounded="lg"
+                medium
+                bg="primary3.500"
+                _pressed={{ bg: 'primary3.600' }}
+                onPress={onSubmit}
+                disabled={isLoading}
+                isLoading={isLoading}
+                //the size didnt match so i had to do this..
+                _spinner={{ paddingY: '0.45' }}
+              >
+                <Text fontWeight="semibold" color="black">
+                  Send
+                </Text>
+              </Button>
+            </VStack>
+          </Box>
+        </ScrollView>
       </Center>
     </TouchableWithoutFeedback>
   );

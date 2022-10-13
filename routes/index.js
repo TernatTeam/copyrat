@@ -13,7 +13,13 @@ import {
   RegisterPage,
   ForgotPasswordPage,
 } from '../src/pages/auth/index';
-import { HomePage, ChatPage, LobbyPage, VotePage, ScorePage } from '../src/pages/index';
+import {
+  HomePage,
+  ChatPage,
+  LobbyPage,
+  VotePage,
+  ScorePage,
+} from '../src/pages/index';
 
 const Stack = createStackNavigator();
 

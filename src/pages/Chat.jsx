@@ -87,7 +87,7 @@ export const ChatPage = ({ navigation }) => {
   }, []);
 
   return fakeId ? (
-    <Box h="100%" w="100%" safeArea backgroundColor="#747474" py="4" px="4">
+    <Box h="100%" w="100%" safeArea backgroundColor="#747474" py="3" px="4">
       <Center py="2">
         <HStack justifyContent="space-between" alignItems="center" w="full">
           <Box w="30%">
