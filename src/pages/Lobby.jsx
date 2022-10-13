@@ -76,10 +76,6 @@ export const LobbyPage = ({ navigation }) => {
   const setRoles = async () => {
     setIsLoadingButton(true);
 
-    await updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
-      is_game_ready: true,
-    });
-
     let no_of_rats = Math.floor(players.length / 2);
 
     //arr of 3 rand index
@@ -99,6 +95,11 @@ export const LobbyPage = ({ navigation }) => {
         },
       );
     }
+    
+    await updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
+      is_game_ready: true,
+    });
+
 
     setIsLoadingButton(false);
   };
