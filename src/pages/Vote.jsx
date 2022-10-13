@@ -1,6 +1,14 @@
-import { TouchableOpacity } from 'react-native';
-import { Box, Button, Center, useToast, Text } from 'native-base';
 import React, { useEffect, useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import {
+  Box,
+  Button,
+  Center,
+  useToast,
+  Text,
+  ScrollView,
+  VStack,
+} from 'native-base';
 import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 import {
   db,
@@ -96,35 +104,11 @@ export const VotePage = ({ navigation }) => {
   };
 
   const voteFor = (index) => {
+    setAlreadyVoted(false);
     // retine ultima optiune de votare a playerului curent
     setIndexOfVoted(index); // in variabila indexOfVoted
 
-    if (!toast.isActive(id)) {
-      toast.show({
-        id,
-        duration: 2500,
-        placement: 'top',
-        render: () => {
-          return (
-            <Box
-              textAlign="center"
-              bg="rosybrown"
-              px="2"
-              py="1"
-              rounded="sm"
-              mb={5}
-              justifyContent="center"
-              alignItems="center"
-              flex={1}
-            >
-              <Text fontSize="md" fontWeight="bold">
-                You are voting for {playersDB[index].fake_id}
-              </Text>
-            </Box>
-          );
-        },
-      });
-    }
+    showToast(`You are voting for ${playersDB[index].fake_id}`);
   };
 
   const confirmVote = async () => {
@@ -205,298 +189,173 @@ export const VotePage = ({ navigation }) => {
     getAdminIdAndRound(); // playerii si id urile lor, cat si pe al admin ului si numarul rundei
   }, []);
 
+  const showToast = (message) => {
+    if (!toast.isActive(id)) {
+      return toast.show({
+        id,
+        duration: 2500,
+        placement: 'top',
+        render: () => {
+          return (
+            <Box
+              textAlign="center"
+              bg="rosybrown"
+              px="2"
+              py="1"
+              rounded="sm"
+              mb={5}
+              justifyContent="center"
+              alignItems="center"
+              flex={1}
+            >
+              <Text fontSize="md" fontWeight="bold">
+                {message}
+              </Text>
+            </Box>
+          );
+        },
+      });
+    }
+  };
+
   return (
-    <Center
-      h="100%"
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-        backgroundColor: '#747474',
-      }}
-    >
-      <Text fontSize="2xl" fontFamily="RadioNewsman">
-        Vote out the rats!
-      </Text>
-
-      {
-        // generare butoane de votare
-        playersDB?.map((player, index) => {
-          // checking valid vote button
-          if (
-            player.name != currentPlayer.name &&
-            player.name != currentPlayer.fake_id
-          ) {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  voteFor(index); // save vote 
-                }}
-                style={{
-                  width: '80%',
-                  margin: 10,
-                  marginTop: 15,
-                  alignItems: 'center',
-                }}
-              >
-                <Box
-                  py="2"
-                  w="full"
-                  style={{
-                    backgroundColor: player.userNameColor,
-                    paddingVertical: 5,
-                    borderRadius: 10,
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 22,
-                      marginLeft: 10,
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {player.fake_id}
-                  </Text>
-
-                  <Icon
-                    as={<Ionicons name="checkbox" />}
-                    size={6}
-                    mr="2"
-                    color={'white'}
-                  />
-                </Box>
-              </TouchableOpacity>
-            );
-          }
-        })
-      }
-
-      <Button // confirm vote
-        title="LockIn"
-        marginTop={6}
-        marginBottom={3}
-        rounded="lg"
-        medium
-        bg="primary3.500"
-        _pressed={{ bg: 'primary3.600' }}
-        onPress={() => {
-          // la apasare, se apeleaza functia care trimite catre baza de date indicele persoanei cu care votezi
-          if (indexOfVoted != null) {
-            // doar daca playerul a votat cu cineva. Atunci, poti
-            if (!alreadyVoted) {
-              // confirma votul o singura data, adica daca nu ai mai apasat
-              confirmVote(); // pe "Done" (variabila alreadyVoted are valoarea false)
-              setAlreadyVoted(true);
-              if (!toast.isActive(id)) {
-                toast.show({
-                  id,
-                  duration: 2500,
-                  placement: 'top',
-                  render: () => {
-                    return (
-                      <Box
-                        textAlign="center"
-                        bg="rosybrown"
-                        px="2"
-                        py="1"
-                        rounded="sm"
-                        mb={5}
-                        justifyContent="center"
-                        alignItems="center"
-                        flex={1}
-                      >
-                        <Text fontSize="md" fontWeight="bold">
-                          Locking in ... {playersDB[indexOfVoted].fake_id}
-                        </Text>
-                      </Box>
-                    );
-                  },
-                });
-              }
-            } else {
-              if (!toast.isActive(id)) {
-                toast.show({
-                  id,
-                  duration: 2500,
-                  placement: 'top',
-                  render: () => {
-                    return (
-                      <Box
-                        textAlign="center"
-                        bg="rosybrown"
-                        px="2"
-                        py="1"
-                        rounded="sm"
-                        mb={5}
-                        justifyContent="center"
-                        alignItems="center"
-                        flex={1}
-                      >
-                        <Text fontSize="md" fontWeight="bold">
-                          You already locked in your vote
-                        </Text>
-                      </Box>
-                    );
-                  },
-                });
-              }
-            }
-          } else {
-            if (!toast.isActive(id)) {
-              toast.show({
-                id,
-                duration: 2500,
-                placement: 'top',
-                render: () => {
-                  return (
-                    <Box
-                      textAlign="center"
-                      bg="rosybrown"
-                      px="2"
-                      py="1"
-                      rounded="sm"
-                      mb={5}
-                      justifyContent="center"
-                      alignItems="center"
-                      flex={1}
-                    >
-                      <Text fontSize="md" fontWeight="bold">
-                        Please vote for someone
-                      </Text>
-                    </Box>
-                  );
-                },
-              });
-            }
-            // in caz contrar, anunt playerul
-          } // ca nu a votat cu nimeni
-        }}
-      >
-        <Text style={{ fontWeight: 'semibold', color: 'black', fontSize: 16 }}>
-          Lock In Your Vote!
+    <Box safeArea bg="primary1.500" h="100%" w="100%">
+      <Box pt="6" w="full" alignItems="center" justifyContent="center">
+        <Text fontSize="2xl" fontFamily="RadioNewsman">
+          Vote out the rats!
         </Text>
-      </Button>
+      </Box>
 
-      <Button
-        title="stopVote"
-        rounded="lg"
-        medium
-        bg="rosybrown"
-        _pressed={{ bg: 'red.500' }}
-        onPress={async() => {
-          // butonul care calculeaza si afiseaza scorurile, si da update in baza de date
-          if (auth.currentUser.uid == roomData.game_admin_uid) {
-            await getPlayers();
-            let all_voted = true;
-            for (let i = 0; i < playersDB.length; i++) {
-              if (playersDB[i].vote < 0) all_voted = false;
-            }
-            if (!all_voted) { //daca nu si-a facut update
-              if (!toast.isActive(id)) {
-                toast.show({
-                  id,
-                  duration: 2500,
-                  placement: 'top',
-                  render: () => {
-                    return (
-                      <Box
-                        textAlign="center"
-                        bg="rosybrown"
-                        px="2"
-                        py="1"
-                        rounded="sm"
-                        mb={5}
-                        justifyContent="center"
+      <Box px="4" mt="2" mb="12" h="60%">
+        <ScrollView w="full">
+          <VStack flex="1" justifyContent="center" alignItems="center" px="2">
+            {
+              // generare butoane de votare
+              playersDB?.map((player, index) => {
+                // checking valid vote button
+                return (
+                  player.name != currentPlayer.name &&
+                  player.name != currentPlayer.fake_id && (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        voteFor(index); // save vote
+                      }}
+                      style={{
+                        width: '100%',
+                        margin: 10,
+                        marginTop: 15,
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Center
+                        flexDirection="row"
+                        justifyContent="space-between"
                         alignItems="center"
-                        flex={1}
+                        w="full"
+                        p="2"
+                        bgColor={player.userNameColor}
+                        borderRadius="lg"
                       >
-                        <Text fontSize="md" fontWeight="bold">
-                          Votes not locked in! Please try again
+                        <Text color="white" fontWeight="bold" fontSize="lg">
+                          {player.fake_id}
                         </Text>
-                      </Box>
-                    );
-                  },
-                });
-              }
-            } else {
-              // if votes locked in
-              calculateScore(); // scores
-              if (!toast.isActive(id)) {
-                toast.show({
-                  id,
-                  duration: 2500,
-                  placement: 'top',
-                  render: () => {
-                    return (
-                      <Box
-                        textAlign="center"
-                        bg="rosybrown"
-                        px="2"
-                        py="1"
-                        rounded="sm"
-                        mb={5}
-                        justifyContent="center"
-                        alignItems="center"
-                        flex={1}
-                      >
-                        <Text fontSize="md" fontWeight="bold">
-                          Calculating scores... Muie :D
-                        </Text>
-                      </Box>
-                    );
-                  },
-                });
-              }
-              // ne mutam pe pagina cu leaderboard ul
-              setTimeout(async () => { // wait for votes b4  leaving page
-                await updateDoc(
-                  doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
-                  {
-                    navToScore: true,
-                  },
+
+                        <Icon
+                          as={
+                            indexOfVoted === index ? (
+                              <Ionicons name="checkbox" />
+                            ) : (
+                              <Ionicons name="square-outline" />
+                            )
+                          }
+                          size={6}
+                          color={'white'}
+                        />
+                      </Center>
+                    </TouchableOpacity>
+                  )
                 );
-              }, 1000);
-            } 
-          } else { // if not admin -> show message
-            if (!toast.isActive(id)) {
-              toast.show({
-                id,
-                duration: 2500,
-                placement: 'top',
-                render: () => {
-                  return (
-                    <Box
-                      textAlign="center"
-                      bg="rosybrown"
-                      px="2"
-                      py="1"
-                      rounded="sm"
-                      mb={5}
-                      justifyContent="center"
-                      alignItems="center"
-                      flex={1}
-                    >
-                      <Text fontSize="md" fontWeight="bold">
-                        Wait! Only the game creator can stop the voting
-                      </Text>
-                    </Box>
-                  );
-                },
-              });
+              })
             }
-          } 
-        }}
-      >
-        <Text style={{ fontWeight: 'semibold', color: 'black', fontSize: 16 }}>
-          Stop Vote!
-        </Text>
-      </Button>
-    </Center>
+          </VStack>
+        </ScrollView>
+      </Box>
+
+      <Box p="6" mt="auto">
+        <Button // confirm vote
+          title="LockIn"
+          rounded="lg"
+          mb="3"
+          medium
+          bg="primary3.500"
+          _pressed={{ bg: 'primary3.600' }}
+          onPress={() => {
+            // la apasare, se apeleaza functia care trimite catre baza de date indicele persoanei cu care votezi
+            if (indexOfVoted != null) {
+              // doar daca playerul a votat cu cineva. Atunci, poti
+              if (!alreadyVoted) {
+                // confirma votul o singura data, adica daca nu ai mai apasat
+                confirmVote(); // pe "Done" (variabila alreadyVoted are valoarea false)
+                setAlreadyVoted(true);
+                showToast(`Locking in ... ${playersDB[indexOfVoted].fake_id}`);
+              } else {
+                showToast('You already locked in your vote');
+              }
+            } else {
+              showToast('Please vote for someone');
+              // in caz contrar, anunt playerul
+            } // ca nu a votat cu nimeni
+          }}
+        >
+          <Text fontWeight="semibold" color="black">
+            Lock In Your Vote
+          </Text>
+        </Button>
+
+        {auth.currentUser.uid === roomData.game_admin_uid && (
+          <Button
+            title="stopVote"
+            rounded="lg"
+            medium
+            bg="rosybrown"
+            _pressed={{ bg: 'red.400' }}
+            onPress={async () => {
+              // butonul care calculeaza si afiseaza scorurile, si da update in baza de date
+              if (auth.currentUser.uid == roomData.game_admin_uid) {
+                await getPlayers();
+                let all_voted = true;
+                for (let i = 0; i < playersDB.length; i++) {
+                  if (playersDB[i].vote < 0) all_voted = false;
+                }
+                if (!all_voted) {
+                  //daca nu si-a facut update
+                  showToast('Votes not locked in! Please try again');
+                } else {
+                  // if votes locked in
+                  calculateScore(); // scores
+                  showToast('Calculating scores... Muie :D');
+                  // ne mutam pe pagina cu leaderboard ul
+                  setTimeout(async () => {
+                    // wait for votes b4 leaving page
+                    await updateDoc(
+                      doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
+                      {
+                        navToScore: true,
+                      },
+                    );
+                  }, 1000);
+                }
+              }
+            }}
+          >
+            <Text fontWeight="semibold" color="white">
+              Stop Vote
+            </Text>
+          </Button>
+        )}
+      </Box>
+    </Box>
   );
 };
 

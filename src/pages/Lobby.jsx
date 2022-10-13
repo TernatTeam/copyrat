@@ -99,7 +99,7 @@ export const LobbyPage = ({ navigation }) => {
         },
       );
     }
-    
+
     setIsLoadingButton(false);
   };
 
@@ -280,7 +280,7 @@ export const LobbyPage = ({ navigation }) => {
         </Heading>
       </Box>
 
-      <Box px="4" mt="2" mb="12" h="50%">
+      <Box px="4" mt="2" h="60%">
         <ScrollView w="full">
           {isLoading ? (
             <PlayersLoader />
@@ -311,7 +311,7 @@ export const LobbyPage = ({ navigation }) => {
         </ScrollView>
       </Box>
 
-      <Box px="6">
+      <Box mt="auto" p="6">
         {auth.currentUser.uid == roomData.game_admin_uid && (
           <Button
             onPress={() => {
