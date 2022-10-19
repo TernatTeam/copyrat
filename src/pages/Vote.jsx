@@ -107,8 +107,6 @@ export const VotePage = ({ navigation }) => {
     setAlreadyVoted(false);
     // retine ultima optiune de votare a playerului curent
     setIndexOfVoted(index); // in variabila indexOfVoted
-
-    showToast(`You are voting for ${playersDB[index].fake_id}`);
   };
 
   const confirmVote = async () => {
