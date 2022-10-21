@@ -30,7 +30,7 @@ export const ModalShowRats = ({
               {players.map((player, index) => {
                 if (player.name != player.fake_id) {
                   return (
-                    <Text color="white" fontWeight="semibold" key={index}>
+                    <Text color={player.userNameColor} fontWeight="semibold" key={index}>
                       {player.name}
                     </Text>
                   );
