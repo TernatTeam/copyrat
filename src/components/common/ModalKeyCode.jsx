@@ -169,7 +169,7 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
                 value={keyCode}
                 onChangeText={(value) => {
                   setIsInvalidKeyCode(false);
-                  setKeyCode(value);
+                  setKeyCode(value.toUpperCase());
                 }}
               />
             </Modal.Body>

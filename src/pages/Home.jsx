@@ -131,6 +131,7 @@ export const HomePage = ({ navigation }) => {
       <Box px="12">
         <VStack justifyContent="flex-start" alignItems="center" my="16">
           <Image
+            mb="-9"
             alt="Copy Rat Logo"
             source={CopyratLogo}
             style={{ width: 150, height: 150 }}
