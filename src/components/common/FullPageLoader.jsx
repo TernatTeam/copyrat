@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import { VStack, Spinner, Text, Image, Center } from 'native-base';
+import { VStack, Spinner, Text, Image, Center } from "native-base";
 
-import CopyratLogo from '../../../assets/logo_trans.png';
+import CopyratLogo from "../../../assets/logo_trans.png";
 
 export const FullPageLoader = () => {
   return (
@@ -12,9 +12,10 @@ export const FullPageLoader = () => {
           alt="Copy Rat Logo"
           source={CopyratLogo}
           style={{ width: 150, height: 150 }}
+          mb="-9"
         />
 
-        <Text fontSize="3xl" fontFamily="RadioNewsman" color="black">
+        <Text fontSize="5xl" fontFamily="RadioNewsman" color="black">
           copyrat
         </Text>
       </VStack>
