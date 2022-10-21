@@ -20,13 +20,13 @@ import {
   collection,
   auth,
   getDocs,
-  addDoc,
   query,
   onSnapshot,
 } from '../../config/firebase/firebase-key-config';
 import { useGlobal } from '../../state';
+import { ModalShowRats } from '../components/common';
 
-let route = "Chat";
+let route = 'Chat';
 
 export const ScorePage = ({ navigation }) => {
   const toast = useToast();
@@ -44,15 +44,15 @@ export const ScorePage = ({ navigation }) => {
   -> roundNo = numarul rundei curente
 */
 
- 
   const [currentPlayer, setCurrentPlayer] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [{ roomData }] = useGlobal();
 
-  useEffect(() => { //console.log(route);
+  useEffect(() => {
     const q = query(collection(db, `games`, roomData.keyCode, 'admin'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        if (change.type === "modified") { 
+        if (change.type === 'modified') {
           navigation.reset({
             routes: [{ name: route }],
           });
@@ -112,7 +112,7 @@ export const ScorePage = ({ navigation }) => {
 
     while (ratsIndex.length < no_of_rats) {
       // generare indecsi
-      let newRatIndex = Math.floor(Math.random() * (playersDB.length));
+      let newRatIndex = Math.floor(Math.random() * playersDB.length);
 
       if (ratsIndex.indexOf(newRatIndex) == -1) {
         ratsIndex.push(newRatIndex);
@@ -162,48 +162,70 @@ export const ScorePage = ({ navigation }) => {
     }
   };
 
-
   const countNextRound = async () => {
     await updateDoc(doc(db, `games/${roomData.keyCode}`), {
       round_number: increment(1),
     });
   };
 
-  const showRats = () => {
-    // functia care afiseaza jucatorii care au avut rolul de "rat"
-    let rats = 'The rats this round were:';
-
-    playersDB.map((player) => {
-      // verificam prin array ul de playeri
-      if (player.name != player.fake_id) {
-        rats += '\n' + player.name; // retinem numele celor cu numele si fake_id ul diferit
-      }
-    });
-    window.alert(rats);
-  };
-
-  useEffect(() => { 
+  useEffect(() => {
     getSortedPlayers();
-    
+
     setTimeout(() => {
-      showRats(); // arata ratii din runda asta
+      setIsModalOpen(true); // arata ratii din runda asta
     }, 1000);
   }, []);
-  
+
   let roundNo = 1;
   useEffect(() => {
     const checkRound = async () => {
       const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
       roundNo = docSnap.data().round_number;
-      if(roundNo > 2) 
-        route = "Home";
+      if (roundNo > 2) route = 'Home';
     };
     checkRound();
   }, []);
 
+  const showToast = (message) => {
+    if (!toast.isActive(id)) {
+      return toast.show({
+        id,
+        duration: 2500,
+        placement: 'top',
+        render: () => {
+          return (
+            <Box
+              textAlign="center"
+              bg="rosybrown"
+              px="2"
+              py="1"
+              rounded="sm"
+              mb={5}
+              justifyContent="center"
+              alignItems="center"
+              flex={1}
+            >
+              <Text fontSize="md" fontWeight="bold">
+                {message}
+              </Text>
+            </Box>
+          );
+        },
+      });
+    }
+  };
+
   return (
     <Box safeArea bg="primary1.500" h="100%" w="100%">
       <Box px="5" w="full" justifyContent="center" alignItems="flex-start">
+        <ModalShowRats
+          show={isModalOpen}
+          players={playersDB}
+          onClose={() => {
+            setIsModalOpen(false);
+          }}
+        />
+
         <Box w="full" alignItems="center" justifyContent="center">
           <Heading size="2xl" fontWeight="500" color="black">
             Scoreboard:
@@ -239,71 +261,49 @@ export const ScorePage = ({ navigation }) => {
         </Box>
       </Box>
 
-      <Box w="full" px="16">
-        <Button
-          title="Next round"
-          rounded="lg"
-          medium
-          bg="primary3.500"
-          _pressed={{ bg: 'primary3.600' }}
-          onPress={() => {
-            // butonul care va incepe o noua runda
-            if (auth.currentUser.uid == roomData.game_admin_uid) {
+      {auth.currentUser.uid === roomData.game_admin_uid && (
+        <Box w="full" p="6" mt="auto">
+          <Button
+            title="Next round"
+            rounded="lg"
+            medium
+            bg="primary3.500"
+            _pressed={{ bg: 'primary3.600' }}
+            onPress={() => {
+              //getAdminIdAndRound();
+              // butonul care va incepe o noua runda
+
               // acest lucru e posibil doar daca playerul care apasa are rolul de admin
               roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote
               deleteChat(); // stergem chatul de tura trecuta
               countNextRound(); // actualizez numarul rundei
-            }
 
-            if (roundNo < 3) {
-              setTimeout(() => {
-                if (!toast.isActive(id)) {
-                  toast.show({
-                    id,
-                    duration: 2500,
-                    placement: 'top',
-                    render: () => {
-                      return (
-                        <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
-                          Preparing new roles...
-                        </Box>
-                      );
-                    },
-                  });
-                }
-              }, 1000);
-            } else { 
-              if (!toast.isActive(id)) {
-                toast.show({
-                  id,
-                  duration: 2500,
-                  placement: 'top',
-                  render: () => {
-                    return (
-                      <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
-                        Well done! See you again soon
-                      </Box>
-                    );
-                  },
-                });
+              if (roundNo < 3) {
+                setTimeout(() => {
+                  if (!toast.isActive(id)) {
+                    showToast('Preparing new roles...');
+                  }
+                }, 1000);
+              } else {
+                showToast('Well done! See you again soon');
               }
-            }
 
-            setTimeout(async () => {
-              await updateDoc(
-                doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
-                {
-                  navToScore: false,
-                },
-              );
-            }, 1000);
-          }}
-        >
-          <Text fontWeight="semibold" color="black">
-            Next Round
-          </Text>
-        </Button>
-      </Box>
+              setTimeout(async () => {
+                await updateDoc(
+                  doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
+                  {
+                    navToScore: false,
+                  },
+                );
+              }, 1000);
+            }}
+          >
+            <Text fontWeight="semibold" color="black">
+              Next Round
+            </Text>
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
