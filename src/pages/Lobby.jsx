@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  Center,
   Flex,
   Heading,
   Icon,
@@ -147,7 +146,7 @@ export const LobbyPage = ({ navigation }) => {
       });
     });
 
-    return async () => {
+    return () => {
       unsubscribe();
     };
   }, []);

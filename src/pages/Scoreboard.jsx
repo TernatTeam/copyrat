@@ -126,7 +126,7 @@ export const ScorePage = ({ navigation }) => {
       await updateDoc(
         doc(db, `games/${roomData.keyCode}/players/${playerIDs[i]}`),
         {
-          //fake_id: newFakeIds[i],
+          fake_id: newFakeIds[i],
           no_of_votes: 0,
           vote: -1,
         },
@@ -166,15 +166,14 @@ export const ScorePage = ({ navigation }) => {
   useEffect(() => {
     getSortedPlayers();
 
-    setTimeout(() => {
-      setIsModalOpen(true); // arata ratii din runda asta
-    }, 1000);
+    setIsModalOpen(true);
 
     const checkRound = async () => {
       const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
       roundNo = docSnap.data().round_number;
       if (roundNo > 2) route = 'Home';
     };
+
     checkRound();
   }, []);
 
@@ -271,11 +270,7 @@ export const ScorePage = ({ navigation }) => {
               countNextRound(); // actualizez numarul rundei
 
               if (roundNo < 3) {
-                setTimeout(() => {
-                  if (!toast.isActive(id)) {
-                    showToast('Preparing new roles...');
-                  }
-                }, 1000);
+                showToast('Preparing new roles...');
               } else {
                 showToast('Well done! See you again soon');
               }
