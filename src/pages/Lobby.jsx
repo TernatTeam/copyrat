@@ -333,9 +333,9 @@ export const LobbyPage = ({ navigation }) => {
                     w="full"
                   >
                     <Text fontWeight="bold">{player.name}</Text>
-                    {auth.currentUser.uid == roomData.game_admin_uid ? (
+                    {player.uid == roomData.game_admin_uid && (
                       <Text fontWeight="extrabold">Room Admin</Text>
-                    ) : null}
+                    )}
                   </Flex>
                 );
               })}
