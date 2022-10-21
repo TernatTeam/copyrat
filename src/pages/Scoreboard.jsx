@@ -43,8 +43,6 @@ export const ScorePage = ({ navigation }) => {
   -> currentPlayer = obiectul cu informatiile despre un player (divera pe fiecare device)
   -> roundNo = numarul rundei curente
 */
-
-  const [currentPlayer, setCurrentPlayer] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [{ roomData }] = useGlobal();
 
@@ -81,11 +79,6 @@ export const ScorePage = ({ navigation }) => {
         // pentru fiecare player luat din baza de data
         playersArray.push(doc.data()); // il retin in array ul auxiliar
         idArray.push(doc.id); // retinem si id urile playerilor in array ul auxiliar
-
-        if (doc.id == auth.currentUser.uid) {
-          // daca am gasit playeryl cu id ul curent, il retinem in
-          setCurrentPlayer(doc.data()); // variabila currentPlayer pentru a avea acces usor la date
-        } // cand cream butoanele de votare
       });
 
       playersArray.sort((a, b) => {
@@ -168,16 +161,15 @@ export const ScorePage = ({ navigation }) => {
     });
   };
 
+  let roundNo = 1;
+
   useEffect(() => {
     getSortedPlayers();
 
     setTimeout(() => {
       setIsModalOpen(true); // arata ratii din runda asta
     }, 1000);
-  }, []);
 
-  let roundNo = 1;
-  useEffect(() => {
     const checkRound = async () => {
       const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
       roundNo = docSnap.data().round_number;
