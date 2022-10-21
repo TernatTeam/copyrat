@@ -44,13 +44,11 @@ export const ScorePage = ({ navigation }) => {
   -> roundNo = numarul rundei curente
 */
 
-  const [roundNo, setRoundNo] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [{ roomData }] = useGlobal();
 
   useEffect(() => {
-    console.log(route);
     const q = query(collection(db, `games`, roomData.keyCode, 'admin'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
@@ -164,13 +162,6 @@ export const ScorePage = ({ navigation }) => {
     }
   };
 
-  const getAdminIdAndRound = async () => {
-    // functie care retine id ul adminului si runda, se apeleaza o data la
-    const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
-    //setAdminId(docSnap.data().game_admin_uid);
-    setRoundNo(docSnap.data().round_number);
-  };
-
   const countNextRound = async () => {
     await updateDoc(doc(db, `games/${roomData.keyCode}`), {
       round_number: increment(1),
@@ -185,11 +176,15 @@ export const ScorePage = ({ navigation }) => {
     }, 1000);
   }, []);
 
-  // bruh you DON'T do this asta o sa iti ruleze la fiecare state update si uhm practic de zeci de ori nu e de mirare ca avem super multe writeuri/readuri
-  {
-    getAdminIdAndRound();
-    if (roundNo > 2) route = 'Home';
-  }
+  let roundNo = 1;
+  useEffect(() => {
+    const checkRound = async () => {
+      const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
+      roundNo = docSnap.data().round_number;
+      if (roundNo > 2) route = 'Home';
+    };
+    checkRound();
+  }, []);
 
   const showToast = (message) => {
     if (!toast.isActive(id)) {
