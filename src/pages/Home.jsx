@@ -4,6 +4,7 @@ import {
   Text,
   Image,
   VStack,
+  useToast,
   Icon,
   IconButton,
   Box,
@@ -32,6 +33,23 @@ export const HomePage = ({ navigation }) => {
   const [isLoadingJoinRoom, setIsLoadingJoinRoom] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [{}, dispatch] = useGlobal();
+  const toast = useToast();
+  const id = 'voting-toasts';
+  const rat_alert = [
+    'If they talk about you, they talk about themselves',
+    'You’re Italic. I’m in bold.',
+    'Go buy yourself a personality.',
+    'An original is worth more than a copy. Sometimes.',
+    'Don’t study me. You won’t graduate.',
+    'Great, a copycat.',
+    'A copycat can never influence, but might win.',
+    'Parrots mimic their owners.',
+    'To copy others is actually why you’re here',
+    'I guess you are a fan of monkey’s threat.',
+    'No one wants to be you. I promise',
+    'Cri-cri...grey autumn...',
+    'I’m Yu. He’s Mi.',
+  ];
 
   const logOut = () => {
     signOut(auth).then(() => {
@@ -101,6 +119,36 @@ export const HomePage = ({ navigation }) => {
     setIsDisabled(false);
   };
 
+  const showToast = (message) => {
+    if (!toast.isActive(id)) {
+      return toast.show({
+        id,
+        duration: 2500,
+        placement: 'top',
+        render: () => {
+          return (
+            <Box
+              textAlign="center"
+              bg="#71dada"
+              px="2"
+              py="1"
+              rounded="sm"
+              mb={5}
+              justifyContent="center"
+              alignItems="center"
+              flex={1}
+            >
+              <Text fontSize="md" fontWeight="bold">
+                {message}
+              </Text>
+            </Box>
+          );
+        },
+      });
+    }
+  };
+
+
   return (
     <Box safeArea bg="primary1.500" h="100%" w="100%">
       <ModalKeyCode
@@ -149,12 +197,17 @@ export const HomePage = ({ navigation }) => {
 
       <Box px="10">
         <VStack justifyContent="flex-start" alignItems="center" my="16">
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+                let r = Math.floor(Math.random() * 13);
+                showToast(rat_alert[r]);
+              }}>
             <Image
               mb="-9"
               alt="Copy Rat Logo"
               source={CopyratLogo}
               style={{ width: 150, height: 150 }}
+              
+              
             />
           </TouchableOpacity>
 
