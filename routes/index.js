@@ -13,12 +13,14 @@ import {
   RegisterPage,
   ForgotPasswordPage,
 } from '../src/pages/auth/index';
+
 import {
   HomePage,
   ChatPage,
   LobbyPage,
   VotePage,
   ScorePage,
+  CreateGameSettingsPage,
 } from '../src/pages/index';
 
 const Stack = createStackNavigator();
@@ -41,6 +43,7 @@ const AppRouter = ({ page }) => {
         )}
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordPage} />
+        <Stack.Screen name="Settings" component={CreateGameSettingsPage} />
         <Stack.Screen name="Lobby" component={LobbyPage} />
         <Stack.Screen name="Chat" component={ChatPage} />
         <Stack.Screen name="Vote" component={VotePage} />

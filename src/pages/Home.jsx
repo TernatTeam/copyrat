@@ -13,13 +13,7 @@ import {
 
 import { Ionicons } from '@expo/vector-icons';
 
-import {
-  auth,
-  db,
-  doc,
-  setDoc,
-  signOut,
-} from '../../config/firebase/firebase-key-config';
+import { auth, signOut } from '../../config/firebase/firebase-key-config';
 
 import CopyratLogo from '../../assets/logo_trans.png';
 import { ModalKeyCode } from '../components/common';
@@ -27,7 +21,6 @@ import { useGlobal } from '../../state';
 
 export const HomePage = ({ navigation }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoadingCreateRoom, setIsLoadingCreateRoom] = useState(false);
   const [isLoadingJoinRoom, setIsLoadingJoinRoom] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [{}, dispatch] = useGlobal();
@@ -38,48 +31,6 @@ export const HomePage = ({ navigation }) => {
         routes: [{ name: 'Login' }],
       });
     });
-  };
-
-  const generateRoomKey = async (length) => {
-    setIsLoadingCreateRoom(true);
-    setIsDisabled(true);
-
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const charactersLength = characters.length;
-
-    const currentUser = auth.currentUser;
-
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    try {
-      await setDoc(doc(db, 'games', result), {
-        game_admin_uid: currentUser.uid,
-
-        round_number: 1,
-      });
-
-      await setDoc(doc(db, 'games', result, 'admin', 'gameState'), {
-        is_game_ready: false,
-        navToScore: false,
-      });
-
-      dispatch({
-        type: 'ROOM_DATA',
-        keyCode: result,
-        game_admin_uid: currentUser.uid,
-      });
-
-      setIsLoadingCreateRoom(false);
-      navigation.reset({
-        routes: [{ name: 'Lobby' }],
-      });
-      setIsDisabled(false);
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   const joinGame = async (keyCode, gameAdminUid) => {
@@ -129,7 +80,12 @@ export const HomePage = ({ navigation }) => {
       </Box>
 
       <Box px="12">
-        <VStack justifyContent="flex-start" alignItems="center" my="16">
+        <VStack
+          shadow={9}
+          justifyContent="flex-start"
+          alignItems="center"
+          my="16"
+        >
           <Image
             mb="-9"
             alt="Copy Rat Logo"
@@ -158,11 +114,9 @@ export const HomePage = ({ navigation }) => {
               bg="primary3.500"
               _pressed={{ bg: 'primary3.600' }}
               onPress={() => {
-                generateRoomKey(4);
+                navigation.navigate('Settings');
               }}
               disabled={isDisabled}
-              isLoading={isLoadingCreateRoom}
-              _spinner={{ paddingY: '0.45' }}
             >
               <Text fontWeight="semibold" color="black">
                 Create room
