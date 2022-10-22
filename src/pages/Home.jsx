@@ -18,6 +18,7 @@ import { auth, signOut } from '../../config/firebase/firebase-key-config';
 import CopyratLogo from '../../assets/logo_trans.png';
 import { ModalKeyCode } from '../components/common';
 import { useGlobal } from '../../state';
+import { TouchableOpacity } from 'react-native';
 
 export const HomePage = ({ navigation }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,9 +65,14 @@ export const HomePage = ({ navigation }) => {
         }}
       />
 
-      <Box px="6" w="full" justifyContent="center" alignItems="flex-start">
+      <HStack
+        px="4"
+        w="full"
+        justifyContent="space-between"
+        alignItems="flex-start"
+      >
         <IconButton
-          icon={<Icon as={<Ionicons name="settings-outline" />} />}
+          icon={<Icon as={<Ionicons name="log-out" />} />}
           borderRadius="full"
           _icon={{
             color: 'white',
@@ -76,22 +82,32 @@ export const HomePage = ({ navigation }) => {
             bg: 'primary3.600',
           }}
           onPress={logOut}
+          rotation={180}
         />
-      </Box>
+        <IconButton
+          icon={<Icon as={<Ionicons name="book" />} />}
+          borderRadius="full"
+          _icon={{
+            color: 'white',
+            size: '8',
+          }}
+          _pressed={{
+            bg: 'primary3.600',
+          }}
+          onPress={() => navigation.navigate('Rules')}
+        />
+      </HStack>
 
-      <Box px="12">
-        <VStack
-          shadow={9}
-          justifyContent="flex-start"
-          alignItems="center"
-          my="16"
-        >
-          <Image
-            mb="-9"
-            alt="Copy Rat Logo"
-            source={CopyratLogo}
-            style={{ width: 150, height: 150 }}
-          />
+      <Box px="10">
+        <VStack justifyContent="flex-start" alignItems="center" my="16">
+          <TouchableOpacity>
+            <Image
+              mb="-9"
+              alt="Copy Rat Logo"
+              source={CopyratLogo}
+              style={{ width: 150, height: 150 }}
+            />
+          </TouchableOpacity>
 
           <Text fontSize="5xl" fontFamily="RadioNewsman" color="black">
             copyrat

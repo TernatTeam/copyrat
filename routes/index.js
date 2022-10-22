@@ -21,6 +21,7 @@ import {
   VotePage,
   ScorePage,
   CreateGameSettingsPage,
+  Rules,
 } from '../src/pages/index';
 
 const Stack = createStackNavigator();
@@ -48,6 +49,7 @@ const AppRouter = ({ page }) => {
         <Stack.Screen name="Chat" component={ChatPage} />
         <Stack.Screen name="Vote" component={VotePage} />
         <Stack.Screen name="Scoreboard" component={ScorePage} />
+        <Stack.Screen name="Rules" component={Rules} />
       </Stack.Navigator>
     </NavigationContainer>
   );
