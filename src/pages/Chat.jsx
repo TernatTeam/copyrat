@@ -38,10 +38,7 @@ export const ChatPage = ({ navigation }) => {
 
       setFakeId(docSnap.data().fake_id);
 
-      console.log(playerInfo.nameAndColor.length, playerInfo.nameAndColor);
-
       for (let i = 0; i < playerInfo.nameAndColor.length; i++) {
-        console.log(playerInfo.nameAndColor[i].userNameColor);
         if (playerInfo.nameAndColor[i].name == docSnap.data().fake_id) {
           setUserNameColor(playerInfo.nameAndColor[i].userNameColor);
           break;
@@ -111,13 +108,6 @@ export const ChatPage = ({ navigation }) => {
               <Text fontWeight="semibold" color="black">
                 Vote
               </Text>
-            </Button>
-            <Button
-              onPress={() => {
-                console.log(playerInfo);
-              }}
-            >
-              print
             </Button>
           </Box>
 

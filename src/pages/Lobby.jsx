@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 import {
   Box,
@@ -12,13 +12,13 @@ import {
   Text,
   useToast,
   VStack,
-} from "native-base";
+} from 'native-base';
 
-import { Keyboard } from "react-native";
+import { Keyboard } from 'react-native';
 
-import * as Clipboard from "expo-clipboard";
+import * as Clipboard from 'expo-clipboard';
 
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 
 import {
   auth,
@@ -29,10 +29,10 @@ import {
   updateDoc,
   onSnapshot,
   deleteDoc,
-} from "../../config/firebase/firebase-key-config";
+} from '../../config/firebase/firebase-key-config';
 
-import { useGlobal } from "../../state";
-import { ModalName } from "../components/common";
+import { useGlobal } from '../../state';
+import { ModalName } from '../components/common';
 
 let uIds = [];
 
@@ -45,29 +45,29 @@ export const LobbyPage = ({ navigation }) => {
   const [keyboardStatus, setKeyboardStatus] = useState(false);
   const [{ roomData }, dispatch] = useGlobal();
   const userNameColors = [
-    "#e6194B",
-    "#3cb44b",
-    "#ffe119",
-    "#4363d8",
-    "#f58231",
-    "#911eb4",
-    "#42d4f4",
-    "#f032e6",
-    "#bfef45",
-    "#fabed4",
-    "#469990",
-    "#dcbeff",
-    "#9A6324",
-    "#fffac8",
-    "#800000",
-    "#aaffc3",
-    "#808000",
-    "#ffd8b1",
-    "#000075",
-    "#a9a9a9",
+    '#e6194B',
+    '#3cb44b',
+    '#ffe119',
+    '#4363d8',
+    '#f58231',
+    '#911eb4',
+    '#42d4f4',
+    '#f032e6',
+    '#bfef45',
+    '#fabed4',
+    '#469990',
+    '#dcbeff',
+    '#9A6324',
+    '#fffac8',
+    '#800000',
+    '#aaffc3',
+    '#808000',
+    '#ffd8b1',
+    '#000075',
+    '#a9a9a9',
   ];
   const toast = useToast();
-  const id = "copy-clipboard-toast";
+  const id = 'copy-clipboard-toast';
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(roomData.keyCode);
@@ -76,7 +76,7 @@ export const LobbyPage = ({ navigation }) => {
       toast.show({
         id,
         duration: 2500,
-        placement: "bottom",
+        placement: 'bottom',
         render: () => {
           return (
             <Box bg="green.500" px="2" py="1" rounded="sm" mb={4}>
@@ -108,11 +108,11 @@ export const LobbyPage = ({ navigation }) => {
         doc(db, `games/${roomData.keyCode}/players/${uIds[arr[i]]}`),
         {
           fake_id: players[arr[(i + 1) % no_of_rats]].name,
-        }
+        },
       );
     }
 
-    await updateDoc(doc(db, "games", roomData.keyCode, "admin", "gameState"), {
+    await updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
       is_game_ready: true,
     });
 
@@ -123,7 +123,7 @@ export const LobbyPage = ({ navigation }) => {
     const q = query(collection(db, `games/${roomData.keyCode}/players`));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
+        if (change.type === 'added') {
           setPlayers((oldValues) => [
             ...oldValues,
             { ...change.doc.data(), uid: change.doc.id },
@@ -133,7 +133,7 @@ export const LobbyPage = ({ navigation }) => {
           setIsLoading(false);
         }
 
-        if (change.type === "modified") {
+        if (change.type === 'modified') {
           const newState = players.map((player) => {
             if (change.doc.id == player.uid) {
               return { ...player, name: player.name };
@@ -145,9 +145,11 @@ export const LobbyPage = ({ navigation }) => {
           setPlayers(newState);
         }
 
-        if (change.type === "removed") {
+        if (change.type === 'removed') {
           setPlayers((oldValues) =>
-            oldValues.filter((player) => player.name !== change.doc.data().name)
+            oldValues.filter(
+              (player) => player.name !== change.doc.data().name,
+            ),
           );
 
           setHasLeft({ id: change.doc.id, name: change.doc.data().name });
@@ -168,7 +170,7 @@ export const LobbyPage = ({ navigation }) => {
         toast.show({
           id: hasLeft.id,
           duration: 2500,
-          placement: "top",
+          placement: 'top',
           render: () => {
             return (
               <Box flex={1} bg="red.500" px="2" py="1" rounded="sm" mb={4}>
@@ -182,12 +184,12 @@ export const LobbyPage = ({ navigation }) => {
   }, [hasLeft]);
 
   useEffect(() => {
-    const q = query(collection(db, "games", roomData.keyCode, "admin"));
+    const q = query(collection(db, 'games', roomData.keyCode, 'admin'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        if (change.type === "modified") {
+        if (change.type === 'modified') {
           navigation.reset({
-            routes: [{ name: "Chat" }],
+            routes: [{ name: 'Chat' }],
           });
         }
       });
@@ -200,12 +202,12 @@ export const LobbyPage = ({ navigation }) => {
 
   useEffect(() => {
     const subscribeShow = Keyboard.addListener(
-      "keyboardDidShow",
-      _keyboardDidShow
+      'keyboardDidShow',
+      _keyboardDidShow,
     );
     const subscribeHide = Keyboard.addListener(
-      "keyboardDidHide",
-      _keyboardDidHide
+      'keyboardDidHide',
+      _keyboardDidHide,
     );
 
     return () => {
@@ -215,9 +217,9 @@ export const LobbyPage = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (players) {
+    if (players.length) {
       dispatch({
-        type: "PLAYER_INFO",
+        type: 'PLAYER_INFO',
         nameAndColor: players,
       });
     }
@@ -232,7 +234,7 @@ export const LobbyPage = ({ navigation }) => {
       loaderArray.push(
         <Box key={i} padding={2}>
           <Skeleton borderRadius={10} />
-        </Box>
+        </Box>,
       );
     }
 
@@ -255,11 +257,11 @@ export const LobbyPage = ({ navigation }) => {
           icon={<Icon as={<Ionicons name="arrow-back-outline" />} />}
           borderRadius="full"
           _icon={{
-            color: "white",
-            size: "8",
+            color: 'white',
+            size: '8',
           }}
           _pressed={{
-            bg: "primary3.600",
+            bg: 'primary3.600',
           }}
           onPress={async () => {
             try {
@@ -267,15 +269,15 @@ export const LobbyPage = ({ navigation }) => {
                 doc(
                   db,
                   `games/${roomData.keyCode}/players`,
-                  auth.currentUser.uid
-                )
+                  auth.currentUser.uid,
+                ),
               );
 
               navigation.reset({
-                routes: [{ name: "Home" }],
+                routes: [{ name: 'Home' }],
               });
             } catch (err) {
-              console.log("Err: ", err);
+              console.log('Err: ', err);
             }
           }}
         />
@@ -305,11 +307,11 @@ export const LobbyPage = ({ navigation }) => {
             icon={<Icon as={<Ionicons name="copy-outline" />} />}
             borderRadius="full"
             _icon={{
-              color: "white",
-              size: "5",
+              color: 'white',
+              size: '5',
             }}
             _pressed={{
-              bg: "primary3.600",
+              bg: 'primary3.600',
             }}
             onPress={copyToClipboard}
           />
@@ -366,10 +368,10 @@ export const LobbyPage = ({ navigation }) => {
               rounded="lg"
               medium
               bg="primary3.500"
-              _pressed={{ bg: "primary3.600" }}
+              _pressed={{ bg: 'primary3.600' }}
               disabled={isLoadingButton}
               isLoading={isLoadingButton}
-              _spinner={{ paddingY: "0.45" }}
+              _spinner={{ paddingY: '0.45' }}
             >
               <Text fontWeight="semibold" color="black">
                 Start
