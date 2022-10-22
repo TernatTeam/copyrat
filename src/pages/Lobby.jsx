@@ -271,12 +271,9 @@ export const LobbyPage = ({ navigation }) => {
                 )
               );
 
-              navigation.reset(
-                {
-                  routes: [{ name: "Home" }],
-                },
-                { players }
-              );
+              navigation.reset({
+                routes: [{ name: "Home" }],
+              });
             } catch (err) {
               console.log("Err: ", err);
             }
