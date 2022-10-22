@@ -238,7 +238,7 @@ export const HomePage = ({ navigation }) => {
               isLoading={isLoadingCreateRoom}
               _spinner={{ paddingY: "0.45" }}
             >
-              <Text fontWeight="semibold" color="black">
+              <Text fontFamily="RadioNewsman" color="black">
                 Create room
               </Text>
             </Button>
@@ -259,7 +259,7 @@ export const HomePage = ({ navigation }) => {
               isLoading={isLoadingJoinRoom}
               _spinner={{ paddingY: "0.45" }}
             >
-              <Text fontWeight="semibold" color="black">
+              <Text fontFamily="RadioNewsman" color="black">
                 Join room
               </Text>
             </Button>
