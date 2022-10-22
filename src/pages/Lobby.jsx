@@ -43,7 +43,7 @@ export const LobbyPage = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
-  const [{ roomData }] = useGlobal();
+  const [{ roomData }, dispatch] = useGlobal();
   const userNameColors = [
     "#e6194B",
     "#3cb44b",
@@ -186,6 +186,7 @@ export const LobbyPage = ({ navigation }) => {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "modified") {
+          console.log(players);
           navigation.reset({
             routes: [{ name: "Chat" }],
           });
@@ -213,6 +214,15 @@ export const LobbyPage = ({ navigation }) => {
       subscribeHide.remove();
     };
   }, []);
+
+  useEffect(() => {
+    if (players) {
+      dispatch({
+        type: "PLAYER_INFO",
+        nameAndColor: players,
+      });
+    }
+  }, [players]);
 
   const _keyboardDidShow = () => setKeyboardStatus(true);
   const _keyboardDidHide = () => setKeyboardStatus(false);
@@ -262,9 +272,12 @@ export const LobbyPage = ({ navigation }) => {
                 )
               );
 
-              navigation.reset({
-                routes: [{ name: "Home" }],
-              });
+              navigation.reset(
+                {
+                  routes: [{ name: "Home" }],
+                },
+                { players }
+              );
             } catch (err) {
               console.log("Err: ", err);
             }
