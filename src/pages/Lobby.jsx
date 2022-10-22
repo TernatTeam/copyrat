@@ -186,7 +186,6 @@ export const LobbyPage = ({ navigation }) => {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "modified") {
-          console.log(players);
           navigation.reset({
             routes: [{ name: "Chat" }],
           });
