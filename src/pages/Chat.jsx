@@ -25,7 +25,7 @@ export const ChatPage = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [fakeId, setFakeId] = useState();
   const [userNameColor, setUserNameColor] = useState('');
-  const [{ roomData }] = useGlobal();
+  const [{ roomData, playerInfo }] = useGlobal();
 
   const getFakeIdAndUsernameColor = async () => {
     const docRef = doc(
@@ -37,7 +37,13 @@ export const ChatPage = ({ navigation }) => {
       const docSnap = await getDoc(docRef);
 
       setFakeId(docSnap.data().fake_id);
-      setUserNameColor(docSnap.data().userNameColor);
+
+      for (let i = 0; i < playerInfo.nameAndColor.length; i++) {
+        if (playerInfo.nameAndColor[i].name == docSnap.data().fake_id) {
+          setUserNameColor(playerInfo.nameAndColor[i].userNameColor);
+          break;
+        }
+      }
     } catch (err) {
       console.log('ERR: ', err);
     }
@@ -86,7 +92,7 @@ export const ChatPage = ({ navigation }) => {
     setMessages([]);
   }, []);
 
-  return fakeId ? (
+  return userNameColor ? (
     <Box h="100%" w="100%" safeArea backgroundColor="#747474" py="3" px="4">
       <Center py="2">
         <HStack justifyContent="space-between" alignItems="center" w="full">
