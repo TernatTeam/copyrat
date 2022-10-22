@@ -58,6 +58,12 @@ export const ChatPage = ({ route, navigation }) => {
   useEffect(() => {
     getFakeIdAndUsernameColor();
 
+    playerInfo.nameAndColor.map((player) => {
+      if (player.name == fakeId) {
+        setUserNameColor(player.userNameColor);
+      }
+    })
+
     const q = query(
       collection(db, `games/${roomData.keyCode}/chat`),
       orderBy("createdAt", "desc")
