@@ -20,8 +20,8 @@ import {
   LobbyPage,
   VotePage,
   ScorePage,
-  CreateGameSettingsPage,
   Rules,
+  RoomSettingsPage,
 } from '../src/pages/index';
 
 const Stack = createStackNavigator();
@@ -44,12 +44,19 @@ const AppRouter = ({ page }) => {
         )}
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordPage} />
-        <Stack.Screen name="Settings" component={CreateGameSettingsPage} />
         <Stack.Screen name="Lobby" component={LobbyPage} />
         <Stack.Screen name="Chat" component={ChatPage} />
         <Stack.Screen name="Vote" component={VotePage} />
         <Stack.Screen name="Scoreboard" component={ScorePage} />
         <Stack.Screen name="Rules" component={Rules} />
+        <Stack.Screen
+          options={{
+            gestureDirection: 'vertical',
+            cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
+          }}
+          name="Room Settings"
+          component={RoomSettingsPage}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

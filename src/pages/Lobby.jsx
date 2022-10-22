@@ -14,8 +14,6 @@ import {
   VStack,
 } from 'native-base';
 
-import { Keyboard } from 'react-native';
-
 import * as Clipboard from 'expo-clipboard';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -33,6 +31,7 @@ import {
 
 import { useGlobal } from '../../state';
 import { ModalName } from '../components/common';
+import { useKeyboard } from '../hooks/use-keyboard';
 
 let uIds = [];
 
@@ -42,7 +41,7 @@ export const LobbyPage = ({ navigation }) => {
   const [hasLeft, setHasLeft] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingButton, setIsLoadingButton] = useState(false);
-  const [keyboardStatus, setKeyboardStatus] = useState(false);
+  const keyboardStatus = useKeyboard();
   const [{ roomData }, dispatch] = useGlobal();
   const userNameColors = [
     '#e6194B',
@@ -201,22 +200,6 @@ export const LobbyPage = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    const subscribeShow = Keyboard.addListener(
-      'keyboardDidShow',
-      _keyboardDidShow,
-    );
-    const subscribeHide = Keyboard.addListener(
-      'keyboardDidHide',
-      _keyboardDidHide,
-    );
-
-    return () => {
-      subscribeShow.remove();
-      subscribeHide.remove();
-    };
-  }, []);
-
-  useEffect(() => {
     if (players.length) {
       dispatch({
         type: 'PLAYER_INFO',
@@ -224,9 +207,6 @@ export const LobbyPage = ({ navigation }) => {
       });
     }
   }, [players]);
-
-  const _keyboardDidShow = () => setKeyboardStatus(true);
-  const _keyboardDidHide = () => setKeyboardStatus(false);
 
   const PlayersLoader = () => {
     const loaderArray = [];

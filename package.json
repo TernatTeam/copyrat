@@ -11,14 +11,14 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.10",
     "@react-navigation/native": "^6.0.13",
-    "@react-navigation/stack": "^6.3.1",
-    "expo": "~46.0.13",
+    "@react-navigation/stack": "^6.3.2",
+    "expo": "~46.0.16",
     "expo-cli": "^6.0.6",
     "expo-clipboard": "^3.1.0",
     "expo-status-bar": "~1.4.0",
-    "firebase": "^9.10.0",
-    "firebase-tools": "^11.12.0",
-    "native-base": "^3.4.17",
+    "firebase": "^9.12.1",
+    "firebase-tools": "^11.15.0",
+    "native-base": "^3.4.19",
     "react": "18.0.0",
     "react-native": "0.69.6",
     "react-native-gesture-handler": "~2.5.0",
@@ -28,7 +28,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.19.6"
   },
   "private": true
 }

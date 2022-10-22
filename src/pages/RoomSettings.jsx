@@ -6,9 +6,7 @@ import {
   Box,
   Button,
   Center,
-  Heading,
   Icon,
-  Image,
   Input,
   ScrollView,
   Text,
@@ -26,18 +24,18 @@ import {
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
-
-import CopyratLogo from '../../assets/logo_trans.png';
+import { useKeyboard } from '../hooks/use-keyboard';
 
 const joinGameSchema = yup.object({
   name: yup.string().required('Name is required'),
 });
 
-export const CreateGameSettingsPage = () => {
+export const RoomSettingsPage = ({ onClose }) => {
   const [isLoadingCreateRoom, setIsLoadingCreateRoom] = useState(false);
   const [name, setName] = useState('');
   const [isInvalidName, setIsInvalidName] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const keyboardStatus = useKeyboard();
 
   const toast = useToast();
   const id = 'error-toasts';
@@ -173,16 +171,16 @@ export const CreateGameSettingsPage = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <Center bg="primary1.500" h="100%" w="100%">
+      <Center safeArea bg="primary1.500" h="100%" w="100%" position="relative">
         <ScrollView w="full" h="full" px="16">
-          <Box safeArea pt="16" pb="2">
+          <Box pt="16" pb="2">
             <Center w="full" mb="4">
-              <Text fontSize="5xl" fontFamily="RadioNewsman" color="black">
-                Settings
+              <Text fontSize="3xl" fontFamily="RadioNewsman" color="black">
+                Create Game
               </Text>
             </Center>
 
-            <VStack space={2} py="4">
+            <VStack space={2} py="8">
               <Text
                 fontFamily="RadioNewsman"
                 color="white"
@@ -225,31 +223,56 @@ export const CreateGameSettingsPage = () => {
                 }}
               />
             </VStack>
-
-            <Box mt="auto">
-              <Button
-                w="full"
-                bg="primary3.500"
-                _pressed={{ bg: 'primary3.600' }}
-                onPress={onSubmit}
-                disabled={isLoading}
-                isLoading={isLoading}
-                _spinner={{ paddingY: '0.48' }}
-              >
-                <Text
-                  fontFamily="RadioNewsman"
-                  fontWeight="semibold"
-                  color="black"
-                >
-                  Create game
-                </Text>
-              </Button>
-            </Box>
           </Box>
         </ScrollView>
+
+        <Box position="absolute" bottom={keyboardStatus ? '2' : '5'}>
+          <Button
+            w="full"
+            bg="primary3.500"
+            _pressed={{ bg: 'primary3.600' }}
+            onPress={onSubmit}
+            disabled={isLoading}
+            isLoading={isLoading}
+            _spinner={{ paddingY: '0.48' }}
+          >
+            <Text fontFamily="RadioNewsman" fontWeight="semibold" color="black">
+              Create game
+            </Text>
+          </Button>
+        </Box>
       </Center>
     </TouchableWithoutFeedback>
   );
 };
 
-export default CreateGameSettingsPage;
+export default RoomSettingsPage;
+
+{
+  /* <PresenceTransition
+visible={isCreateGameSettings}
+initial={{
+  opacity: 0,
+}}
+animate={{
+  opacity: 1,
+  transition: {
+    duration: 250,
+  },
+}}
+>
+<Actionsheet
+  isOpen={isCreateGameSettings}
+  onClose={() => {
+    setIsCreateGameSettings(false);
+  }}
+>
+  <Actionsheet.Content>
+    <Actionsheet.Item>Option 1</Actionsheet.Item>
+    <Actionsheet.Item>Option 2</Actionsheet.Item>
+    <Actionsheet.Item>Option 3</Actionsheet.Item>
+    <Actionsheet.Item color="red.500">Delete</Actionsheet.Item>
+  </Actionsheet.Content>
+</Actionsheet>
+</PresenceTransition> */
+}

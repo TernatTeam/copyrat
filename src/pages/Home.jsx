@@ -130,7 +130,7 @@ export const HomePage = ({ navigation }) => {
               bg="primary3.500"
               _pressed={{ bg: 'primary3.600' }}
               onPress={() => {
-                navigation.navigate('Settings');
+                navigation.navigate('Room Settings');
               }}
               disabled={isDisabled}
             >
