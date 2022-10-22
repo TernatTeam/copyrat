@@ -4,3 +4,4 @@ export * from './Lobby';
 export * from './Vote';
 export * from './Scoreboard';
 export * from './CreateGameSettings';
+export * from './Rules';
