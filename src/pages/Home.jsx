@@ -99,7 +99,6 @@ export const HomePage = ({ navigation }) => {
     }
   };
 
-
   return (
     <Box safeArea bg="primary1.500" h="100%" w="100%">
       <ModalKeyCode
@@ -147,25 +146,25 @@ export const HomePage = ({ navigation }) => {
       </HStack>
 
       <Box px="10">
-        <VStack justifyContent="flex-start" alignItems="center" my="16">
-          <TouchableOpacity onPress={() => {
-                let r = Math.floor(Math.random() * 13);
-                showToast(rat_alert[r]);
-              }}>
+        <TouchableOpacity
+          onPress={() => {
+            let r = Math.floor(Math.random() * 13);
+            showToast(rat_alert[r]);
+          }}
+        >
+          <VStack justifyContent="flex-start" alignItems="center" my="16">
             <Image
               mb="-9"
               alt="Copy Rat Logo"
               source={CopyratLogo}
               style={{ width: 150, height: 150 }}
-              
-              
             />
-          </TouchableOpacity>
 
-          <Text fontSize="5xl" fontFamily="RadioNewsman" color="black">
-            copyrat
-          </Text>
-        </VStack>
+            <Text fontSize="5xl" fontFamily="RadioNewsman" color="black">
+              copyrat
+            </Text>
+          </VStack>
+        </TouchableOpacity>
 
         <HStack
           flexDirection="column"

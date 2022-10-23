@@ -20,7 +20,7 @@ import {
   LobbyPage,
   VotePage,
   ScorePage,
-  Rules,
+  RulesPage,
   RoomSettingsPage,
 } from '../src/pages/index';
 
@@ -48,7 +48,14 @@ const AppRouter = ({ page }) => {
         <Stack.Screen name="Chat" component={ChatPage} />
         <Stack.Screen name="Vote" component={VotePage} />
         <Stack.Screen name="Scoreboard" component={ScorePage} />
-        <Stack.Screen name="Rules" component={Rules} />
+        <Stack.Screen
+          options={{
+            gestureDirection: 'vertical',
+            cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
+          }}
+          name="Rules"
+          component={RulesPage}
+        />
         <Stack.Screen
           options={{
             gestureDirection: 'vertical',

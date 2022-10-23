@@ -232,7 +232,7 @@ export const LobbyPage = ({ navigation }) => {
         keyCode={roomData.keyCode}
       />
 
-      <Box px="2" w="full" justifyContent="center" alignItems="flex-start">
+      <Box px="4" w="full" justifyContent="center" alignItems="flex-start">
         <IconButton
           icon={<Icon as={<Ionicons name="arrow-back-outline" />} />}
           borderRadius="full"
@@ -263,10 +263,15 @@ export const LobbyPage = ({ navigation }) => {
         />
       </Box>
 
-      <Box w="full" alignItems="center" justifyContent="center">
-        <Heading size="2xl" fontWeight="600" color="black">
+      <Box w="full" alignItems="center" justifyContent="center" pt="4">
+        <Text
+          fontSize="2xl"
+          textAlign="center"
+          fontFamily="RadioNewsman"
+          color="black"
+        >
           Room key:
-        </Heading>
+        </Text>
 
         <Flex
           direction="row"

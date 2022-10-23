@@ -4,7 +4,7 @@ import { Text, Icon, IconButton, Flex, HStack, VStack, Box } from 'native-base';
 
 import { Ionicons } from '@expo/vector-icons';
 
-export const Rules = ({ navigation }) => {
+export const RulesPage = ({ navigation }) => {
   const [page, setPage] = useState(1);
 
   return (
@@ -26,23 +26,21 @@ export const Rules = ({ navigation }) => {
             bg: 'primary3.600',
           }}
           onPress={() => {
-            navigation.reset({
-              routes: [{ name: 'Home' }],
-            });
+            navigation.navigate('Home');
           }}
         />
       </HStack>
 
       <VStack p="5" justifyContent="center" alignItems="center" m="auto">
-        {page == 1 ? (
+        {page == 1 && (
           <Text color="white" fontSize="20" textAlign="center">
             You are going to play a three round game, in which you will chat
             with your fellow players, but there's a catch. There are two types
             of players, rats and cats.
           </Text>
-        ) : null}
+        )}
 
-        {page == 2 ? (
+        {page == 2 && (
           <Text color="white" fontSize="20" textAlign="center">
             Each round, half of the players will have to impersonate someone
             from the lobby. They will have assigned the rat role, and appear
@@ -50,9 +48,9 @@ export const Rules = ({ navigation }) => {
             appear in the top right of your screen saying 'Playing as ..',
             insert name of another rat player.
           </Text>
-        ) : null}
+        )}
 
-        {page == 3 ? (
+        {page == 3 && (
           <Text color="white" fontSize="20" textAlign="center">
             If you are not part of the chosen few, fear not, because you have
             the cat role. Your mission as cats is to try and catch the impostors
@@ -60,26 +58,25 @@ export const Rules = ({ navigation }) => {
             players write, if you think that someone said something that they
             wouldn't normally say.
           </Text>
-        ) : null}
+        )}
 
-        {page == 4 ? (
+        {page == 4 && (
           <Text color="white" fontSize="20" textAlign="center">
             The rats get points by fooling the others and having as little
             players as possible vote for the, whereas the cats get points by
             correctly voting out the rats.
           </Text>
-        ) : null}
+        )}
 
-        {page == 5 ? (
+        {page == 5 && (
           <Text color="white" fontSize="20" textAlign="center">
             Good luck!
           </Text>
-        ) : null}
+        )}
       </VStack>
 
       <HStack
-        px="4"
-        py="4"
+        p="4"
         w="full"
         justifyContent="space-between"
         alignItems="flex-end"
@@ -134,4 +131,4 @@ export const Rules = ({ navigation }) => {
   );
 };
 
-export default Rules;
+export default RulesPage;

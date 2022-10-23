@@ -7,6 +7,7 @@ import {
   Button,
   Center,
   Icon,
+  IconButton,
   Input,
   ScrollView,
   Text,
@@ -25,12 +26,13 @@ import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
 import { useKeyboard } from '../hooks/use-keyboard';
+import UnderlinedInput from '../components/interface/UnderlinedInput';
 
 const joinGameSchema = yup.object({
   name: yup.string().required('Name is required'),
 });
 
-export const RoomSettingsPage = ({ onClose }) => {
+export const RoomSettingsPage = ({ navigation, onClose }) => {
   const [isLoadingCreateRoom, setIsLoadingCreateRoom] = useState(false);
   const [name, setName] = useState('');
   const [isInvalidName, setIsInvalidName] = useState(false);
@@ -172,58 +174,53 @@ export const RoomSettingsPage = ({ onClose }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <Center safeArea bg="primary1.500" h="100%" w="100%" position="relative">
-        <ScrollView w="full" h="full" px="16">
-          <Box pt="16" pb="2">
-            <Center w="full" mb="4">
-              <Text fontSize="3xl" fontFamily="RadioNewsman" color="black">
-                Create Game
-              </Text>
-            </Center>
+        <Box px="4" w="full" justifyContent="center" alignItems="flex-start">
+          <IconButton
+            icon={<Icon as={<Ionicons name="arrow-back-outline" />} />}
+            borderRadius="full"
+            _icon={{
+              color: 'white',
+              size: '8',
+            }}
+            _pressed={{
+              bg: 'primary3.600',
+            }}
+            onPress={() => {
+              navigation.navigate('Home');
+            }}
+          />
+        </Box>
 
-            <VStack space={2} py="8">
-              <Text
-                fontFamily="RadioNewsman"
-                color="white"
-                fontWeight="semibold"
-                fontSize="md"
-              >
-                Set your username:
-              </Text>
+        <ScrollView w="full" h="full" px="10" pt="4">
+          <Text
+            fontSize="2xl"
+            textAlign="center"
+            fontFamily="RadioNewsman"
+            color="black"
+          >
+            Create Game
+          </Text>
 
-              <Input
-                borderBottomWidth={2}
-                borderBottomColor={`${isInvalidName ? 'red.500' : 'black'}`}
-                _focus={
-                  isInvalidName
-                    ? {
-                        borderBottomColor: 'red.500',
-                        placeholderTextColor: 'red.500',
-                      }
-                    : {
-                        borderBottomColor: 'white',
-                        placeholderTextColor: 'white',
-                      }
-                }
-                InputRightElement={
-                  <Icon
-                    as={<Ionicons name="person-outline" />}
-                    size={6}
-                    mr="2"
-                    color={isInvalidName ? `red.500` : 'white'}
-                  />
-                }
-                variant="underlined"
-                placeholder="username"
-                placeholderTextColor={isInvalidName ? `red.500` : 'black'}
-                color={isInvalidName ? 'red.500' : 'white'}
-                value={name}
-                onChangeText={(value) => {
-                  setIsInvalidName(false);
-                  setName(value);
-                }}
-              />
-            </VStack>
-          </Box>
+          <VStack space={2} py="8">
+            <Text
+              fontFamily="RadioNewsman"
+              color="white"
+              fontWeight="semibold"
+              fontSize="md"
+            >
+              Set your username:
+            </Text>
+
+            <UnderlinedInput
+              placeholder="username"
+              icon="person-outline"
+              onChangeText={(value) => {
+                setIsInvalidName(false);
+                setName(value);
+              }}
+              isInvalid={isInvalidName}
+            />
+          </VStack>
         </ScrollView>
 
         <Box position="absolute" bottom={keyboardStatus ? '2' : '5'}>
