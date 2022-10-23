@@ -1,29 +1,26 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import * as yup from "yup";
+import * as yup from 'yup';
 
 import {
   Box,
   Button,
-  Icon,
-  Input,
   Modal,
   Text,
   useToast,
   KeyboardAvoidingView,
-} from "native-base";
-
-import { Ionicons } from "@expo/vector-icons";
+} from 'native-base';
 
 import {
   auth,
   db,
   doc,
   setDoc,
-} from "../../../config/firebase/firebase-key-config";
+} from '../../../config/firebase/firebase-key-config';
+import { UnderlinedInput } from '../interface';
 
 const joinGameSchema = yup.object({
-  name: yup.string().required("Name is required"),
+  name: yup.string().required('Name is required'),
 });
 
 export const ModalName = ({
@@ -32,12 +29,12 @@ export const ModalName = ({
   keyCode,
   userNameColors,
 }) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [isNameInvalid, setIsInvalidName] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
-  const id = "error-toasts";
+  const id = 'error-toasts';
 
   const resetFieldsErrors = () => {
     setIsInvalidName(true);
@@ -62,7 +59,7 @@ export const ModalName = ({
 
       return true;
     } catch (err) {
-      console.log("Err: ", err);
+      console.log('Err: ', err);
       return false;
     }
   };
@@ -85,7 +82,7 @@ export const ModalName = ({
               toast.show({
                 id,
                 duration: 2500,
-                placement: "top",
+                placement: 'top',
                 render: () => {
                   return (
                     <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
@@ -108,7 +105,7 @@ export const ModalName = ({
         toast.show({
           id,
           duration: 2500,
-          placement: "top",
+          placement: 'top',
           render: () => {
             return (
               <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
@@ -119,7 +116,7 @@ export const ModalName = ({
         });
       }
 
-      if (err.path === "name") {
+      if (err.path === 'name') {
         setIsInvalidName(true);
       }
     });
@@ -135,7 +132,7 @@ export const ModalName = ({
               alignItems="center"
               justifyContent="center"
             >
-              <Text color="white" style={{ fontSize: 18, fontWeight: "bold" }}>
+              <Text color="white" style={{ fontSize: 18, fontWeight: 'bold' }}>
                 Name
               </Text>
             </Modal.Header>
@@ -145,32 +142,10 @@ export const ModalName = ({
               alignItems="center"
               justifyContent="center"
             >
-              <Input
-                borderBottomWidth={2}
-                borderBottomColor={`${isNameInvalid ? "red.500" : "black"}`}
-                _focus={
-                  isNameInvalid
-                    ? {
-                        borderBottomColor: "red.500",
-                        placeholderTextColor: "red.500",
-                      }
-                    : {
-                        borderBottomColor: "white",
-                        placeholderTextColor: "white",
-                      }
-                }
-                InputRightElement={
-                  <Icon
-                    as={<Ionicons name="person-outline" />}
-                    size={6}
-                    mr="2"
-                    color={isNameInvalid ? `red.500` : "white"}
-                  />
-                }
-                variant="underlined"
+              <UnderlinedInput
                 placeholder="Name"
-                placeholderTextColor={isNameInvalid ? `red.500` : "black"}
-                color={isNameInvalid ? "red.500" : "white"}
+                icon="person-outline"
+                isInvalid={isNameInvalid}
                 value={name}
                 onChangeText={(value) => {
                   setIsInvalidName(false);
@@ -183,12 +158,12 @@ export const ModalName = ({
               <Button
                 w="full"
                 bg="primary3.500"
-                _pressed={{ bg: "primary3.600" }}
+                _pressed={{ bg: 'primary3.600' }}
                 onPress={onSubmit}
                 disabled={isLoading}
                 isLoading={isLoading}
                 //the size didnt match so i had to do this..
-                _spinner={{ paddingY: "0.48" }}
+                _spinner={{ paddingY: '0.48' }}
               >
                 <Text fontWeight="semibold" color="black">
                   Done

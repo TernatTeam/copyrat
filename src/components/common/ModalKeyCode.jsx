@@ -5,17 +5,14 @@ import * as yup from 'yup';
 import {
   Box,
   Button,
-  Icon,
-  Input,
   Modal,
   Text,
   useToast,
   KeyboardAvoidingView,
 } from 'native-base';
 
-import { Ionicons } from '@expo/vector-icons';
-
 import { db, doc, getDoc } from '../../../config/firebase/firebase-key-config';
+import { UnderlinedInput } from '../interface';
 
 const joinGameSchema = yup.object({
   keyCode: yup.string().required('Key room is required'),
@@ -140,32 +137,10 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
               alignItems="center"
               justifyContent="center"
             >
-              <Input
-                borderBottomWidth={2}
-                borderBottomColor={`${isInvalidKeyCode ? 'red.500' : 'black'}`}
-                _focus={
-                  isInvalidKeyCode
-                    ? {
-                        borderBottomColor: 'red.500',
-                        placeholderTextColor: 'red.500',
-                      }
-                    : {
-                        borderBottomColor: 'white',
-                        placeholderTextColor: 'white',
-                      }
-                }
-                InputRightElement={
-                  <Icon
-                    as={<Ionicons name="key-outline" />}
-                    size={6}
-                    mr="2"
-                    color={isInvalidKeyCode ? `red.500` : 'white'}
-                  />
-                }
-                variant="underlined"
+              <UnderlinedInput
                 placeholder="Room Key"
-                placeholderTextColor={isInvalidKeyCode ? `red.500` : 'black'}
-                color={isInvalidKeyCode ? 'red.500' : 'white'}
+                icon="key-outline"
+                isInvalid={isInvalidKeyCode}
                 value={keyCode}
                 onChangeText={(value) => {
                   setIsInvalidKeyCode(false);
