@@ -5,7 +5,7 @@ import { Icon, Input } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 
 export const UnderlinedInput = ({
-  isInvalid,
+  isInvalid = false,
   value,
   icon,
   placeholder,

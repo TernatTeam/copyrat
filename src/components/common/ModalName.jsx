@@ -18,17 +18,13 @@ import {
   setDoc,
 } from '../../../config/firebase/firebase-key-config';
 import { UnderlinedInput } from '../interface';
+import { useColors } from '../../hooks';
 
 const joinGameSchema = yup.object({
   name: yup.string().required('Name is required'),
 });
 
-export const ModalName = ({
-  show = false,
-  onClose = () => {},
-  keyCode,
-  userNameColors,
-}) => {
+export const ModalName = ({ show = false, onClose = () => {}, keyCode }) => {
   const [name, setName] = useState('');
   const [isNameInvalid, setIsInvalidName] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +50,7 @@ export const ModalName = ({
         no_of_votes: 0,
         score: 0,
         vote: -1,
-        userNameColor: userNameColors[Math.floor(Math.random() * 20)],
+        userNameColor: useColors(),
       });
 
       return true;

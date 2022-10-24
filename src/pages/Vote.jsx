@@ -49,8 +49,8 @@ export const VotePage = ({ navigation }) => {
   const [{ roomData }] = useGlobal();
 
   useEffect(() => {
-    updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
-      navToScore: false,
+    updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_state'), {
+      nav_to_score: false,
     });
   }, []);
 
@@ -337,9 +337,9 @@ export const VotePage = ({ navigation }) => {
                   setTimeout(async () => {
                     // wait for votes b4 leaving page
                     await updateDoc(
-                      doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
+                      doc(db, 'games', roomData.keyCode, 'admin', 'game_state'),
                       {
-                        navToScore: true,
+                        nav_to_score: true,
                       },
                     );
                   }, 1000);

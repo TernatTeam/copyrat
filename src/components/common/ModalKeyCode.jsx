@@ -44,7 +44,7 @@ export const ModalKeyCode = ({ show = false, onClose = () => {} }) => {
           setIsLoading(true);
 
           const docSnap = await getDoc(
-            doc(db, 'games', keyCode, 'admin', 'gameState'),
+            doc(db, 'games', keyCode, 'admin', 'game_state'),
           );
           const docSnap2 = await getDoc(doc(db, 'games', keyCode));
           if (docSnap.exists()) {

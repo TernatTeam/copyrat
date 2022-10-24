@@ -277,9 +277,9 @@ export const ScorePage = ({ navigation }) => {
 
               setTimeout(async () => {
                 await updateDoc(
-                  doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
+                  doc(db, 'games', roomData.keyCode, 'admin', 'game_state'),
                   {
-                    navToScore: false,
+                    nav_to_score: false,
                   },
                 );
               }, 1000);
