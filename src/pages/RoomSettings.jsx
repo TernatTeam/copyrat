@@ -187,7 +187,7 @@ export const RoomSettingsPage = ({ navigation }) => {
       <Center safeArea bg="primary1.500" h="100%" w="100%" position="relative">
         <Box px="4" w="full" justifyContent="center" alignItems="flex-start">
           <IconButton
-            icon={<Icon as={<Ionicons name="arrow-back-outline" />} />}
+            icon={<Icon as={<Ionicons name="close-outline" />} />}
             borderRadius="full"
             _icon={{
               color: 'white',
