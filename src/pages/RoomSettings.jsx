@@ -7,7 +7,6 @@ import {
   Button,
   Center,
   Flex,
-  HStack,
   Icon,
   IconButton,
   ScrollView,
