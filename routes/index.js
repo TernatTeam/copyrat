@@ -1,18 +1,18 @@
-import "react-native-gesture-handler";
+import 'react-native-gesture-handler';
 
-import React from "react";
+import React from 'react';
 
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer } from '@react-navigation/native';
 import {
   CardStyleInterpolators,
   createStackNavigator,
-} from "@react-navigation/stack";
+} from '@react-navigation/stack';
 
 import {
   LoginPage,
   RegisterPage,
   ForgotPasswordPage,
-} from "../src/pages/auth/index";
+} from '../src/pages/auth/index';
 import {
   HomePage,
   ChatPage,
@@ -20,7 +20,8 @@ import {
   VotePage,
   ScorePage,
   Rules,
-} from "../src/pages/index";
+  EndPage,
+} from '../src/pages/index';
 
 const Stack = createStackNavigator();
 
@@ -31,11 +32,11 @@ const AppRouter = ({ page }) => {
         screenOptions={{
           headerShown: false,
           gestureEnabled: true,
-          gestureDirection: "horizontal",
+          gestureDirection: 'horizontal',
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
-        {page === "Login" ? (
+        {page === 'Login' ? (
           <Stack.Screen name="Login" component={LoginPage} />
         ) : (
           <Stack.Screen name="Home" component={HomePage} />
@@ -47,6 +48,7 @@ const AppRouter = ({ page }) => {
         <Stack.Screen name="Vote" component={VotePage} />
         <Stack.Screen name="Scoreboard" component={ScorePage} />
         <Stack.Screen name="Rules" component={Rules} />
+        <Stack.Screen name="End" component={EndPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
