@@ -103,7 +103,7 @@ export const chatBubble = (props) => {
       maxWidth="80%"
       backgroundColor="#a4a4a4"
       borderRadius="xl"
-      borderTopLeftRadius="0"
+      
       pl="18"
       mt="1"
     >
