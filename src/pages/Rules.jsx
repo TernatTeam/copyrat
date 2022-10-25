@@ -27,7 +27,7 @@ export const RulesPage = ({ navigation }) => {
         alignItems="flex-start"
       >
         <IconButton
-          icon={<Icon as={<Ionicons name="arrow-back-outline" />} />}
+          icon={<Icon as={<Ionicons name="close-outline" />} />}
           borderRadius="full"
           _icon={{
             color: 'white',

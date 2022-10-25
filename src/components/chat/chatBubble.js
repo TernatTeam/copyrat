@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Text, Button } from 'native-base';
+import { Box, Text } from 'native-base';
 
 import { Bubble } from 'react-native-gifted-chat';
 
@@ -25,9 +25,9 @@ export const chatBubble = (props) => {
     }
 
     return false;
-  }
+  };
 
-  if (props.currentMessage.user._id == auth.currentUser.uid ) { 
+  if (props.currentMessage.user._id == auth.currentUser.uid) {
     return (
       <Box
         maxWidth="80%"
@@ -51,81 +51,75 @@ export const chatBubble = (props) => {
               marginRight: -10,
               marginLeft: 0,
             },
-            
           }}
         />
       </Box>
     );
-  }
-
-  else if(!checkPrev())
-  return (
-    <Box
-      maxWidth="80%"
-      backgroundColor="#a4a4a4"
-      borderRadius="xl"
-      borderTopLeftRadius="0"
-      pl="18"
-      mt="2"
-    >
-      <Text
-        mt="1"
-        mr="4"
-        fontWeight="bold"
-        fontSize="md"
-        color={props.currentMessage.user.userNameColor}
-        isTruncated={true}
-        maxWidth="100%"
+  } else if (!checkPrev())
+    return (
+      <Box
+        maxWidth="80%"
+        backgroundColor="#a4a4a4"
+        borderRadius="xl"
+        borderTopLeftRadius="0"
+        pl="18"
+        mt="2"
       >
-        {props.currentMessage.user.fakeId}
-      </Text>
+        <Text
+          mt="1"
+          mr="4"
+          fontWeight="bold"
+          fontSize="md"
+          color={props.currentMessage.user.userNameColor}
+          isTruncated={true}
+          maxWidth="100%"
+        >
+          {props.currentMessage.user.fakeId}
+        </Text>
 
-      <Bubble
-        {...props}
-        textStyle={{
-          left: {
-            color: 'white',
-          },
-        }}
-        wrapperStyle={{
-          left: {
-            backgroundColor: '#a4a4a4',
-            marginLeft: -10,
-            marginRight: 0,
-          },
-        }}
-      /> 
-    </Box>
-  );
-  else 
-  return (
-    <Box
-      maxWidth="80%"
-      backgroundColor="#a4a4a4"
-      borderRadius="xl"
-      
-      pl="18"
-      mt="1"
-    >
-     
-
-      <Bubble
-        {...props}
-        textStyle={{
-          left: {
-            color: 'white',
-          },
-        }}
-        wrapperStyle={{
-          left: {
-            backgroundColor: '#a4a4a4',
-            marginLeft: -10,
-            marginRight: 0,
-          },
-        }}
-      /> 
-    </Box>
-  );
+        <Bubble
+          {...props}
+          textStyle={{
+            left: {
+              color: 'white',
+            },
+          }}
+          wrapperStyle={{
+            left: {
+              backgroundColor: '#a4a4a4',
+              marginLeft: -10,
+              marginRight: 0,
+            },
+          }}
+        />
+      </Box>
+    );
+  else
+    return (
+      <Box
+        maxWidth="80%"
+        backgroundColor="#a4a4a4"
+        borderRadius="xl"
+        pl="18"
+        mt="1"
+      >
+        <Bubble
+          {...props}
+          textStyle={{
+            left: {
+              color: 'white',
+            },
+          }}
+          wrapperStyle={{
+            left: {
+              backgroundColor: '#a4a4a4',
+              marginLeft: -10,
+              marginRight: 0,
+            },
+          }}
+        />
+      </Box>
+    );
 };
 
 export default chatBubble;
