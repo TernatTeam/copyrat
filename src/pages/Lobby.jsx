@@ -30,18 +30,14 @@ import {
 } from '../../config/firebase/firebase-key-config';
 
 import { useGlobal } from '../../state';
-import { ModalName } from '../components/common';
-import { useKeyboard } from '../hooks/use-keyboard';
 
 let uIds = [];
 
 export const LobbyPage = ({ navigation }) => {
   const [players, setPlayers] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(true);
   const [hasLeft, setHasLeft] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingButton, setIsLoadingButton] = useState(false);
-  const keyboardStatus = useKeyboard();
   const [{ roomData }, dispatch] = useGlobal();
   const toast = useToast();
   const id = 'copy-clipboard-toast';
@@ -186,6 +182,10 @@ export const LobbyPage = ({ navigation }) => {
     }
   }, [players]);
 
+  useEffect(() => {
+    setPlayers([]);
+  }, []);
+
   const PlayersLoader = () => {
     const loaderArray = [];
     for (let i = 0; i <= 10; i++) {
@@ -200,15 +200,7 @@ export const LobbyPage = ({ navigation }) => {
   };
 
   return (
-    <Box safeArea bg="primary1.500" h="100%" w="100%">
-      <ModalName
-        show={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-        }}
-        keyCode={roomData.keyCode}
-      />
-
+    <Box safeArea bg="primary1.500" h="100%" w="100%" position="absolute">
       <Box px="4" w="full" justifyContent="center" alignItems="flex-start">
         <IconButton
           icon={<Icon as={<Ionicons name="arrow-back-outline" />} />}
@@ -317,31 +309,29 @@ export const LobbyPage = ({ navigation }) => {
         </ScrollView>
       </Box>
 
-      {keyboardStatus === false && (
-        <Box mt="auto" p="6">
-          {auth.currentUser.uid == roomData.game_admin_uid && (
-            <Button
-              onPress={() => {
-                if (auth.currentUser.uid == roomData.game_admin_uid) {
-                  setRoles();
-                }
-              }}
-              title="Start"
-              rounded="lg"
-              medium
-              bg="primary3.500"
-              _pressed={{ bg: 'primary3.600' }}
-              disabled={isLoadingButton}
-              isLoading={isLoadingButton}
-              _spinner={{ paddingY: '0.45' }}
-            >
-              <Text fontWeight="semibold" color="black">
-                Start
-              </Text>
-            </Button>
-          )}
-        </Box>
-      )}
+      <Box position="absolute" bottom="6" w="full" px="4">
+        {auth.currentUser.uid == roomData.game_admin_uid && (
+          <Button
+            onPress={() => {
+              if (auth.currentUser.uid == roomData.game_admin_uid) {
+                setRoles();
+              }
+            }}
+            title="Start"
+            rounded="lg"
+            medium
+            bg="primary3.500"
+            _pressed={{ bg: 'primary3.600' }}
+            disabled={isLoadingButton}
+            isLoading={isLoadingButton}
+            _spinner={{ paddingY: '0.45' }}
+          >
+            <Text fontWeight="semibold" color="black">
+              Start
+            </Text>
+          </Button>
+        )}
+      </Box>
     </Box>
   );
 };

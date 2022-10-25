@@ -17,15 +17,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { auth, signOut } from '../../config/firebase/firebase-key-config';
 
 import CopyratLogo from '../../assets/logo_trans.png';
-import { ModalKeyCode } from '../components/common';
-import { useGlobal } from '../../state';
+import { ModalJoinRoom } from '../components/common';
 import { TouchableOpacity } from 'react-native';
 
 export const HomePage = ({ navigation }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoadingJoinRoom, setIsLoadingJoinRoom] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [{}, dispatch] = useGlobal();
   const toast = useToast();
   const id = 'voting-toasts';
   const rat_alert = [
@@ -50,24 +46,6 @@ export const HomePage = ({ navigation }) => {
         routes: [{ name: 'Login' }],
       });
     });
-  };
-
-  const joinGame = async (keyCode, gameAdminUid) => {
-    setIsModalOpen(false);
-    setIsLoadingJoinRoom(true);
-    setIsDisabled(true);
-
-    dispatch({
-      type: 'ROOM_DATA',
-      keyCode: keyCode,
-      game_admin_uid: gameAdminUid,
-    });
-
-    setIsLoadingJoinRoom(false);
-    navigation.reset({
-      routes: [{ name: 'Lobby' }],
-    });
-    setIsDisabled(false);
   };
 
   const showToast = (message) => {
@@ -101,14 +79,11 @@ export const HomePage = ({ navigation }) => {
 
   return (
     <Box safeArea bg="primary1.500" h="100%" w="100%">
-      <ModalKeyCode
+      <ModalJoinRoom
         show={isModalOpen}
-        onClose={(keyCode, gameAdminUid) => {
+        navigation={navigation}
+        onClose={() => {
           setIsModalOpen(false);
-
-          if (keyCode && gameAdminUid) {
-            joinGame(keyCode, gameAdminUid);
-          }
         }}
       />
 
@@ -184,7 +159,6 @@ export const HomePage = ({ navigation }) => {
               onPress={() => {
                 navigation.navigate('Room Settings');
               }}
-              disabled={isDisabled}
             >
               <Text fontFamily="RadioNewsman" color="black">
                 Create room
@@ -203,9 +177,6 @@ export const HomePage = ({ navigation }) => {
               onPress={() => {
                 setIsModalOpen(true);
               }}
-              disabled={isDisabled}
-              isLoading={isLoadingJoinRoom}
-              _spinner={{ paddingY: '0.45' }}
             >
               <Text fontFamily="RadioNewsman" color="black">
                 Join room

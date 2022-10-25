@@ -136,7 +136,9 @@ export const RoomSettingsPage = ({ navigation }) => {
           const response = await addPlayerName(keyCode);
 
           if (response) {
-            // navigation.navigate('Lobby');
+            navigation.reset({
+              routes: [{ name: 'Lobby' }],
+            });
           } else {
             if (!toast.isActive(id)) {
               toast.show({
@@ -284,7 +286,7 @@ export const RoomSettingsPage = ({ navigation }) => {
 
         <Box
           position="absolute"
-          bottom={keyboardStatus ? '2' : '5'}
+          bottom={keyboardStatus ? '2' : '6'}
           w="full"
           px="4"
         >
