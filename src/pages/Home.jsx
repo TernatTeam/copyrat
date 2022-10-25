@@ -191,7 +191,7 @@ export const HomePage = ({ navigation }) => {
           _pressed={{
             bg: "primary3.600",
           }}
-          onPress={() => navigation.navigate("End")}
+          onPress={() => navigation.navigate("Rules")}
         />
       </HStack>
 
@@ -206,8 +206,6 @@ export const HomePage = ({ navigation }) => {
               alt="Copy Rat Logo"
               source={CopyratLogo}
               style={{ width: 150, height: 150 }}
-              
-              
             />
           </TouchableOpacity>
 
