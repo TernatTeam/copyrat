@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
-
 import { Text, Icon, IconButton, Flex, HStack, VStack, Box } from 'native-base';
+
+import React, { useState, useEffect } from 'react';
 
 import { Ionicons } from '@expo/vector-icons';
 
+import { Audio } from 'expo-av';
+
 export const RulesPage = ({ navigation }) => {
   const [page, setPage] = useState(1);
+
+  const playSound = async () => {
+    await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+
+    const { sound: playbackObject } = await Audio.Sound.createAsync(
+      { uri: 'https://www.soundjay.com/misc/page-flip-02.mp3' },
+      { shouldPlay: true, rate: 1.5 },
+    );
+  };
 
   return (
     <Flex safeArea bg="primary1.500" h="100%" w="100%" alignItems="center">
@@ -93,20 +104,29 @@ export const RulesPage = ({ navigation }) => {
               bg: 'primary3.600',
             }}
             onPress={() => {
-              if (page > 1) {
-                setPage(page - 1);
-              }
+              playSound();
+              setTimeout(() => {
+                if (page > 1) {
+                  setPage(page - 1);
+                }
+              }, 200);
             }}
           />
         ) : (
           <Box w="12"></Box>
         )}
 
-        <Text color="white" fontSize="20" alignItems="center" pb="2">
-          {page} / 5
+        <Text
+          color="white"
+          fontSize="15"
+          fontFamily="RadioNewsman"
+          alignItems="center"
+          pb="2"
+        >
+          {page} / 3
         </Text>
 
-        {page < 5 ? (
+        {page < 3 ? (
           <IconButton
             icon={<Icon as={<Ionicons name="arrow-redo" />} />}
             borderRadius="full"
@@ -118,9 +138,12 @@ export const RulesPage = ({ navigation }) => {
               bg: 'primary3.600',
             }}
             onPress={() => {
-              if (page < 5) {
-                setPage(page + 1);
-              }
+              playSound();
+              setTimeout(() => {
+                if (page < 3) {
+                  setPage(page + 1);
+                }
+              }, 200);
             }}
           />
         ) : (

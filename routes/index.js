@@ -21,6 +21,7 @@ import {
   VotePage,
   ScorePage,
   RulesPage,
+  EndPage,
   RoomSettingsPage,
 } from '../src/pages/index';
 
@@ -64,6 +65,7 @@ const AppRouter = ({ page }) => {
           name="Room Settings"
           component={RoomSettingsPage}
         />
+        <Stack.Screen name="End" component={EndPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

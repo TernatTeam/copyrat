@@ -162,7 +162,7 @@ export const LobbyPage = ({ navigation }) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'modified') {
           navigation.reset({
-            routes: [{ name: 'Chat' }],
+            routes: [{ name: 'Chat', params: {round: 1} }],
           });
         }
       });
