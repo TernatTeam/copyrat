@@ -12,7 +12,7 @@ export const RulesPage = ({ navigation }) => {
   const playSound = async () => {
     await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
 
-    const { sound: playbackObject } = await Audio.Sound.createAsync(
+    await Audio.Sound.createAsync(
       { uri: 'https://www.soundjay.com/misc/page-flip-02.mp3' },
       { shouldPlay: true, rate: 1.5 },
     );
