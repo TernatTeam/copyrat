@@ -53,9 +53,7 @@ export const RulesPage = ({ navigation }) => {
             Simple as meow. Three rounds, one chat and o lot of copyrats.{'\n'}
             {'\n'}
             Each round, you'll be assigned to be just like someone from the
-            lobby. You'll see your role in the top right of your screen:{
-              '\n'
-            }{' '}
+            lobby. You'll see your role in the top right of your screen:{'\n'}
             'Playing as ...'.{'\n'}
             {'\n'}
             You could either play as yourself (meaning you're a cat), either as
