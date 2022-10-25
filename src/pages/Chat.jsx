@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Box, Button, Center, Divider, HStack, Text } from 'native-base';
+import { Box, Button, Center, Divider, HStack, Text, Modal } from 'native-base';
 
 import { GiftedChat } from 'react-native-gifted-chat';
 
@@ -21,11 +21,13 @@ import { FullPageLoader } from '../components/common/FullPageLoader';
 
 import { useGlobal } from '../../state';
 
-export const ChatPage = ({ navigation }) => {
+export const ChatPage = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
   const [fakeId, setFakeId] = useState();
   const [userNameColor, setUserNameColor] = useState('');
   const [{ roomData, playerInfo }] = useGlobal();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [blurr, setBlurr] = useState(1);
 
   const getFakeIdAndUsernameColor = async () => {
     const docRef = doc(
@@ -92,8 +94,18 @@ export const ChatPage = ({ navigation }) => {
     setMessages([]);
   }, []);
 
+  useEffect(() => {
+    setModalOpen(true);
+    setBlurr(0.7);
+
+    setTimeout(() => {
+      setModalOpen(false);
+      setBlurr(1);
+    }, 2000);
+  }, []);
+
   return userNameColor ? (
-    <Box h="100%" w="100%" safeArea backgroundColor="#747474" py="3" px="4">
+    <Box h="100%" w="100%" safeArea backgroundColor="#747474" py="3" px="4" opacity={blurr}>
       <Center py="2">
         <HStack justifyContent="space-between" alignItems="center" w="full">
           <Box w="30%">
@@ -146,6 +158,15 @@ export const ChatPage = ({ navigation }) => {
           userNameColor: userNameColor,
         }}
       />
+
+      <Modal
+        isOpen={modalOpen}
+        contentLabel="Round number"
+      >
+        <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
+          {"Round " + route.params.round}
+        </Text>
+      </Modal>
     </Box>
   ) : (
     <FullPageLoader />
