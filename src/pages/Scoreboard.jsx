@@ -28,6 +28,7 @@ import { ModalShowRats } from '../components/common';
 
 let route = 'Chat';
 let winnerID = '';
+let roundNo = 1;
 
 export const ScorePage = ({ navigation }) => {
   const toast = useToast();
@@ -53,7 +54,7 @@ export const ScorePage = ({ navigation }) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'modified') {
           navigation.reset({
-            routes: [{ name: route, params: {winner: winnerID} }],
+            routes: [{ name: route, params: {winner: winnerID, round: roundNo + 1} }],
           });
         }
       });
@@ -164,7 +165,7 @@ export const ScorePage = ({ navigation }) => {
     });
   };
 
-  let roundNo = 1;
+  //let roundNo = 1;
 
   useEffect(() => {
     getSortedPlayers();
