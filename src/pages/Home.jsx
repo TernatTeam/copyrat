@@ -191,7 +191,7 @@ export const HomePage = ({ navigation }) => {
           _pressed={{
             bg: "primary3.600",
           }}
-          onPress={() => navigation.navigate("Rules")}
+          onPress={() => navigation.navigate("End")}
         />
       </HStack>
 

@@ -27,6 +27,7 @@ import { useGlobal } from '../../state';
 import { ModalShowRats } from '../components/common';
 
 let route = 'Chat';
+let winnerID = '';
 
 export const ScorePage = ({ navigation }) => {
   const toast = useToast();
@@ -45,14 +46,14 @@ export const ScorePage = ({ navigation }) => {
 */
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [{ roomData }] = useGlobal();
-
+  
   useEffect(() => {
     const q = query(collection(db, `games`, roomData.keyCode, 'admin'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'modified') {
           navigation.reset({
-            routes: [{ name: route }],
+            routes: [{ name: route, params: {winner: winnerID} }],
           });
         }
       });
@@ -87,6 +88,8 @@ export const ScorePage = ({ navigation }) => {
 
       setPlayersDB(playersArray); // modific arrayul in care tin minte playerii
       setPlayerIDs(idArray); // modific arrayul in care tin minte id urile
+
+      winnerID = playersArray[0].name;
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -171,7 +174,9 @@ export const ScorePage = ({ navigation }) => {
     const checkRound = async () => {
       const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
       roundNo = docSnap.data().round_number;
-      if (roundNo > 2) route = 'Home';
+      if (roundNo > 2) {
+        route = 'End';
+      }
     };
 
     checkRound();
