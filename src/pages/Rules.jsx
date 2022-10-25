@@ -1,6 +1,6 @@
 import { Text, Icon, IconButton, Flex, HStack, VStack, Box } from 'native-base';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { Ionicons } from '@expo/vector-icons';
 
