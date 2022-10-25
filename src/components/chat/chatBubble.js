@@ -1,13 +1,33 @@
 import React from 'react';
 
-import { Box, Text } from 'native-base';
+import { Box, Text, Button } from 'native-base';
 
 import { Bubble } from 'react-native-gifted-chat';
 
 import { auth } from '../../../config/firebase/firebase-key-config';
 
 export const chatBubble = (props) => {
-  if (props.currentMessage.user._id == auth.currentUser.uid) {
+  const checkPrev = () => {
+    if (typeof props.previousMessage === 'undefined') {
+      return false;
+    }
+
+    if (typeof props.previousMessage.user === 'undefined') {
+      return false;
+    }
+
+    if (typeof props.previousMessage.user._id === 'undefined') {
+      return false;
+    }
+
+    if (props.previousMessage.user._id == props.currentMessage.user._id) {
+      return true;
+    }
+
+    return false;
+  }
+
+  if (props.currentMessage.user._id == auth.currentUser.uid ) { 
     return (
       <Box
         maxWidth="80%"
@@ -31,12 +51,14 @@ export const chatBubble = (props) => {
               marginRight: -10,
               marginLeft: 0,
             },
+            
           }}
         />
       </Box>
     );
   }
 
+  else if(!checkPrev())
   return (
     <Box
       maxWidth="80%"
@@ -72,7 +94,36 @@ export const chatBubble = (props) => {
             marginRight: 0,
           },
         }}
-      />
+      /> 
+    </Box>
+  );
+  else 
+  return (
+    <Box
+      maxWidth="80%"
+      backgroundColor="#a4a4a4"
+      borderRadius="xl"
+      borderTopLeftRadius="0"
+      pl="18"
+      mt="1"
+    >
+     
+
+      <Bubble
+        {...props}
+        textStyle={{
+          left: {
+            color: 'white',
+          },
+        }}
+        wrapperStyle={{
+          left: {
+            backgroundColor: '#a4a4a4',
+            marginLeft: -10,
+            marginRight: 0,
+          },
+        }}
+      /> 
     </Box>
   );
 };
