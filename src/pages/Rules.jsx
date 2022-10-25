@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
-
 import { Text, Icon, IconButton, Flex, HStack, VStack, Box } from 'native-base';
+
+import React, { useState, useEffect } from 'react';
 
 import { Ionicons } from '@expo/vector-icons';
 
+import { Audio } from 'expo-av';
+
 export const Rules = ({ navigation }) => {
   const [page, setPage] = useState(1);
+  
+  const playSound = async () => {
+    await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
 
+    const { sound: playbackObject } = await Audio.Sound.createAsync(
+      { uri: 'https://www.soundjay.com/misc/page-flip-02.mp3' },
+      { shouldPlay: true, rate: 1.5 },
+    );
+  }
+  
   return (
     <Flex safeArea bg="primary1.500" h="100%" w="100%" alignItems="center">
       <HStack
@@ -35,44 +46,33 @@ export const Rules = ({ navigation }) => {
 
       <VStack p="5" justifyContent="center" alignItems="center" m="auto">
         {page == 1 ? (
-          <Text color="white" fontSize="20" textAlign="center">
-            You are going to play a three round game, in which you will chat
-            with your fellow players, but there's a catch. There are two types
-            of players, rats and cats.
-          </Text>
+          <Text color="white" fontSize="17" fontFamily="RadioNewsman" textAlign="center">
+            Simple as meow. Three rounds, one chat and o lot of copyrats.{"\n"}{"\n"}
+	          Each round, you'll be assigned to be just like someone from the lobby.
+            You'll see your role in the top right of your screen:{"\n"} 'Playing as ...'.{"\n"}{"\n"}
+            You could either play as yourself (meaning you're a cat), either as one of your friends (making you a rat).
+          </Text>  
         ) : null}
 
         {page == 2 ? (
-          <Text color="white" fontSize="20" textAlign="center">
-            Each round, half of the players will have to impersonate someone
-            from the lobby. They will have assigned the rat role, and appear
-            with a different name while chatting with the others. A text will
-            appear in the top right of your screen saying 'Playing as ..',
-            insert name of another rat player.
+          <Text color="white" fontSize="17" fontFamily="RadioNewsman" textAlign="center">
+            Let's say you're a cat. Try and catch the impostors among you ;). 
+            Ask personal questions, test their memory, see their response, do the math then pick a rat.{"\n"}{"\n"}
+	          As a rat, be a copy of the one you've been assigned. When texting, it will appear like it's them talking, 
+            so don't panic when you see yourself in there saying something you didn't.{"\n"}{"\n"}
+            Chat like the one you've been assigned, quote them, do anything just to fool the rest.
+            You can vote as well, so try to catch the other rats.
           </Text>
         ) : null}
 
         {page == 3 ? (
-          <Text color="white" fontSize="20" textAlign="center">
-            If you are not part of the chosen few, fear not, because you have
-            the cat role. Your mission as cats is to try and catch the impostors
-            among you. You can do that by carefully reading the messages that
-            players write, if you think that someone said something that they
-            wouldn't normally say.
-          </Text>
-        ) : null}
-
-        {page == 4 ? (
-          <Text color="white" fontSize="20" textAlign="center">
-            The rats get points by fooling the others and having as little
-            players as possible vote for the, whereas the cats get points by
-            correctly voting out the rats.
-          </Text>
-        ) : null}
-
-        {page == 5 ? (
-          <Text color="white" fontSize="20" textAlign="center">
-            Good luck!
+          <Text color="white" fontSize="17" fontFamily="RadioNewsman" textAlign="center">
+            Let's see the scoring!{"\n"}
+	          Well, the rats get points by fooling the others and having as little players as possible vote for them.{"\n"}{"\n"} 
+            Rats will be rats, so their vote doesn't add to their score, but it makes the others gain less.{"\n"}{"\n"} 
+	          Cats get points by correctly voting out the rats. Avoid teamming up, cause cats split points when voting for the same rat.{"\n"}{"\n"}
+	          Bonus points for anyone who does his job perfectly.{"\n"}{"\n"}{"\n"}
+            Good luck !
           </Text>
         ) : null}
       </VStack>
@@ -96,20 +96,23 @@ export const Rules = ({ navigation }) => {
               bg: 'primary3.600',
             }}
             onPress={() => {
-              if (page > 1) {
-                setPage(page - 1);
-              }
+              playSound();
+              setTimeout(() => {
+                if (page > 1) {
+                  setPage(page - 1);
+                }  
+              }, 200);
             }}
           />
         ) : (
           <Box w="12"></Box>
         )}
 
-        <Text color="white" fontSize="20" alignItems="center" pb="2">
-          {page} / 5
+        <Text color="white" fontSize="15" fontFamily="RadioNewsman" alignItems="center" pb="2">
+          {page} / 3
         </Text>
 
-        {page < 5 ? (
+        {page < 3 ? (
           <IconButton
             icon={<Icon as={<Ionicons name="arrow-redo" />} />}
             borderRadius="full"
@@ -121,9 +124,12 @@ export const Rules = ({ navigation }) => {
               bg: 'primary3.600',
             }}
             onPress={() => {
-              if (page < 5) {
-                setPage(page + 1);
-              }
+              playSound();
+              setTimeout(() => {
+                if (page < 3) {
+                  setPage(page + 1);
+                }  
+              }, 200);
             }}
           />
         ) : (
