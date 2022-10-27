@@ -12,6 +12,7 @@ import {
   onSnapshot,
   orderBy,
   updateDoc,
+  serverTimestamp,
 } from 'firebase/firestore';
 import {
   createUserWithEmailAndPassword,
@@ -58,4 +59,5 @@ export {
   onSnapshot,
   orderBy,
   updateDoc,
+  serverTimestamp,
 };

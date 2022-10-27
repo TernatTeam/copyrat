@@ -66,7 +66,6 @@ export const RoomSettingsPage = ({ navigation }) => {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const charactersLength = characters.length;
-
     const currentUser = auth.currentUser;
 
     for (var i = 0; i < length; i++) {
@@ -83,10 +82,6 @@ export const RoomSettingsPage = ({ navigation }) => {
       await setDoc(doc(db, 'games', result, 'admin', 'game_state'), {
         is_game_ready: false,
         nav_to_score: false,
-      });
-
-      await setDoc(doc(db, 'games', result, 'admin', 'game_settings'), {
-        round_time: selectedTime,
       });
 
       dispatch({
@@ -137,7 +132,9 @@ export const RoomSettingsPage = ({ navigation }) => {
 
           if (response) {
             navigation.reset({
-              routes: [{ name: 'Lobby' }],
+              routes: [
+                { name: 'Lobby', params: { roundSeconds: selectedTime } },
+              ],
             });
           } else {
             if (!toast.isActive(id)) {

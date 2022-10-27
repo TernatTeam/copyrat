@@ -26,8 +26,31 @@ export const ChatPage = ({ navigation, route }) => {
   const [fakeId, setFakeId] = useState();
   const [userNameColor, setUserNameColor] = useState('');
   const [{ roomData, playerInfo }] = useGlobal();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [blurr, setBlurr] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [roundEndTimestamp, setRoundEndTimestamp] = useState();
+  const [countDown, setCountDown] = useState();
+
+  const addSeconds = (date, seconds) => {
+    date.setSeconds(date.getSeconds() + seconds);
+    return date;
+  };
+
+  const getRoundTime = async () => {
+    const docRef = doc(db, `games/${roomData.keyCode}/admin/game_settings`);
+
+    try {
+      const docSnap = await getDoc(docRef);
+
+      const roundEndTimestamp = addSeconds(
+        docSnap.data().round_start_timestamp.toDate(),
+        docSnap.data().round_seconds,
+      );
+
+      setRoundEndTimestamp(new Date(roundEndTimestamp).getTime());
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const getFakeIdAndUsernameColor = async () => {
     const docRef = doc(
@@ -35,6 +58,7 @@ export const ChatPage = ({ navigation, route }) => {
       `games/${roomData.keyCode}/players`,
       auth.currentUser.uid,
     );
+
     try {
       const docSnap = await getDoc(docRef);
 
@@ -64,6 +88,13 @@ export const ChatPage = ({ navigation, route }) => {
   };
 
   useEffect(() => {
+    setIsModalOpen(true);
+
+    setTimeout(() => {
+      setIsModalOpen(false);
+    }, 2000);
+
+    getRoundTime();
     getFakeIdAndUsernameColor();
 
     const q = query(
@@ -95,17 +126,32 @@ export const ChatPage = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    setModalOpen(true);
-    setBlurr(0.7);
+    const interval = setInterval(() => {
+      if (countDown <= 0) {
+        console.log('mue');
+        if (auth.currentUser.uid === roomData.game_admin_uid) {
+          console.log('nav to vote plm');
+        }
+      } else {
+        setCountDown(
+          Math.floor((roundEndTimestamp - new Date().getTime()) / 1000),
+        );
+      }
+    }, 1000);
 
-    setTimeout(() => {
-      setModalOpen(false);
-      setBlurr(1);
-    }, 2000);
-  }, []);
+    return () => clearInterval(interval);
+  }, [roundEndTimestamp]);
 
   return userNameColor ? (
-    <Box h="100%" w="100%" safeArea backgroundColor="#747474" py="3" px="4" opacity={blurr}>
+    <Box
+      h="100%"
+      w="100%"
+      safeArea
+      backgroundColor="#747474"
+      py="3"
+      px="4"
+      opacity={isModalOpen ? 0.7 : 1}
+    >
       <Center py="2">
         <HStack justifyContent="space-between" alignItems="center" w="full">
           <Box w="30%">
@@ -118,7 +164,7 @@ export const ChatPage = ({ navigation, route }) => {
               onPress={() => navigation.navigate('Vote')}
             >
               <Text fontWeight="semibold" color="black">
-                Vote
+                {countDown ? countDown : null}
               </Text>
             </Button>
           </Box>
@@ -159,12 +205,9 @@ export const ChatPage = ({ navigation, route }) => {
         }}
       />
 
-      <Modal
-        isOpen={modalOpen}
-        contentLabel="Round number"
-      >
+      <Modal isOpen={isModalOpen} contentLabel="Round number">
         <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
-          {"Round " + route.params.round}
+          Round {route.params.round}
         </Text>
       </Modal>
     </Box>

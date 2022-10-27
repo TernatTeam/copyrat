@@ -27,13 +27,15 @@ import {
   updateDoc,
   onSnapshot,
   deleteDoc,
+  serverTimestamp,
+  setDoc,
 } from '../../config/firebase/firebase-key-config';
 
 import { useGlobal } from '../../state';
 
 let uIds = [];
 
-export const LobbyPage = ({ navigation }) => {
+export const LobbyPage = ({ navigation, route }) => {
   const [players, setPlayers] = useState([]);
   const [hasLeft, setHasLeft] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -59,6 +61,13 @@ export const LobbyPage = ({ navigation }) => {
         },
       });
     }
+  };
+
+  const setEndRoundTime = async () => {
+    await setDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_settings'), {
+      round_start_timestamp: serverTimestamp(),
+      round_seconds: route.params.roundSeconds,
+    });
   };
 
   //Assign roles
@@ -162,7 +171,7 @@ export const LobbyPage = ({ navigation }) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'modified') {
           navigation.reset({
-            routes: [{ name: 'Chat', params: {round: 1} }],
+            routes: [{ name: 'Chat', params: { round: 1 } }],
           });
         }
       });
@@ -314,6 +323,7 @@ export const LobbyPage = ({ navigation }) => {
           <Button
             onPress={() => {
               if (auth.currentUser.uid == roomData.game_admin_uid) {
+                setEndRoundTime();
                 setRoles();
               }
             }}
