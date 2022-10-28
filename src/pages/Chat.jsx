@@ -14,6 +14,7 @@ import {
   query,
   onSnapshot,
   orderBy,
+  updateDoc,
 } from '../../config/firebase/firebase-key-config';
 
 import { chatBubble, inputToolBar, sendButton } from '../components/chat';
@@ -28,6 +29,7 @@ export const ChatPage = ({ navigation, route }) => {
   const [{ roomData, playerInfo }] = useGlobal();
   const [modalOpen, setModalOpen] = useState(false);
   const [blurr, setBlurr] = useState(1);
+  const [countdown, setCountdown] = useState(15);
 
   const getFakeIdAndUsernameColor = async () => {
     const docRef = doc(
@@ -62,6 +64,23 @@ export const ChatPage = ({ navigation, route }) => {
       user,
     });
   };
+
+  useEffect(() => {
+    const q = query(collection(db, `games`, roomData.keyCode, 'admin'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'modified') {
+          navigation.reset({
+            routes: [{ name: 'Vote' }],
+          });
+        }
+      });
+    });
+
+    return async () => {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     getFakeIdAndUsernameColor();
@@ -104,6 +123,27 @@ export const ChatPage = ({ navigation, route }) => {
     }, 2000);
   }, []);
 
+  useEffect(() => {
+    if(auth.currentUser.uid == roomData.game_admin_uid) {
+      setTimeout(async () => {
+        await updateDoc(
+          doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
+          {
+            navToScore: true,
+          },
+        );
+      }, countdown * 1000); 
+    }
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (countdown >= 0) {
+        setCountdown(countdown - 1);
+      }
+    }, 1000);
+  }, [countdown]);
+
   return userNameColor ? (
     <Box h="100%" w="100%" safeArea backgroundColor="#747474" py="3" px="4" opacity={blurr}>
       <Center py="2">
@@ -115,10 +155,19 @@ export const ChatPage = ({ navigation, route }) => {
               size="sm"
               bg="primary3.500"
               _pressed={{ bg: 'primary3.600' }}
-              onPress={() => navigation.navigate('Vote')}
+              onPress={async() => {
+                if(auth.currentUser.uid == roomData.game_admin_uid) {
+                  await updateDoc(
+                    doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
+                    {
+                      navToScore: true,
+                    },
+                  );
+                }
+              }}
             >
               <Text fontWeight="semibold" color="black">
-                Vote
+                {countdown > 0 ? countdown : "Vote"}
               </Text>
             </Button>
           </Box>
