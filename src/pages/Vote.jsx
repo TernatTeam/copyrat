@@ -55,18 +55,16 @@ export const VotePage = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    const q = query(collection(db, `games`, roomData.keyCode, 'admin'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'modified') {
-          navigation.reset({
-            routes: [{ name: 'Scoreboard' }],
-          });
-        }
-      });
+    const q = doc(db, 'games', `${roomData.keyCode}/admin/game_state`);
+    const unsubscribe = onSnapshot(q, (doc) => {
+      if (doc.data().nav_to_score === true) {
+        navigation.reset({
+          routes: [{ name: 'Scoreboard' }],
+        });
+      }
     });
 
-    return async () => {
+    return () => {
       unsubscribe();
     };
   }, []);

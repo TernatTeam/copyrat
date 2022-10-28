@@ -26,9 +26,10 @@ export const ChatPage = ({ navigation, route }) => {
   const [fakeId, setFakeId] = useState();
   const [userNameColor, setUserNameColor] = useState('');
   const [{ roomData, playerInfo }] = useGlobal();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRoundModalOpen, setIsRoundModalOpen] = useState(true);
+  const [isTimesUpModalOpen, setIsTimesUpModalOpen] = useState(false);
   const [roundEndTimestamp, setRoundEndTimestamp] = useState();
-  const [countDown, setCountDown] = useState();
+  const [countDown, setCountDown] = useState(0);
 
   const addSeconds = (date, seconds) => {
     date.setSeconds(date.getSeconds() + seconds);
@@ -88,10 +89,8 @@ export const ChatPage = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    setIsModalOpen(true);
-
     setTimeout(() => {
-      setIsModalOpen(false);
+      setIsRoundModalOpen(false);
     }, 2000);
 
     getRoundTime();
@@ -127,19 +126,26 @@ export const ChatPage = ({ navigation, route }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (countDown <= 0) {
-        console.log('mue');
-        if (auth.currentUser.uid === roomData.game_admin_uid) {
-          console.log('nav to vote plm');
-        }
-      } else {
+      if (Math.floor((roundEndTimestamp - new Date().getTime()) / 1000) >= 0) {
         setCountDown(
           Math.floor((roundEndTimestamp - new Date().getTime()) / 1000),
         );
       }
+
+      if (Math.floor((roundEndTimestamp - new Date().getTime()) / 1000) === 0) {
+        setIsTimesUpModalOpen(true);
+
+        setTimeout(() => {
+          navigation.reset({
+            routes: [{ name: 'Vote' }],
+          });
+        }, 2000);
+      }
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+    };
   }, [roundEndTimestamp]);
 
   return userNameColor ? (
@@ -150,33 +156,42 @@ export const ChatPage = ({ navigation, route }) => {
       backgroundColor="#747474"
       py="3"
       px="4"
-      opacity={isModalOpen ? 0.7 : 1}
+      opacity={isRoundModalOpen || isTimesUpModalOpen ? 0.7 : 1}
     >
-      <Center py="2">
+      <Modal isOpen={isRoundModalOpen} contentLabel="Round number">
+        <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
+          Round {route.params.round}
+        </Text>
+      </Modal>
+
+      <Modal isOpen={isTimesUpModalOpen} contentLabel="Round number">
+        <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
+          Times up!
+        </Text>
+      </Modal>
+
+      <Center py="2" px="1">
         <HStack justifyContent="space-between" alignItems="center" w="full">
           <Box w="30%">
-            <Button
-              title="Vote"
-              rounded="lg"
-              size="sm"
-              bg="primary3.500"
-              _pressed={{ bg: 'primary3.600' }}
-              onPress={() => navigation.navigate('Vote')}
+            <Text
+              fontSize="lg"
+              fontFamily="RadioNewsman"
+              fontWeight="semibold"
+              color={countDown <= 30 ? 'red.500' : 'black'}
             >
-              <Text fontWeight="semibold" color="black">
-                {countDown ? countDown : null}
-              </Text>
-            </Button>
+              {countDown}
+            </Text>
           </Box>
 
           <Box w="68%" justifyContent="center" alignItems="flex-end">
             <Text
               isTruncated={true}
-              fontWeight="bold"
+              fontFamily="RadioNewsman"
               color="white"
-              fontSize="xl"
+              fontSize="md"
             >
-              Playing as <Text color={userNameColor}>{fakeId}</Text>
+              Playing as&nbsp;
+              <Text color={userNameColor}>{fakeId}</Text>
             </Text>
           </Box>
         </HStack>
@@ -204,12 +219,6 @@ export const ChatPage = ({ navigation, route }) => {
           userNameColor: userNameColor,
         }}
       />
-
-      <Modal isOpen={isModalOpen} contentLabel="Round number">
-        <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
-          Round {route.params.round}
-        </Text>
-      </Modal>
     </Box>
   ) : (
     <FullPageLoader />

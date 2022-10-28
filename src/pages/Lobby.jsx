@@ -166,18 +166,16 @@ export const LobbyPage = ({ navigation, route }) => {
   }, [hasLeft]);
 
   useEffect(() => {
-    const q = query(collection(db, 'games', roomData.keyCode, 'admin'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'modified') {
-          navigation.reset({
-            routes: [{ name: 'Chat', params: { round: 1 } }],
-          });
-        }
-      });
+    const q = doc(db, 'games', `${roomData.keyCode}/admin/game_state`);
+    const unsubscribe = onSnapshot(q, (doc) => {
+      if (doc.data().is_game_ready === true) {
+        navigation.reset({
+          routes: [{ name: 'Chat', params: { round: 1 } }],
+        });
+      }
     });
 
-    return async () => {
+    return () => {
       unsubscribe();
     };
   }, []);
@@ -191,6 +189,7 @@ export const LobbyPage = ({ navigation, route }) => {
     }
   }, [players]);
 
+  // only for dev
   useEffect(() => {
     setPlayers([]);
   }, []);
