@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
-import { Box, Button, Center, Divider, HStack, Text, Modal } from 'native-base';
+import {
+  Box,
+  Button,
+  Center,
+  Divider,
+  HStack,
+  Text,
+  Modal,
+  Icon,
+  Flex,
+} from 'native-base';
 
 import { GiftedChat } from 'react-native-gifted-chat';
 
@@ -15,6 +25,8 @@ import {
   onSnapshot,
   orderBy,
 } from '../../config/firebase/firebase-key-config';
+
+import { Ionicons } from '@expo/vector-icons';
 
 import { chatBubble, inputToolBar, sendButton } from '../components/chat';
 import { FullPageLoader } from '../components/common/FullPageLoader';
@@ -32,7 +44,7 @@ export const ChatPage = ({ navigation, route }) => {
   const [countDown, setCountDown] = useState(0);
 
   const addSeconds = (date, seconds) => {
-    date.setSeconds(date.getSeconds() + seconds);
+    date.setSeconds(date.getSeconds() + seconds + 2);
     return date;
   };
 
@@ -132,7 +144,8 @@ export const ChatPage = ({ navigation, route }) => {
         );
       }
 
-      if (Math.floor((roundEndTimestamp - new Date().getTime()) / 1000) === 0) {
+      if (Math.floor((roundEndTimestamp - new Date().getTime()) / 1000) <= 0) {
+        clearInterval(interval);
         setIsTimesUpModalOpen(true);
 
         setTimeout(() => {
@@ -142,10 +155,6 @@ export const ChatPage = ({ navigation, route }) => {
         }, 2000);
       }
     }, 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
   }, [roundEndTimestamp]);
 
   return userNameColor ? (
@@ -172,7 +181,13 @@ export const ChatPage = ({ navigation, route }) => {
 
       <Center py="2" px="1">
         <HStack justifyContent="space-between" alignItems="center" w="full">
-          <Box w="30%">
+          <Flex direction="row" w="30%">
+            <Icon
+              as={<Ionicons name="alarm-outline" />}
+              size={6}
+              color={countDown <= 30 ? 'red.500' : 'white'}
+              mr="2"
+            />
             <Text
               fontSize="lg"
               fontFamily="RadioNewsman"
@@ -181,7 +196,7 @@ export const ChatPage = ({ navigation, route }) => {
             >
               {countDown}
             </Text>
-          </Box>
+          </Flex>
 
           <Box w="68%" justifyContent="center" alignItems="flex-end">
             <Text
