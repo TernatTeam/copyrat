@@ -49,24 +49,22 @@ export const VotePage = ({ navigation }) => {
   const [{ roomData }] = useGlobal();
 
   useEffect(() => {
-    updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
-      navToScore: false,
+    updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_state'), {
+      nav_to_score: false,
     });
   }, []);
 
   useEffect(() => {
-    const q = query(collection(db, `games`, roomData.keyCode, 'admin'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'modified') {
-          navigation.reset({
-            routes: [{ name: 'Scoreboard' }],
-          });
-        }
-      });
+    const q = doc(db, 'games', `${roomData.keyCode}/admin/game_state`);
+    const unsubscribe = onSnapshot(q, (doc) => {
+      if (doc.data().nav_to_score === true) {
+        navigation.reset({
+          routes: [{ name: 'Scoreboard' }],
+        });
+      }
     });
 
-    return async () => {
+    return () => {
       unsubscribe();
     };
   }, []);
@@ -337,9 +335,9 @@ export const VotePage = ({ navigation }) => {
                   setTimeout(async () => {
                     // wait for votes b4 leaving page
                     await updateDoc(
-                      doc(db, 'games', roomData.keyCode, 'admin', 'gameState'),
+                      doc(db, 'games', roomData.keyCode, 'admin', 'game_state'),
                       {
-                        navToScore: true,
+                        nav_to_score: true,
                       },
                     );
                   }, 1000);

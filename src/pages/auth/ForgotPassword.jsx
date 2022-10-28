@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import * as yup from 'yup';
 
@@ -7,9 +7,7 @@ import {
   Button,
   Center,
   Heading,
-  Icon,
   Image,
-  Input,
   Text,
   ScrollView,
   useToast,
@@ -17,11 +15,10 @@ import {
 } from 'native-base';
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 
-import { Ionicons } from '@expo/vector-icons';
-
 import { forgotPass } from '../../../config/firebase/firebase-functions';
 
 import CopyratLogo from '../../../assets/logo_trans.png';
+import { UnderlinedInput } from '../../components/interface';
 
 const forgotPasswordSchema = yup.object({
   email: yup
@@ -151,32 +148,10 @@ export const ForgotPasswordPage = ({ navigation }) => {
             </Heading>
 
             <VStack space={4} mt="4">
-              <Input
-                borderBottomWidth={2}
-                borderBottomColor={`${isInvalidEmail ? 'red.500' : 'black'}`}
-                _focus={
-                  isInvalidEmail
-                    ? {
-                        borderBottomColor: 'red.500',
-                        placeholderTextColor: 'red.500',
-                      }
-                    : {
-                        borderBottomColor: 'white',
-                        placeholderTextColor: 'white',
-                      }
-                }
-                InputRightElement={
-                  <Icon
-                    as={<Ionicons name="mail-outline" />}
-                    size={6}
-                    mr="2"
-                    color={isInvalidEmail ? `red.500` : 'white'}
-                  />
-                }
-                variant="underlined"
+              <UnderlinedInput
                 placeholder="Email"
-                placeholderTextColor={isInvalidEmail ? `red.500` : 'black'}
-                color={isInvalidEmail ? 'red.500' : 'white'}
+                icon="mail-outline"
+                isInvalid={isInvalidEmail}
                 value={email}
                 onChangeText={(value) => {
                   setIsInvalidEmail(false);

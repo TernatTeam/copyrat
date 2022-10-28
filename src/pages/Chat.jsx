@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
-import { Box, Button, Center, Divider, HStack, Text, Modal } from 'native-base';
+import {
+  Box,
+  Button,
+  Center,
+  Divider,
+  HStack,
+  Text,
+  Modal,
+  Icon,
+  Flex,
+} from 'native-base';
 
 import { GiftedChat } from 'react-native-gifted-chat';
 
@@ -16,6 +26,8 @@ import {
   orderBy,
 } from '../../config/firebase/firebase-key-config';
 
+import { Ionicons } from '@expo/vector-icons';
+
 import { chatBubble, inputToolBar, sendButton } from '../components/chat';
 import { FullPageLoader } from '../components/common/FullPageLoader';
 
@@ -26,8 +38,32 @@ export const ChatPage = ({ navigation, route }) => {
   const [fakeId, setFakeId] = useState();
   const [userNameColor, setUserNameColor] = useState('');
   const [{ roomData, playerInfo }] = useGlobal();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [blurr, setBlurr] = useState(1);
+  const [isRoundModalOpen, setIsRoundModalOpen] = useState(true);
+  const [isTimesUpModalOpen, setIsTimesUpModalOpen] = useState(false);
+  const [roundEndTimestamp, setRoundEndTimestamp] = useState();
+  const [countDown, setCountDown] = useState(0);
+
+  const addSeconds = (date, seconds) => {
+    date.setSeconds(date.getSeconds() + seconds + 2);
+    return date;
+  };
+
+  const getRoundTime = async () => {
+    const docRef = doc(db, `games/${roomData.keyCode}/admin/game_settings`);
+
+    try {
+      const docSnap = await getDoc(docRef);
+
+      const roundEndTimestamp = addSeconds(
+        docSnap.data().round_start_timestamp.toDate(),
+        docSnap.data().round_seconds,
+      );
+
+      setRoundEndTimestamp(new Date(roundEndTimestamp).getTime());
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const getFakeIdAndUsernameColor = async () => {
     const docRef = doc(
@@ -35,6 +71,7 @@ export const ChatPage = ({ navigation, route }) => {
       `games/${roomData.keyCode}/players`,
       auth.currentUser.uid,
     );
+
     try {
       const docSnap = await getDoc(docRef);
 
@@ -64,6 +101,11 @@ export const ChatPage = ({ navigation, route }) => {
   };
 
   useEffect(() => {
+    setTimeout(() => {
+      setIsRoundModalOpen(false);
+    }, 2000);
+
+    getRoundTime();
     getFakeIdAndUsernameColor();
 
     const q = query(
@@ -95,42 +137,76 @@ export const ChatPage = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    setModalOpen(true);
-    setBlurr(0.7);
+    const interval = setInterval(() => {
+      if (Math.floor((roundEndTimestamp - new Date().getTime()) / 1000) >= 0) {
+        setCountDown(
+          Math.floor((roundEndTimestamp - new Date().getTime()) / 1000),
+        );
+      }
 
-    setTimeout(() => {
-      setModalOpen(false);
-      setBlurr(1);
-    }, 2000);
-  }, []);
+      if (Math.floor((roundEndTimestamp - new Date().getTime()) / 1000) <= 0) {
+        clearInterval(interval);
+        setIsTimesUpModalOpen(true);
+
+        setTimeout(() => {
+          navigation.reset({
+            routes: [{ name: 'Vote' }],
+          });
+        }, 2000);
+      }
+    }, 1000);
+  }, [roundEndTimestamp]);
 
   return userNameColor ? (
-    <Box h="100%" w="100%" safeArea backgroundColor="#747474" py="3" px="4" opacity={blurr}>
-      <Center py="2">
+    <Box
+      h="100%"
+      w="100%"
+      safeArea
+      backgroundColor="#747474"
+      py="3"
+      px="4"
+      opacity={isRoundModalOpen || isTimesUpModalOpen ? 0.7 : 1}
+    >
+      <Modal isOpen={isRoundModalOpen} contentLabel="Round number">
+        <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
+          Round {route.params.round}
+        </Text>
+      </Modal>
+
+      <Modal isOpen={isTimesUpModalOpen} contentLabel="Round number">
+        <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
+          Times up!
+        </Text>
+      </Modal>
+
+      <Center py="2" px="1">
         <HStack justifyContent="space-between" alignItems="center" w="full">
-          <Box w="30%">
-            <Button
-              title="Vote"
-              rounded="lg"
-              size="sm"
-              bg="primary3.500"
-              _pressed={{ bg: 'primary3.600' }}
-              onPress={() => navigation.navigate('Vote')}
+          <Flex direction="row" w="30%">
+            <Icon
+              as={<Ionicons name="alarm-outline" />}
+              size={6}
+              color={countDown <= 30 ? 'red.500' : 'white'}
+              mr="2"
+            />
+            <Text
+              fontSize="lg"
+              fontFamily="RadioNewsman"
+              fontWeight="semibold"
+              color={countDown <= 30 ? 'red.500' : 'black'}
             >
-              <Text fontWeight="semibold" color="black">
-                Vote
-              </Text>
-            </Button>
-          </Box>
+              {countDown}
+            </Text>
+          </Flex>
 
           <Box w="68%" justifyContent="center" alignItems="flex-end">
             <Text
               isTruncated={true}
-              fontWeight="bold"
+              fontFamily="RadioNewsman"
               color="white"
-              fontSize="xl"
+              fontSize="md"
             >
-              Playing as <Text color={userNameColor}>{fakeId}</Text>
+              Playing as&nbsp;
+              <Text color={userNameColor}>{fakeId}</Text>
             </Text>
           </Box>
         </HStack>
@@ -158,15 +234,6 @@ export const ChatPage = ({ navigation, route }) => {
           userNameColor: userNameColor,
         }}
       />
-
-      <Modal
-        isOpen={modalOpen}
-        contentLabel="Round number"
-      >
-        <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
-          {"Round " + route.params.round}
-        </Text>
-      </Modal>
     </Box>
   ) : (
     <FullPageLoader />

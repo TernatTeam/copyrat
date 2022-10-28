@@ -14,8 +14,6 @@ import {
   VStack,
 } from 'native-base';
 
-import { Keyboard } from 'react-native';
-
 import * as Clipboard from 'expo-clipboard';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -29,43 +27,20 @@ import {
   updateDoc,
   onSnapshot,
   deleteDoc,
+  serverTimestamp,
+  setDoc,
 } from '../../config/firebase/firebase-key-config';
 
 import { useGlobal } from '../../state';
-import { ModalName } from '../components/common';
 
 let uIds = [];
 
-export const LobbyPage = ({ navigation }) => {
+export const LobbyPage = ({ navigation, route }) => {
   const [players, setPlayers] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(true);
   const [hasLeft, setHasLeft] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingButton, setIsLoadingButton] = useState(false);
-  const [keyboardStatus, setKeyboardStatus] = useState(false);
   const [{ roomData }, dispatch] = useGlobal();
-  const userNameColors = [
-    '#e6194B',
-    '#3cb44b',
-    '#ffe119',
-    '#4363d8',
-    '#f58231',
-    '#911eb4',
-    '#42d4f4',
-    '#f032e6',
-    '#bfef45',
-    '#fabed4',
-    '#469990',
-    '#dcbeff',
-    '#9A6324',
-    '#fffac8',
-    '#800000',
-    '#aaffc3',
-    '#808000',
-    '#ffd8b1',
-    '#000075',
-    '#a9a9a9',
-  ];
   const toast = useToast();
   const id = 'copy-clipboard-toast';
 
@@ -86,6 +61,13 @@ export const LobbyPage = ({ navigation }) => {
         },
       });
     }
+  };
+
+  const setEndRoundTime = async () => {
+    await setDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_settings'), {
+      round_start_timestamp: serverTimestamp(),
+      round_seconds: route.params.roundSeconds,
+    });
   };
 
   //Assign roles
@@ -112,7 +94,7 @@ export const LobbyPage = ({ navigation }) => {
       );
     }
 
-    await updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
+    await updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_state'), {
       is_game_ready: true,
     });
 
@@ -184,35 +166,17 @@ export const LobbyPage = ({ navigation }) => {
   }, [hasLeft]);
 
   useEffect(() => {
-    const q = query(collection(db, 'games', roomData.keyCode, 'admin'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'modified') {
-          navigation.reset({
-            routes: [{ name: 'Chat', params: {round: 1} }],
-          });
-        }
-      });
+    const q = doc(db, 'games', `${roomData.keyCode}/admin/game_state`);
+    const unsubscribe = onSnapshot(q, (doc) => {
+      if (doc.data().is_game_ready === true) {
+        navigation.reset({
+          routes: [{ name: 'Chat', params: { round: 1 } }],
+        });
+      }
     });
 
-    return async () => {
-      unsubscribe();
-    };
-  }, []);
-
-  useEffect(() => {
-    const subscribeShow = Keyboard.addListener(
-      'keyboardDidShow',
-      _keyboardDidShow,
-    );
-    const subscribeHide = Keyboard.addListener(
-      'keyboardDidHide',
-      _keyboardDidHide,
-    );
-
     return () => {
-      subscribeShow.remove();
-      subscribeHide.remove();
+      unsubscribe();
     };
   }, []);
 
@@ -225,8 +189,10 @@ export const LobbyPage = ({ navigation }) => {
     }
   }, [players]);
 
-  const _keyboardDidShow = () => setKeyboardStatus(true);
-  const _keyboardDidHide = () => setKeyboardStatus(false);
+  // only for dev
+  useEffect(() => {
+    setPlayers([]);
+  }, []);
 
   const PlayersLoader = () => {
     const loaderArray = [];
@@ -242,17 +208,8 @@ export const LobbyPage = ({ navigation }) => {
   };
 
   return (
-    <Box safeArea bg="primary1.500" h="100%" w="100%">
-      <ModalName
-        show={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-        }}
-        userNameColors={userNameColors}
-        keyCode={roomData.keyCode}
-      />
-
-      <Box px="2" w="full" justifyContent="center" alignItems="flex-start">
+    <Box safeArea bg="primary1.500" h="100%" w="100%" position="absolute">
+      <Box px="4" w="full" justifyContent="center" alignItems="flex-start">
         <IconButton
           icon={<Icon as={<Ionicons name="arrow-back-outline" />} />}
           borderRadius="full"
@@ -283,10 +240,15 @@ export const LobbyPage = ({ navigation }) => {
         />
       </Box>
 
-      <Box w="full" alignItems="center" justifyContent="center">
-        <Heading size="2xl" fontWeight="600" color="black">
+      <Box w="full" alignItems="center" justifyContent="center" pt="4">
+        <Text
+          fontSize="2xl"
+          textAlign="center"
+          fontFamily="RadioNewsman"
+          color="black"
+        >
           Room key:
-        </Heading>
+        </Text>
 
         <Flex
           direction="row"
@@ -355,31 +317,30 @@ export const LobbyPage = ({ navigation }) => {
         </ScrollView>
       </Box>
 
-      {keyboardStatus === false && (
-        <Box mt="auto" p="6">
-          {auth.currentUser.uid == roomData.game_admin_uid && (
-            <Button
-              onPress={() => {
-                if (auth.currentUser.uid == roomData.game_admin_uid) {
-                  setRoles();
-                }
-              }}
-              title="Start"
-              rounded="lg"
-              medium
-              bg="primary3.500"
-              _pressed={{ bg: 'primary3.600' }}
-              disabled={isLoadingButton}
-              isLoading={isLoadingButton}
-              _spinner={{ paddingY: '0.45' }}
-            >
-              <Text fontWeight="semibold" color="black">
-                Start
-              </Text>
-            </Button>
-          )}
-        </Box>
-      )}
+      <Box position="absolute" bottom="6" w="full" px="4">
+        {auth.currentUser.uid == roomData.game_admin_uid && (
+          <Button
+            onPress={() => {
+              if (auth.currentUser.uid == roomData.game_admin_uid) {
+                setEndRoundTime();
+                setRoles();
+              }
+            }}
+            title="Start"
+            rounded="lg"
+            medium
+            bg="primary3.500"
+            _pressed={{ bg: 'primary3.600' }}
+            disabled={isLoadingButton}
+            isLoading={isLoadingButton}
+            _spinner={{ paddingY: '0.45' }}
+          >
+            <Text fontWeight="semibold" color="black">
+              Start
+            </Text>
+          </Button>
+        )}
+      </Box>
     </Box>
   );
 };

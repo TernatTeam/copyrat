@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 import {
   Text,
@@ -10,29 +10,18 @@ import {
   Box,
   Button,
   HStack,
-} from "native-base";
+} from 'native-base';
 
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 
-import {
-  auth,
-  db,
-  doc,
-  setDoc,
-  signOut,
-} from "../../config/firebase/firebase-key-config";
+import { auth, signOut } from '../../config/firebase/firebase-key-config';
 
-import CopyratLogo from "../../assets/logo_trans.png";
-import { ModalKeyCode } from "../components/common";
-import { useGlobal } from "../../state";
-import { TouchableOpacity } from "react-native";
+import CopyratLogo from '../../assets/logo_trans.png';
+import { ModalJoinRoom } from '../components/common';
+import { TouchableOpacity } from 'react-native';
 
 export const HomePage = ({ navigation }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoadingCreateRoom, setIsLoadingCreateRoom] = useState(false);
-  const [isLoadingJoinRoom, setIsLoadingJoinRoom] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [{}, dispatch] = useGlobal();
   const toast = useToast();
   const id = 'voting-toasts';
   const rat_alert = [
@@ -54,69 +43,9 @@ export const HomePage = ({ navigation }) => {
   const logOut = () => {
     signOut(auth).then(() => {
       navigation.reset({
-        routes: [{ name: "Login" }],
+        routes: [{ name: 'Login' }],
       });
     });
-  };
-
-  const generateRoomKey = async (length) => {
-    setIsLoadingCreateRoom(true);
-    setIsDisabled(true);
-
-    let result = "";
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const charactersLength = characters.length;
-
-    const currentUser = auth.currentUser;
-
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    try {
-      await setDoc(doc(db, "games", result), {
-        game_admin_uid: currentUser.uid,
-
-        round_number: 1,
-      });
-
-      await setDoc(doc(db, "games", result, "admin", "gameState"), {
-        is_game_ready: false,
-        navToScore: false,
-      });
-
-      dispatch({
-        type: "ROOM_DATA",
-        keyCode: result,
-        game_admin_uid: currentUser.uid,
-      });
-
-      setIsLoadingCreateRoom(false);
-      navigation.reset({
-        routes: [{ name: "Lobby" }],
-      });
-      setIsDisabled(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const joinGame = async (keyCode, gameAdminUid) => {
-    setIsModalOpen(false);
-    setIsLoadingJoinRoom(true);
-    setIsDisabled(true);
-
-    dispatch({
-      type: "ROOM_DATA",
-      keyCode: keyCode,
-      game_admin_uid: gameAdminUid,
-    });
-
-    setIsLoadingJoinRoom(false);
-    navigation.reset({
-      routes: [{ name: "Lobby" }],
-    });
-    setIsDisabled(false);
   };
 
   const showToast = (message) => {
@@ -148,17 +77,13 @@ export const HomePage = ({ navigation }) => {
     }
   };
 
-
   return (
     <Box safeArea bg="primary1.500" h="100%" w="100%">
-      <ModalKeyCode
+      <ModalJoinRoom
         show={isModalOpen}
-        onClose={(keyCode, gameAdminUid) => {
+        navigation={navigation}
+        onClose={() => {
           setIsModalOpen(false);
-
-          if (keyCode && gameAdminUid) {
-            joinGame(keyCode, gameAdminUid);
-          }
         }}
       />
 
@@ -172,11 +97,11 @@ export const HomePage = ({ navigation }) => {
           icon={<Icon as={<Ionicons name="log-out" />} />}
           borderRadius="full"
           _icon={{
-            color: "white",
-            size: "8",
+            color: 'white',
+            size: '8',
           }}
           _pressed={{
-            bg: "primary3.600",
+            bg: 'primary3.600',
           }}
           onPress={logOut}
           rotation={180}
@@ -185,34 +110,36 @@ export const HomePage = ({ navigation }) => {
           icon={<Icon as={<Ionicons name="book" />} />}
           borderRadius="full"
           _icon={{
-            color: "white",
-            size: "8",
+            color: 'white',
+            size: '8',
           }}
           _pressed={{
-            bg: "primary3.600",
+            bg: 'primary3.600',
           }}
-          onPress={() => navigation.navigate("Rules")}
+          onPress={() => navigation.navigate('Rules')}
         />
       </HStack>
 
       <Box px="10">
-        <VStack justifyContent="flex-start" alignItems="center" my="16">
-          <TouchableOpacity onPress={() => {
-                let r = Math.floor(Math.random() * 13);
-                showToast(rat_alert[r]);
-              }}>
+        <TouchableOpacity
+          onPress={() => {
+            let r = Math.floor(Math.random() * 13);
+            showToast(rat_alert[r]);
+          }}
+        >
+          <VStack justifyContent="flex-start" alignItems="center" my="16">
             <Image
               mb="-9"
               alt="Copy Rat Logo"
               source={CopyratLogo}
               style={{ width: 150, height: 150 }}
             />
-          </TouchableOpacity>
 
-          <Text fontSize="5xl" fontFamily="RadioNewsman" color="black">
-            copyrat
-          </Text>
-        </VStack>
+            <Text fontSize="5xl" fontFamily="RadioNewsman" color="black">
+              copyrat
+            </Text>
+          </VStack>
+        </TouchableOpacity>
 
         <HStack
           flexDirection="column"
@@ -228,13 +155,10 @@ export const HomePage = ({ navigation }) => {
               rounded="lg"
               medium
               bg="primary3.500"
-              _pressed={{ bg: "primary3.600" }}
+              _pressed={{ bg: 'primary3.600' }}
               onPress={() => {
-                generateRoomKey(4);
+                navigation.navigate('Room Settings');
               }}
-              disabled={isDisabled}
-              isLoading={isLoadingCreateRoom}
-              _spinner={{ paddingY: "0.45" }}
             >
               <Text fontFamily="RadioNewsman" color="black">
                 Create room
@@ -249,13 +173,10 @@ export const HomePage = ({ navigation }) => {
               rounded="lg"
               medium
               bg="primary3.500"
-              _pressed={{ bg: "primary3.600" }}
+              _pressed={{ bg: 'primary3.600' }}
               onPress={() => {
                 setIsModalOpen(true);
               }}
-              disabled={isDisabled}
-              isLoading={isLoadingJoinRoom}
-              _spinner={{ paddingY: "0.45" }}
             >
               <Text fontFamily="RadioNewsman" color="black">
                 Join room

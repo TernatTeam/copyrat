@@ -13,14 +13,16 @@ import {
   RegisterPage,
   ForgotPasswordPage,
 } from '../src/pages/auth/index';
+
 import {
   HomePage,
   ChatPage,
   LobbyPage,
   VotePage,
   ScorePage,
-  Rules,
+  RulesPage,
   EndPage,
+  RoomSettingsPage,
 } from '../src/pages/index';
 
 const Stack = createStackNavigator();
@@ -47,7 +49,22 @@ const AppRouter = ({ page }) => {
         <Stack.Screen name="Chat" component={ChatPage} />
         <Stack.Screen name="Vote" component={VotePage} />
         <Stack.Screen name="Scoreboard" component={ScorePage} />
-        <Stack.Screen name="Rules" component={Rules} />
+        <Stack.Screen
+          options={{
+            gestureDirection: 'vertical',
+            cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
+          }}
+          name="Rules"
+          component={RulesPage}
+        />
+        <Stack.Screen
+          options={{
+            gestureDirection: 'vertical',
+            cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
+          }}
+          name="Room Settings"
+          component={RoomSettingsPage}
+        />
         <Stack.Screen name="End" component={EndPage} />
       </Stack.Navigator>
     </NavigationContainer>
