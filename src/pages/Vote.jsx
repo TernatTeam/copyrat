@@ -48,11 +48,11 @@ export const VotePage = ({ navigation }) => {
   const [currentPlayer, setCurrentPlayer] = useState({});
   const [{ roomData }] = useGlobal();
 
-  useEffect(() => {
-    updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
-      navToScore: false,
-    });
-  }, []);
+  // useEffect(() => {
+  //   updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'gameState'), {
+  //     navToScore: false,
+  //   });
+  // }, []);
 
   useEffect(() => {
     const q = query(collection(db, `games`, roomData.keyCode, 'admin'));
