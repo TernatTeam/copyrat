@@ -45,16 +45,18 @@ export const ScorePage = ({ navigation }) => {
   -> currentPlayer = obiectul cu informatiile despre un player (divera pe fiecare device)
   -> roundNo = numarul rundei curente
 */
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const [{ roomData }] = useGlobal();
-  
+
   useEffect(() => {
     const q = query(collection(db, `games`, roomData.keyCode, 'admin'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'modified') {
           navigation.reset({
-            routes: [{ name: route, params: {winner: winnerID, round: roundNo + 1} }],
+            routes: [
+              { name: route, params: { winner: winnerID, round: roundNo + 1 } },
+            ],
           });
         }
       });
@@ -165,12 +167,19 @@ export const ScorePage = ({ navigation }) => {
     });
   };
 
+  const updateEndRoundTime = async () => {
+    await updateDoc(
+      doc(db, 'games', roomData.keyCode, 'admin', 'game_settings'),
+      {
+        round_start_timestamp: serverTimestamp(),
+      },
+    );
+  };
+
   //let roundNo = 1;
 
   useEffect(() => {
     getSortedPlayers();
-
-    setIsModalOpen(true);
 
     const checkRound = async () => {
       const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
@@ -274,6 +283,7 @@ export const ScorePage = ({ navigation }) => {
               roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote
               deleteChat(); // stergem chatul de tura trecuta
               countNextRound(); // actualizez numarul rundei
+              updateEndRoundTime(); // ca si cum ai da start game iar
 
               if (roundNo < 3) {
                 showToast('Preparing new roles...');
