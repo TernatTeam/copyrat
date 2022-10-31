@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import AppReducer from "./reducer/app.reducer";
-import { StateProvider } from "./state";
+import AppReducer from './reducer/app.reducer';
+import { StateProvider } from './state';
 
-import { LogBox } from "react-native";
+import { NativeBaseProvider, StatusBar } from 'native-base';
 
-import { NativeBaseProvider, StatusBar } from "native-base";
+import theme from './config/theme/colors';
+import { useFonts } from 'expo-font';
 
-import theme from "./config/theme/colors";
-import { useFonts } from "expo-font";
-
-import Navigator from "./routes/index";
+import Navigator from './routes/index';
 
 import {
   auth,
   onAuthStateChanged,
-} from "./config/firebase/firebase-key-config";
+} from './config/firebase/firebase-key-config';
 
-import { FullPageLoader } from "./src/components/common";
-
-LogBox.ignoreLogs([
-  "Warning: Async Storage has been extracted from react-native core",
-]);
+import { FullPageLoader } from './src/components/common';
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState();
@@ -29,9 +23,9 @@ export const App = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setIsLoggedIn("Home");
+        setIsLoggedIn('Home');
       } else {
-        setIsLoggedIn("Login");
+        setIsLoggedIn('Login');
       }
     });
   }, []);
@@ -47,7 +41,7 @@ export const App = () => {
   };
 
   const [loaded] = useFonts({
-    RadioNewsman: require("./assets/fonts/RadioNewsman.ttf"),
+    RadioNewsman: require('./assets/fonts/RadioNewsman.ttf'),
   });
 
   if (!loaded) {

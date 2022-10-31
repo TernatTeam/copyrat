@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { getApp, getApps, initializeApp } from 'firebase/app';
 import {
   getFirestore,
   doc,
@@ -21,13 +21,14 @@ import {
   getAuth,
   signOut,
   sendPasswordResetEmail,
+  initializeAuth,
 } from 'firebase/auth';
 
-// don't have time for this but we need to upgrade with this bc yeah you can see that yellow warrning on expo start but later...
-// doc:https://react-native-async-storage.github.io/async-storage/docs/usage
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getReactNativePersistence } from 'firebase/auth/react-native';
 
-const firebaseApp = initializeApp({
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const configKeys = {
   apiKey: 'AIzaSyDXl7WAJij4smf3ETP4EVv_hApGzvsbE-I',
   authDomain: 'copyrat-7b7d6.firebaseapp.com',
   projectId: 'copyrat-7b7d6',
@@ -35,10 +36,22 @@ const firebaseApp = initializeApp({
   messagingSenderId: '332746644139',
   appId: '1:332746644139:web:977492c8cc6feacb5df5ee',
   measurementId: 'G-3B49ECP7L8',
-});
+};
+
+let firebaseApp;
+let auth;
+
+if (getApps().length < 1) {
+  firebaseApp = initializeApp(configKeys);
+  auth = initializeAuth(firebaseApp, {
+    persistence: getReactNativePersistence(AsyncStorage),
+  });
+} else {
+  firebaseApp = getApp();
+  auth = getAuth(firebaseApp);
+}
 
 const db = getFirestore(firebaseApp);
-const auth = getAuth(firebaseApp);
 
 export {
   db,
