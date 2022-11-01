@@ -49,25 +49,6 @@ export const ScorePage = ({ navigation }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [{ roomData }] = useGlobal();
 
-  useEffect(() => {
-    const q = query(collection(db, `games`, roomData.keyCode, 'admin'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'modified') {
-          navigation.reset({
-            routes: [
-              { name: route, params: { winner: winnerID, round: roundNo + 1 } },
-            ],
-          });
-        }
-      });
-    });
-
-    return async () => {
-      unsubscribe();
-    };
-  }, []);
-
   const getSortedPlayers = async () => {
     // functie care ia din baza de date arrayul cu playeri si ii sorteaza dupa scor
     try {
@@ -177,20 +158,32 @@ export const ScorePage = ({ navigation }) => {
     );
   };
 
-  //let roundNo = 1;
+  const checkRound = async () => {
+    const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
+    roundNo = docSnap.data().round_number;
+    if (roundNo > 2) {
+      route = 'End';
+    }
+  };
 
   useEffect(() => {
     getSortedPlayers();
-
-    const checkRound = async () => {
-      const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
-      roundNo = docSnap.data().round_number;
-      if (roundNo > 2) {
-        route = 'End';
-      }
-    };
-
     checkRound();
+
+    const q = doc(db, 'games', `${roomData.keyCode}/admin/game_state`);
+    const unsubscribe = onSnapshot(q, (doc) => {
+      if (doc.data().nav_to_score === false) {
+        navigation.reset({
+          routes: [
+            { name: route, params: { winner: winnerID, round: roundNo + 1 } },
+          ],
+        });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const showToast = (message) => {

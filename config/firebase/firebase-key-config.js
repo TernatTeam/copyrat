@@ -13,6 +13,7 @@ import {
   orderBy,
   updateDoc,
   serverTimestamp,
+  increment,
 } from 'firebase/firestore';
 import {
   createUserWithEmailAndPassword,
@@ -73,4 +74,5 @@ export {
   orderBy,
   updateDoc,
   serverTimestamp,
+  increment,
 };
