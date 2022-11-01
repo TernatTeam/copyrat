@@ -84,10 +84,10 @@ export const ScorePage = ({ navigation }) => {
     // functia care reseteaza fieldurile no_of_votes, vote, fake_id
     let newFakeIds = []; // in acest array construim noile fake_id uri
 
-    for (let i = 0; i < playersDB.length; i++) {
+    for (let i = playersDB.length - 1; i >= 0; i--) {
       newFakeIds.push(playersDB[i].name);
     }
-
+    
     let no_of_rats = Math.floor(playersDB.length / 2); // iau numarul de rati
     let ratsIndex = []; // arrayul cu indecsii generati la intamplare
 
@@ -102,7 +102,7 @@ export const ScorePage = ({ navigation }) => {
 
     // actualizam fake_id urile in vectorul auxiliar pentru a le schimba pe toate odata in baza de date
     let firstRatId = newFakeIds[ratsIndex[0]];
-
+    
     for (let i = 0; i < no_of_rats - 1; i++) {
       newFakeIds[ratsIndex[i]] = newFakeIds[ratsIndex[i + 1]]; // schimbam noile id uri in mod
     } // circular intre rati, 2 cate 2
@@ -119,6 +119,7 @@ export const ScorePage = ({ navigation }) => {
           vote: -1,
         },
       );
+
     }
   };
 
@@ -269,30 +270,31 @@ export const ScorePage = ({ navigation }) => {
             medium
             bg="primary3.500"
             _pressed={{ bg: 'primary3.600' }}
-            onPress={() => {
+            onPress={async() => {
               //getAdminIdAndRound();
               // butonul care va incepe o noua runda
 
               // acest lucru e posibil doar daca playerul care apasa are rolul de admin
-              roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote
-              deleteChat(); // stergem chatul de tura trecuta
-              countNextRound(); // actualizez numarul rundei
-              updateEndRoundTime(); // ca si cum ai da start game iar
+             
+              await countNextRound(); // actualizez numarul rundei
+              
 
               if (roundNo < 3) {
                 showToast('Preparing new roles...');
+                await roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote
+                await deleteChat(); // stergem chatul de tura trecuta
+                await updateEndRoundTime(); // ca si cum ai da start game iar
               } else {
                 showToast('Well done! See you again soon');
               }
 
-              setTimeout(async () => {
                 await updateDoc(
                   doc(db, 'games', roomData.keyCode, 'admin', 'game_state'),
                   {
                     nav_to_score: false,
                   },
                 );
-              }, 1000);
+
             }}
           >
             <Text fontWeight="semibold" color="black">
