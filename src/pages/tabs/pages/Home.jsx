@@ -107,6 +107,7 @@ export const HomePage = ({ navigation }) => {
           onPress={logOut}
           rotation={180}
         />
+
         <IconButton
           icon={<Icon as={<Ionicons name="book" />} />}
           borderRadius="full"
