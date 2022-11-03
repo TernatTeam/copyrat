@@ -1,29 +1,6 @@
 import { getApp, getApps, initializeApp } from 'firebase/app';
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  collection,
-  addDoc,
-  getDocs,
-  getDoc,
-  deleteDoc,
-  query,
-  onSnapshot,
-  orderBy,
-  updateDoc,
-  serverTimestamp,
-  increment,
-} from 'firebase/firestore';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  getAuth,
-  signOut,
-  sendPasswordResetEmail,
-  initializeAuth,
-} from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getAuth, initializeAuth } from 'firebase/auth';
 
 import { getReactNativePersistence } from 'firebase/auth/react-native';
 
@@ -54,25 +31,4 @@ if (getApps().length < 1) {
 
 const db = getFirestore(firebaseApp);
 
-export {
-  db,
-  auth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-  doc,
-  setDoc,
-  sendPasswordResetEmail,
-  collection,
-  addDoc,
-  getDocs,
-  getDoc,
-  deleteDoc,
-  query,
-  onSnapshot,
-  orderBy,
-  updateDoc,
-  serverTimestamp,
-  increment,
-};
+export { db, auth };

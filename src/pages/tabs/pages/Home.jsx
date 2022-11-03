@@ -14,10 +14,11 @@ import {
 
 import { Ionicons } from '@expo/vector-icons';
 
-import { auth, signOut } from '../../config/firebase/firebase-key-config';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../../config/firebase/firebase-key-config';
 
-import CopyratLogo from '../../assets/logo_trans.png';
-import { ModalJoinRoom } from '../components/common';
+import CopyratLogo from '../../../../assets/logo_trans.png';
+import { ModalJoinRoom } from '../../../components/common';
 import { TouchableOpacity } from 'react-native';
 
 export const HomePage = ({ navigation }) => {

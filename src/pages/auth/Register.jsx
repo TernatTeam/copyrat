@@ -75,7 +75,7 @@ export const RegisterPage = ({ navigation }) => {
           await registration(username, email, password).then((value) => {
             if (value === 200) {
               navigation.reset({
-                routes: [{ name: 'Home' }],
+                routes: [{ name: 'Tabs' }],
               });
 
               return;

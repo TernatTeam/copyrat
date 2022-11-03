@@ -8,12 +8,10 @@ import { NativeBaseProvider, StatusBar } from 'native-base';
 import theme from './config/theme/colors';
 import { useFonts } from 'expo-font';
 
-import Navigator from './routes/index';
+import Navigator from './routes/Index';
 
-import {
-  auth,
-  onAuthStateChanged,
-} from './config/firebase/firebase-key-config';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './config/firebase/firebase-key-config';
 
 import { FullPageLoader } from './src/components/common';
 
@@ -23,7 +21,7 @@ export const App = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setIsLoggedIn('Home');
+        setIsLoggedIn('Tabs');
       } else {
         setIsLoggedIn('Login');
       }

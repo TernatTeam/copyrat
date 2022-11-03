@@ -33,7 +33,7 @@ export const EndPage = ({ navigation, route }) => {
         _pressed={{ bg: 'primary3.600' }}
         onPress={() => {
           navigation.reset({
-            routes: [{ name: 'Home' }],
+            routes: [{ name: 'Tabs' }],
           });
         }}
       >

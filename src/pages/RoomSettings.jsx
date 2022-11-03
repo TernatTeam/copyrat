@@ -15,12 +15,8 @@ import {
   VStack,
 } from 'native-base';
 
-import {
-  auth,
-  db,
-  doc,
-  setDoc,
-} from '../../config/firebase/firebase-key-config';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../../config/firebase/firebase-key-config';
 
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 
@@ -196,7 +192,7 @@ export const RoomSettingsPage = ({ navigation }) => {
               bg: 'primary3.600',
             }}
             onPress={() => {
-              navigation.navigate('Home');
+              navigation.navigate('Tabs');
             }}
           />
         </Box>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+
 import { TouchableOpacity } from 'react-native';
+
 import {
   Box,
   Button,
@@ -11,19 +13,20 @@ import {
 } from 'native-base';
 
 import {
-  db,
   doc,
   getDoc,
   updateDoc,
   increment,
   collection,
-  auth,
   getDocs,
   onSnapshot,
-} from '../../config/firebase/firebase-key-config';
-import { useGlobal } from '../../state';
+} from 'firebase/firestore';
+import { db, auth } from '../../config/firebase/firebase-key-config';
+
 import { Ionicons } from '@expo/vector-icons';
 import { Icon } from 'native-base';
+
+import { useGlobal } from '../../state';
 
 export const VotePage = ({ navigation }) => {
   const toast = useToast();
@@ -170,9 +173,7 @@ export const VotePage = ({ navigation }) => {
       }
     });
 
-    return () => {
-      unsubscribe();
-    };
+    return unsubscribe;
   }, []);
 
   const showToast = (message) => {

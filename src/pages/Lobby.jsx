@@ -19,17 +19,16 @@ import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 
 import {
-  auth,
   collection,
-  db,
+  serverTimestamp,
   doc,
   query,
   updateDoc,
   onSnapshot,
   deleteDoc,
-  serverTimestamp,
   setDoc,
-} from '../../config/firebase/firebase-key-config';
+} from 'firebase/firestore';
+import { auth, db } from '../../config/firebase/firebase-key-config';
 
 import { useGlobal } from '../../state';
 
@@ -141,9 +140,7 @@ export const LobbyPage = ({ navigation, route }) => {
       });
     });
 
-    return () => {
-      unsubscribe();
-    };
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
@@ -175,9 +172,7 @@ export const LobbyPage = ({ navigation, route }) => {
       }
     });
 
-    return () => {
-      unsubscribe();
-    };
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
@@ -231,7 +226,7 @@ export const LobbyPage = ({ navigation, route }) => {
               );
 
               navigation.reset({
-                routes: [{ name: 'Home' }],
+                routes: [{ name: 'Tabs' }],
               });
             } catch (err) {
               console.log('Err: ', err);

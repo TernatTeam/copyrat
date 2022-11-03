@@ -1,14 +1,10 @@
 import {
-  db,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  auth,
-  doc,
-  setDoc,
   sendPasswordResetEmail,
-  collection,
-  addDoc,
-} from './firebase-key-config';
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { auth, db } from './firebase-key-config';
 
 export const registration = async (name, email, password) => {
   try {

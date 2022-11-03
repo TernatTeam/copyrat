@@ -15,20 +15,19 @@ import { GiftedChat } from 'react-native-gifted-chat';
 
 import {
   collection,
-  db,
   doc,
   setDoc,
-  auth,
   getDoc,
   query,
   onSnapshot,
   orderBy,
-} from '../../config/firebase/firebase-key-config';
+} from 'firebase/firestore';
+import { db, auth } from '../../config/firebase/firebase-key-config';
 
 import { Ionicons } from '@expo/vector-icons';
 
 import { chatBubble, inputToolBar, sendButton } from '../components/chat';
-import { FullPageLoader } from '../components/common/FullPageLoader';
+import { FullPageLoader } from '../components/common';
 
 import { useGlobal } from '../../state';
 
@@ -127,7 +126,7 @@ export const ChatPage = ({ navigation, route }) => {
       });
     });
 
-    return () => unsubscribe();
+    return unsubscribe;
   }, []);
 
   // only for dev
