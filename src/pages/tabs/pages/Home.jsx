@@ -129,7 +129,7 @@ export const HomePage = ({ navigation }) => {
             showToast(rat_alert[r]);
           }}
         >
-          <VStack justifyContent="flex-start" alignItems="center" my="16">
+          <VStack justifyContent="flex-start" alignItems="center" pt="16">
             <Image
               mb="-9"
               alt="Copy Rat Logo"
@@ -148,7 +148,7 @@ export const HomePage = ({ navigation }) => {
           justifyContent="center"
           alignItems="flex-end"
           w="full"
-          h="45%"
+          pt="20"
         >
           <Box w="full" alignItems="flex-start" mb="20">
             <Button
