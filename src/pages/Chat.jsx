@@ -42,7 +42,7 @@ export const ChatPage = ({ navigation, route }) => {
   const [countDown, setCountDown] = useState(0);
 
   const addSeconds = (date, seconds) => {
-    date.setSeconds(date.getSeconds() + seconds + 2);
+    date.setSeconds(date.getSeconds() + seconds);
     return date;
   };
 
