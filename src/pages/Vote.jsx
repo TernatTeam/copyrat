@@ -282,12 +282,12 @@ export const VotePage = ({ navigation }) => {
           disabled={alreadyVoted}
           bg={alreadyVoted ? 'primary3.600' : 'primary3.500'}
           _pressed={{ bg: 'primary3.600' }}
-          onPress={() => {
+          onPress={async() => {
             // la apasare, se apeleaza functia care trimite catre baza de date indicele persoanei cu care votezi
             if (indexOfVoted != null) {
               // doar daca playerul a votat cu cineva. Atunci, poti
               // confirma votul o singura data, adica daca nu ai mai apasat
-              confirmVote(); // pe "Done" (variabila alreadyVoted are valoarea false)
+              await confirmVote(); // pe "Done" (variabila alreadyVoted are valoarea false)
               setAlreadyVoted(true);
               showToast(`Locking in ... ${playersDB[indexOfVoted].fake_id}`);
             } else {
@@ -324,7 +324,7 @@ export const VotePage = ({ navigation }) => {
                 showToast('Votes not locked in! Please try again');
               } else {
                 // if votes locked in
-                calculateScore(); // scores
+                await calculateScore(); // scores
                 showToast('Calculating scores... Muie :D');
                 // ne mutam pe pagina cu leaderboard ul
                 setTimeout(async () => {

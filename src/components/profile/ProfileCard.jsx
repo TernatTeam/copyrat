@@ -48,7 +48,7 @@ export const ProfileCard = () => {
               ml="-0.5"
               mt="-1"
             >
-              {user.email}
+              {user?.email}
             </Text>
           </Stack>
         </Box>

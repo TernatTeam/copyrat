@@ -10,7 +10,7 @@ import { NativeBaseProvider, StatusBar } from 'native-base';
 import theme from './config/theme/colors';
 import { useFonts } from 'expo-font';
 
-import Navigator from './routes/index';
+import Navigator from './routes/Index';
 
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './config/firebase/firebase-key-config';
