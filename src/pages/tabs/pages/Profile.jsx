@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Box, Text } from 'native-base';
+import { Box } from 'native-base';
+import { ProfileCard } from '../../../components/profile';
 
 export const ProfilePage = () => {
   return (
@@ -10,10 +11,9 @@ export const ProfilePage = () => {
       justifyContent="center"
       alignItems="center"
       bg="#747474"
+      safeArea
     >
-      <Text fontFamily="RadioNewsman" fontSize="4xl" color="white">
-        esti gay!
-      </Text>
+      <ProfileCard />
     </Box>
   );
 };

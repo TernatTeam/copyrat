@@ -1,6 +1,6 @@
 const AppReducer = (state, action) => {
   switch (action.type) {
-    case "ROOM_DATA":
+    case 'ROOM_DATA':
       return {
         ...state,
         roomData: {
@@ -9,7 +9,7 @@ const AppReducer = (state, action) => {
           game_admin_uid: action.game_admin_uid,
         },
       };
-    case "PLAYER_INFO":
+    case 'PLAYER_INFO':
       return {
         ...state,
         playerInfo: {
