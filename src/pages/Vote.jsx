@@ -83,7 +83,7 @@ export const VotePage = ({ navigation }) => {
       setPlayerIDs(idArray); // modific arrayul in care tin minte id urile
 
       for (let i = 0; i < playersArray.length; i++) {
-        if (playersArray[i].name != playersArray[j].fake_id && !swapped[i]) {
+        if (playersArray[i].name != playersArray[i].fake_id && !swapped[i]) {
           let initial = i;
           let initialColor = colors[i];
 
