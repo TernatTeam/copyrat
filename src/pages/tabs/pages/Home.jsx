@@ -14,10 +14,11 @@ import {
 
 import { Ionicons } from '@expo/vector-icons';
 
-import { auth, signOut } from '../../config/firebase/firebase-key-config';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../../config/firebase/firebase-key-config';
 
-import CopyratLogo from '../../assets/logo_trans.png';
-import { ModalJoinRoom } from '../components/common';
+import CopyratLogo from '../../../../assets/logo_trans.png';
+import { ModalJoinRoom } from '../../../components/common';
 import { TouchableOpacity } from 'react-native';
 
 export const HomePage = ({ navigation }) => {
@@ -106,6 +107,7 @@ export const HomePage = ({ navigation }) => {
           onPress={logOut}
           rotation={180}
         />
+
         <IconButton
           icon={<Icon as={<Ionicons name="book" />} />}
           borderRadius="full"
@@ -127,7 +129,7 @@ export const HomePage = ({ navigation }) => {
             showToast(rat_alert[r]);
           }}
         >
-          <VStack justifyContent="flex-start" alignItems="center" my="16">
+          <VStack justifyContent="flex-start" alignItems="center" pt="16">
             <Image
               mb="-9"
               alt="Copy Rat Logo"
@@ -146,7 +148,7 @@ export const HomePage = ({ navigation }) => {
           justifyContent="center"
           alignItems="flex-end"
           w="full"
-          h="45%"
+          pt="20"
         >
           <Box w="full" alignItems="flex-start" mb="20">
             <Button

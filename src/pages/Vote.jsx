@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
 import { TouchableOpacity } from 'react-native';
+
 import {
   Box,
   Button,
@@ -9,65 +11,46 @@ import {
   ScrollView,
   VStack,
 } from 'native-base';
-import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
+
 import {
-  db,
+  doc,
+  getDoc,
+  updateDoc,
+  increment,
   collection,
-  auth,
   getDocs,
-  query,
   onSnapshot,
-} from '../../config/firebase/firebase-key-config';
-import { useGlobal } from '../../state';
+} from 'firebase/firestore';
+import { db, auth } from '../../config/firebase/firebase-key-config';
+
 import { Ionicons } from '@expo/vector-icons';
 import { Icon } from 'native-base';
+
+import { useGlobal } from '../../state';
 
 export const VotePage = ({ navigation }) => {
   const toast = useToast();
   const id = 'voting-toasts';
-
   /* variabile carora li se modifica valoarea pe parcursul jocului:
   -> playersDB = array ul cu playeri, luat din baza de date
   -> uIDs = arrayul cu id-urile playerilor, in cazul in care un player iese din joc
   -> indexOfVoted = indexul playerului cu care doresti sa votezi, pana confirmi votul
   -> alreadyVoted = variabila de stare, care indica daca playerul si a confirmat sau nu votul
 */
+  const players = useRef("");
   const [playersDB, setPlayersDB] = useState([]);
   const [playerIDs, setPlayerIDs] = useState([]);
   const [indexOfVoted, setIndexOfVoted] = useState(null);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
-
   /* variabile carora nu li se modifica valoarea pe parcursul jocului:
   -> keycode = retine cheia camerei de joc in "keycode.value"
   -> currentPlayer = odata initializat, retine informatiile despre playerul curent
   -> adminId = id ul playerului care a creat camera
   -> roundNo = numarul rundei curente
 */
-
   const [roundNo, setRoundNo] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState({});
   const [{ roomData }] = useGlobal();
-
-  useEffect(() => {
-    updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_state'), {
-      nav_to_score: false,
-    });
-  }, []);
-
-  useEffect(() => {
-    const q = doc(db, 'games', `${roomData.keyCode}/admin/game_state`);
-    const unsubscribe = onSnapshot(q, (doc) => {
-      if (doc.data().nav_to_score === true) {
-        navigation.reset({
-          routes: [{ name: 'Scoreboard' }],
-        });
-      }
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
 
   const getPlayers = async () => {
     try {
@@ -90,6 +73,7 @@ export const VotePage = ({ navigation }) => {
 
       setPlayersDB(playersArray); // modific arrayul in care tin minte playerii
       setPlayerIDs(idArray); // modific arrayul in care tin minte id urile
+      return playersArray;
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -99,12 +83,6 @@ export const VotePage = ({ navigation }) => {
   const getAdminIdAndRound = async () => {
     const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
     setRoundNo(docSnap.data().round_number);
-  };
-
-  const voteFor = (index) => {
-    setAlreadyVoted(false);
-    // retine ultima optiune de votare a playerului curent
-    setIndexOfVoted(index); // in variabila indexOfVoted
   };
 
   const confirmVote = async () => {
@@ -128,20 +106,20 @@ export const VotePage = ({ navigation }) => {
   const calculateScore = async () => {
     // functia care calculeaza punctajele la final de runda
     let newScores = []; // array auxiliar in care stocam scorurile de runda asta
-    const nrOfPlayers = playersDB.length;
+    const nrOfPlayers = players.current.length;
 
     for (let i = 0; i < nrOfPlayers; i++) {
       // calculam pentru fiecare player
       let score = 0;
 
-      if (playersDB[i].name == playersDB[i].fake_id) {
+      if (players.current[i].name == players.current[i].fake_id) {
         // Real
         if (
-          playersDB[playersDB[i].vote].name !=
-          playersDB[playersDB[i].vote].fake_id
+          players.current[players.current[i].vote].name !=
+          players.current[players.current[i].vote].fake_id
         ) {
           //vot bun
-          score += nrOfPlayers - 1 - playersDB[playersDB[i].vote].no_of_votes;
+          score += nrOfPlayers - 1 - players.current[players.current[i].vote].no_of_votes;
         }
         if (score < 1) {
           score = 1;
@@ -152,7 +130,7 @@ export const VotePage = ({ navigation }) => {
         }
       } else {
         // fake
-        score += nrOfPlayers - 2 - playersDB[i].no_of_votes;
+        score += nrOfPlayers - 2 - players.current[i].no_of_votes;
         score *= 10;
         if (score == nrOfPlayers - 2) {
           score += 5;
@@ -181,8 +159,23 @@ export const VotePage = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getPlayers(); // cand se incarca prima data pagina, luam din baza de date
+    const aux = getPlayers(); // cand se incarca prima data pagina, luam din baza de date
     getAdminIdAndRound(); // playerii si id urile lor, cat si pe al admin ului si numarul rundei
+    
+    updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_state'), {
+      nav_to_score: false,
+    });
+
+    const q = doc(db, 'games', `${roomData.keyCode}/admin/game_state`);
+    const unsubscribe = onSnapshot(q, (doc) => {
+      if (doc.data().nav_to_score === true) {
+        navigation.reset({
+          routes: [{ name: 'Scoreboard' }],
+        });
+      }
+    });
+
+    return unsubscribe;
   }, []);
 
   const showToast = (message) => {
@@ -235,7 +228,11 @@ export const VotePage = ({ navigation }) => {
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        voteFor(index); // save vote
+                        if (!alreadyVoted) {
+                          setIndexOfVoted(index); // save vote
+                        } else {
+                          showToast('You already locked in your vote');
+                        }
                       }}
                       style={{
                         width: '100%',
@@ -253,7 +250,7 @@ export const VotePage = ({ navigation }) => {
                         bgColor={player.userNameColor}
                         borderRadius="lg"
                       >
-                        <Text color="white" fontWeight="bold" fontSize="lg">
+                        <Text color="black" fontWeight="bold" fontSize="lg">
                           {player.fake_id}
                         </Text>
 
@@ -279,32 +276,29 @@ export const VotePage = ({ navigation }) => {
       </Box>
 
       <Box p="6" mt="auto">
-        <Button // confirm vote
+        <Button
           title="LockIn"
           rounded="lg"
           mb="3"
           medium
-          bg="primary3.500"
+          disabled={alreadyVoted}
+          bg={alreadyVoted ? 'primary3.600' : 'primary3.500'}
           _pressed={{ bg: 'primary3.600' }}
-          onPress={() => {
+          onPress={async() => {
             // la apasare, se apeleaza functia care trimite catre baza de date indicele persoanei cu care votezi
             if (indexOfVoted != null) {
               // doar daca playerul a votat cu cineva. Atunci, poti
-              if (!alreadyVoted) {
-                // confirma votul o singura data, adica daca nu ai mai apasat
-                confirmVote(); // pe "Done" (variabila alreadyVoted are valoarea false)
-                setAlreadyVoted(true);
-                showToast(`Locking in ... ${playersDB[indexOfVoted].fake_id}`);
-              } else {
-                showToast('You already locked in your vote');
-              }
+              // confirma votul o singura data, adica daca nu ai mai apasat
+              await confirmVote(); // pe "Done" (variabila alreadyVoted are valoarea false)
+              setAlreadyVoted(true);
+              showToast(`Locking in ... ${playersDB[indexOfVoted].fake_id}`);
             } else {
               showToast('Please vote for someone');
               // in caz contrar, anunt playerul
             } // ca nu a votat cu nimeni
           }}
         >
-          <Text fontWeight="semibold" color="black">
+          <Text fontWeight="semibold" color={alreadyVoted ? 'grey' : 'black'}>
             Lock In Your Vote
           </Text>
         </Button>
@@ -314,34 +308,35 @@ export const VotePage = ({ navigation }) => {
             title="stopVote"
             rounded="lg"
             medium
-            bg="rosybrown"
-            _pressed={{ bg: 'red.400' }}
+            bg="red.700"
+            _pressed={{ bg: 'red.800' }}
             onPress={async () => {
+              let all_voted = true;
               // butonul care calculeaza si afiseaza scorurile, si da update in baza de date
-              if (auth.currentUser.uid == roomData.game_admin_uid) {
-                await getPlayers();
-                let all_voted = true;
-                for (let i = 0; i < playersDB.length; i++) {
-                  if (playersDB[i].vote < 0) all_voted = false;
+              players.current = await getPlayers();
+              for (let i = 0; i < players.current.length; i++) {
+                if (players.current[i].vote < 0) {
+                  all_voted = false;
                 }
-                if (!all_voted) {
-                  //daca nu si-a facut update
-                  showToast('Votes not locked in! Please try again');
-                } else {
-                  // if votes locked in
-                  calculateScore(); // scores
-                  showToast('Calculating scores... Muie :D');
-                  // ne mutam pe pagina cu leaderboard ul
-                  setTimeout(async () => {
-                    // wait for votes b4 leaving page
-                    await updateDoc(
-                      doc(db, 'games', roomData.keyCode, 'admin', 'game_state'),
-                      {
-                        nav_to_score: true,
-                      },
-                    );
-                  }, 1000);
-                }
+              }
+
+              if (!all_voted) {
+                //daca nu si-a facut update
+                showToast('Votes not locked in! Please try again');
+              } else {
+                // if votes locked in
+                await calculateScore(); // scores
+                showToast('Calculating scores... Muie :D');
+                // ne mutam pe pagina cu leaderboard ul
+                setTimeout(async () => {
+                  // wait for votes b4 leaving page
+                  await updateDoc(
+                    doc(db, 'games', roomData.keyCode, 'admin', 'game_state'),
+                    {
+                      nav_to_score: true,
+                    },
+                  );
+                }, 1000);
               }
             }}
           >

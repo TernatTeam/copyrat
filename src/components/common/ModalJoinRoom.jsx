@@ -12,13 +12,8 @@ import {
   VStack,
 } from 'native-base';
 
-import {
-  auth,
-  db,
-  doc,
-  getDoc,
-  setDoc,
-} from '../../../config/firebase/firebase-key-config';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../../../config/firebase/firebase-key-config';
 import { UnderlinedInput } from '../interface';
 import { useColors } from '../../hooks';
 import { useGlobal } from '../../../state';

@@ -1,14 +1,16 @@
 import {
-  db,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  auth,
-  doc,
-  setDoc,
   sendPasswordResetEmail,
-  collection,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
+import {
   addDoc,
-} from './firebase-key-config';
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
+import { auth, db } from './firebase-key-config';
 
 export const registration = async (name, email, password) => {
   try {
@@ -19,7 +21,7 @@ export const registration = async (name, email, password) => {
           name: name,
           email: email,
           password: password,
-          id: user.uid,
+          created_at: serverTimestamp(),
         });
       },
     );

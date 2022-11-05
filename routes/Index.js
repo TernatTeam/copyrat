@@ -14,8 +14,8 @@ import {
   ForgotPasswordPage,
 } from '../src/pages/auth/index';
 
+import IndexTabs from './IndexTabs';
 import {
-  HomePage,
   ChatPage,
   LobbyPage,
   VotePage,
@@ -27,7 +27,7 @@ import {
 
 const Stack = createStackNavigator();
 
-const AppRouter = ({ page }) => {
+const Index = ({ page }) => {
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -41,7 +41,7 @@ const AppRouter = ({ page }) => {
         {page === 'Login' ? (
           <Stack.Screen name="Login" component={LoginPage} />
         ) : (
-          <Stack.Screen name="Home" component={HomePage} />
+          <Stack.Screen name="Tabs" component={IndexTabs} />
         )}
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordPage} />
@@ -71,4 +71,4 @@ const AppRouter = ({ page }) => {
   );
 };
 
-export default AppRouter;
+export default Index;

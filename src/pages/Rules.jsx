@@ -1,6 +1,6 @@
-import { Text, Icon, IconButton, Flex, HStack, VStack, Box } from 'native-base';
-
 import React, { useState } from 'react';
+
+import { Text, Icon, IconButton, Flex, HStack, VStack, Box } from 'native-base';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -37,7 +37,7 @@ export const RulesPage = ({ navigation }) => {
             bg: 'primary3.600',
           }}
           onPress={() => {
-            navigation.navigate('Home');
+            navigation.navigate('Tabs');
           }}
         />
       </HStack>

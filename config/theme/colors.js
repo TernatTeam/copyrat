@@ -6,7 +6,7 @@ const theme = extendTheme({
       50: '#FFE1E1', // 35% lighten
       100: '#FFC8C8', // 25% lighten
       500: '#747474', // original
-      600: '#DE6F6F', // 10% darker
+      600: '#686868', // 10% darker
     },
     primary2: {
       50: '#FFFFA9', // 35% lighten

@@ -19,17 +19,16 @@ import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 
 import {
-  auth,
   collection,
-  db,
+  serverTimestamp,
   doc,
   query,
   updateDoc,
   onSnapshot,
   deleteDoc,
-  serverTimestamp,
   setDoc,
-} from '../../config/firebase/firebase-key-config';
+} from 'firebase/firestore';
+import { auth, db } from '../../config/firebase/firebase-key-config';
 
 import { useGlobal } from '../../state';
 
@@ -78,14 +77,14 @@ export const LobbyPage = ({ navigation, route }) => {
 
     //arr of 3 rand index
     let arr = [];
-
+    console.log(players);
     while (arr.length < no_of_rats) {
       let r = Math.floor(Math.random() * players.length);
       if (arr.indexOf(r) === -1) arr.push(r);
     }
-
+    console.log(arr);
     //update roles and fake_id
-    for (let i = 0; i < no_of_rats; i++) {
+    for (let i = 0; i < no_of_rats; i++) { console.log(i);
       await updateDoc(
         doc(db, `games/${roomData.keyCode}/players/${uIds[arr[i]]}`),
         {
@@ -93,8 +92,8 @@ export const LobbyPage = ({ navigation, route }) => {
         },
       );
     }
-
-    await updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_state'), {
+    console.log(players);
+    updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_state'), {
       is_game_ready: true,
     });
 
@@ -115,18 +114,6 @@ export const LobbyPage = ({ navigation, route }) => {
           setIsLoading(false);
         }
 
-        if (change.type === 'modified') {
-          const newState = players.map((player) => {
-            if (change.doc.id == player.uid) {
-              return { ...player, name: player.name };
-            }
-
-            return player;
-          });
-
-          setPlayers(newState);
-        }
-
         if (change.type === 'removed') {
           setPlayers((oldValues) =>
             oldValues.filter(
@@ -141,9 +128,7 @@ export const LobbyPage = ({ navigation, route }) => {
       });
     });
 
-    return () => {
-      unsubscribe();
-    };
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
@@ -175,9 +160,7 @@ export const LobbyPage = ({ navigation, route }) => {
       }
     });
 
-    return () => {
-      unsubscribe();
-    };
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
@@ -231,7 +214,7 @@ export const LobbyPage = ({ navigation, route }) => {
               );
 
               navigation.reset({
-                routes: [{ name: 'Home' }],
+                routes: [{ name: 'Tabs' }],
               });
             } catch (err) {
               console.log('Err: ', err);
@@ -320,10 +303,11 @@ export const LobbyPage = ({ navigation, route }) => {
       <Box position="absolute" bottom="6" w="full" px="4">
         {auth.currentUser.uid == roomData.game_admin_uid && (
           <Button
-            onPress={() => {
+            onPress={async() => {
               if (auth.currentUser.uid == roomData.game_admin_uid) {
-                setEndRoundTime();
-                setRoles();
+                await setRoles();
+                await setEndRoundTime();
+                
               }
             }}
             title="Start"
