@@ -102,6 +102,7 @@ export const ModalJoinRoom = ({
             type: 'ROOM_DATA',
             keyCode: keyCode,
             game_admin_uid: docSnap2.data().game_admin_uid,
+            round_number: 1,
           });
 
           return true;

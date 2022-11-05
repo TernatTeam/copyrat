@@ -141,7 +141,7 @@ export const ScorePage = ({ navigation }) => {
     }
   };
 
-  const countNextRound = async () => {
+  const countNextRound = () => {
     dispatch({
       type: 'ROOM_DATA',
       keyCode: roomData.keyCode,
@@ -275,7 +275,7 @@ export const ScorePage = ({ navigation }) => {
 
               // acest lucru e posibil doar daca playerul care apasa are rolul de admin
 
-              await countNextRound(); // actualizez numarul rundei
+              countNextRound(); // actualizez numarul rundei
 
               if (roomData.round_number < 3) {
                 showToast('Preparing new roles...');

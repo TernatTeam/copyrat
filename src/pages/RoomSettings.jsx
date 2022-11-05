@@ -71,8 +71,6 @@ export const RoomSettingsPage = ({ navigation }) => {
     try {
       await setDoc(doc(db, 'games', result), {
         game_admin_uid: currentUser.uid,
-
-        round_number: 1,
       });
 
       await setDoc(doc(db, 'games', result, 'admin', 'game_state'), {
@@ -84,6 +82,7 @@ export const RoomSettingsPage = ({ navigation }) => {
         type: 'ROOM_DATA',
         keyCode: result,
         game_admin_uid: currentUser.uid,
+        round_number: 1,
       });
 
       return result;
