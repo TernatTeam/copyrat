@@ -67,15 +67,11 @@ export const ScorePage = ({ navigation }) => {
       querySnapshot.forEach((doc) => {
         // pentru fiecare player luat din baza de data
         playersArray.push(doc.data()); // il retin in array ul auxiliar
-        
         idArray.push(doc.id); // retinem si id urile playerilor in array ul auxiliar
       });
       
-      const copy = async() => {
-        players = playersArray;
-      };
-      await copy();
-      
+      players = [...playersArray];
+
       playersArray.sort((a, b) => {
         return a.score < b.score; // sortam array ul auxiliar in functie de scor
       });
@@ -93,8 +89,7 @@ export const ScorePage = ({ navigation }) => {
   const roundReset = async () => {
     // functia care reseteaza fieldurile no_of_votes, vote, fake_id
     let newFakeIds = []; // in acest array construim noile fake_id uri
-    console.log(players);
-    for (let i = players.length - 1; i >= 0; i--) {
+    for (let i = 0; i < players.length; i++) {
       newFakeIds.push(players[i].name);
     }
 
@@ -109,7 +104,6 @@ export const ScorePage = ({ navigation }) => {
         ratsIndex.push(newRatIndex);
       }
     }
-    console.log(ratsIndex);
     // actualizam fake_id urile in vectorul auxiliar pentru a le schimba pe toate odata in baza de date
     let firstRatId = newFakeIds[ratsIndex[0]];
 
@@ -118,7 +112,6 @@ export const ScorePage = ({ navigation }) => {
     } // circular intre rati, 2 cate 2
 
     newFakeIds[ratsIndex[no_of_rats - 1]] = firstRatId;
-    console.log(newFakeIds);
     for (let i = 0; i < players.length; i++) {
       // actualizez baza de date
       await updateDoc(
@@ -177,7 +170,7 @@ export const ScorePage = ({ navigation }) => {
   };
 
   useEffect(() => {
-    players = getSortedPlayers();
+    getSortedPlayers();
     checkRound();
 
     const q = doc(db, 'games', `${roomData.keyCode}/admin/game_state`);

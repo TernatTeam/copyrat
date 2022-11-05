@@ -77,14 +77,12 @@ export const LobbyPage = ({ navigation, route }) => {
 
     //arr of 3 rand index
     let arr = [];
-    console.log(players);
     while (arr.length < no_of_rats) {
       let r = Math.floor(Math.random() * players.length);
       if (arr.indexOf(r) === -1) arr.push(r);
     }
-    console.log(arr);
     //update roles and fake_id
-    for (let i = 0; i < no_of_rats; i++) { console.log(i);
+    for (let i = 0; i < no_of_rats; i++) { 
       await updateDoc(
         doc(db, `games/${roomData.keyCode}/players/${uIds[arr[i]]}`),
         {
@@ -92,7 +90,6 @@ export const LobbyPage = ({ navigation, route }) => {
         },
       );
     }
-    console.log(players);
     updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_state'), {
       is_game_ready: true,
     });
