@@ -125,16 +125,15 @@ export const HomePage = ({ navigation }) => {
       <Box px="10">
         <TouchableOpacity
           onPress={() => {
-            let r = Math.floor(Math.random() * 13);
-            showToast(rat_alert[r]);
+            showToast(rat_alert[Math.floor(Math.random() * 13)]);
           }}
         >
-          <VStack justifyContent="flex-start" alignItems="center" pt="16">
+          <VStack justifyContent="flex-start" alignItems="center">
             <Image
-              mb="-9"
+              mb="-20"
+              size="2xl"
               alt="Copy Rat Logo"
               source={CopyratLogo}
-              style={{ width: 150, height: 150 }}
             />
 
             <Text fontSize="5xl" fontFamily="RadioNewsman" color="black">

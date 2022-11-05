@@ -37,7 +37,7 @@ export const VotePage = ({ navigation }) => {
   -> indexOfVoted = indexul playerului cu care doresti sa votezi, pana confirmi votul
   -> alreadyVoted = variabila de stare, care indica daca playerul si a confirmat sau nu votul
 */
-  const players = useRef("");
+  const players = useRef('');
   const [playersDB, setPlayersDB] = useState([]);
   const [playerIDs, setPlayerIDs] = useState([]);
   const [fakeColors, setFakeColors] = useState([]);
@@ -47,9 +47,7 @@ export const VotePage = ({ navigation }) => {
   -> keycode = retine cheia camerei de joc in "keycode.value"
   -> currentPlayer = odata initializat, retine informatiile despre playerul curent
   -> adminId = id ul playerului care a creat camera
-  -> roundNo = numarul rundei curente
 */
-  const [roundNo, setRoundNo] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState({});
   const [{ roomData }] = useGlobal();
 
@@ -69,7 +67,7 @@ export const VotePage = ({ navigation }) => {
       querySnapshot.forEach((doc) => {
         playersArray.push(doc.data()); // il retin in array ul auxiliar
         idArray.push(doc.id); // retinem si id urile playerilor in array ul auxiliar
-        
+
         colors.push(doc.data().userNameColor);
         swapped.push(false);
 
@@ -116,12 +114,6 @@ export const VotePage = ({ navigation }) => {
     }
   };
 
-  // used to get round only
-  const getAdminIdAndRound = async () => {
-    const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
-    setRoundNo(docSnap.data().round_number);
-  };
-
   const confirmVote = async () => {
     // functia care trimite catre baza de date indicele persoanei cu care votezi
     // si ii creste acestuia numarul de voturi primite
@@ -156,7 +148,10 @@ export const VotePage = ({ navigation }) => {
           players.current[players.current[i].vote].fake_id
         ) {
           //vot bun
-          score += nrOfPlayers - 1 - players.current[players.current[i].vote].no_of_votes;
+          score +=
+            nrOfPlayers -
+            1 -
+            players.current[players.current[i].vote].no_of_votes;
         }
         if (score < 1) {
           score = 1;
@@ -177,7 +172,7 @@ export const VotePage = ({ navigation }) => {
       score = (score * 76) / nrOfPlayers;
       score = Math.ceil(score / 10) * 10;
 
-      if (roundNo == 3) {
+      if (roomData.round_number == 3) {
         score *= 1.5;
       }
 
@@ -196,9 +191,8 @@ export const VotePage = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const aux = getPlayers(); // cand se incarca prima data pagina, luam din baza de date
-    getAdminIdAndRound(); // playerii si id urile lor, cat si pe al admin ului si numarul rundei
-    
+    getPlayers(); // cand se incarca prima data pagina, luam din baza de date
+
     updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_state'), {
       nav_to_score: false,
     });
@@ -321,7 +315,7 @@ export const VotePage = ({ navigation }) => {
           disabled={alreadyVoted}
           bg={alreadyVoted ? 'primary3.600' : 'primary3.500'}
           _pressed={{ bg: 'primary3.600' }}
-          onPress={async() => {
+          onPress={async () => {
             // la apasare, se apeleaza functia care trimite catre baza de date indicele persoanei cu care votezi
             if (indexOfVoted != null) {
               // doar daca playerul a votat cu cineva. Atunci, poti

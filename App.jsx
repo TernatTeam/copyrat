@@ -86,6 +86,7 @@ export const App = () => {
     roomData: {
       keyCode: null,
       game_admin_uid: null,
+      round_number: 1,
     },
     playerInfo: {
       nameAndColor: [],

@@ -28,7 +28,6 @@ import { ModalShowRats } from '../components/common';
 
 let route = 'Chat';
 let winnerID = '';
-let roundNo = 1;
 let players = [];
 
 export const ScorePage = ({ navigation }) => {
@@ -45,12 +44,9 @@ export const ScorePage = ({ navigation }) => {
   -> roomData = variabila globala care retine informatii despre jocul curent
   -> adminId = id ul playerului care a creat camera
   -> currentPlayer = obiectul cu informatiile despre un player (divera pe fiecare device)
-  -> roundNo = numarul rundei curente
 */
   const [isModalOpen, setIsModalOpen] = useState(true);
-  const [{ roomData }] = useGlobal();
-  
-
+  const [{ roomData }, dispatch] = useGlobal();
 
   const getSortedPlayers = async () => {
     // functie care ia din baza de date arrayul cu playeri si ii sorteaza dupa scor
@@ -69,7 +65,7 @@ export const ScorePage = ({ navigation }) => {
         playersArray.push(doc.data()); // il retin in array ul auxiliar
         idArray.push(doc.id); // retinem si id urile playerilor in array ul auxiliar
       });
-      
+
       players = [...playersArray];
 
       playersArray.sort((a, b) => {
@@ -80,7 +76,6 @@ export const ScorePage = ({ navigation }) => {
       setPlayerIDs(idArray); // modific arrayul in care tin minte id urile
 
       winnerID = playersArray[0].name;
-      
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -147,8 +142,11 @@ export const ScorePage = ({ navigation }) => {
   };
 
   const countNextRound = async () => {
-    await updateDoc(doc(db, `games/${roomData.keyCode}`), {
-      round_number: increment(1),
+    dispatch({
+      type: 'ROOM_DATA',
+      keyCode: roomData.keyCode,
+      game_admin_uid: roomData.game_admin_uid,
+      round_number: roomData.round_number + 1,
     });
   };
 
@@ -161,10 +159,8 @@ export const ScorePage = ({ navigation }) => {
     );
   };
 
-  const checkRound = async () => {
-    const docSnap = await getDoc(doc(db, `games/${roomData.keyCode}`)); // prima incarcare a paginii
-    roundNo = docSnap.data().round_number;
-    if (roundNo > 2) {
+  const checkRound = () => {
+    if (roomData.round_number > 2) {
       route = 'End';
     }
   };
@@ -178,7 +174,10 @@ export const ScorePage = ({ navigation }) => {
       if (doc.data().nav_to_score === false) {
         navigation.reset({
           routes: [
-            { name: route, params: { winner: winnerID, round: roundNo + 1 } },
+            {
+              name: route,
+              params: { winner: winnerID, round: roomData.round_number + 1 },
+            },
           ],
         });
       }
@@ -278,7 +277,7 @@ export const ScorePage = ({ navigation }) => {
 
               await countNextRound(); // actualizez numarul rundei
 
-              if (roundNo < 3) {
+              if (roomData.round_number < 3) {
                 showToast('Preparing new roles...');
                 await roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote
                 await deleteChat(); // stergem chatul de tura trecuta

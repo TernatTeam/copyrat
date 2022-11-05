@@ -7,6 +7,7 @@ const AppReducer = (state, action) => {
           ...state.roomData,
           keyCode: action.keyCode,
           game_admin_uid: action.game_admin_uid,
+          round_number: action.round_number,
         },
       };
     case 'PLAYER_INFO':
