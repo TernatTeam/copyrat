@@ -40,6 +40,7 @@ export const VotePage = ({ navigation }) => {
   const players = useRef("");
   const [playersDB, setPlayersDB] = useState([]);
   const [playerIDs, setPlayerIDs] = useState([]);
+  const [fakeColors, setFakeColors] = useState([]);
   const [indexOfVoted, setIndexOfVoted] = useState(null);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
   /* variabile carora nu li se modifica valoarea pe parcursul jocului:
@@ -61,9 +62,16 @@ export const VotePage = ({ navigation }) => {
       let playersArray = [];
       // la fel si pentru id ul acestora
       let idArray = [];
+      // retinem culorile pentru a le interschimba pt rati
+      let colors = [];
+      let swapped = [];
+
       querySnapshot.forEach((doc) => {
         playersArray.push(doc.data()); // il retin in array ul auxiliar
         idArray.push(doc.id); // retinem si id urile playerilor in array ul auxiliar
+        
+        colors.push(doc.data().userNameColor);
+        swapped.push(false);
 
         if (doc.id == auth.currentUser.uid) {
           // daca am gasit playeryl cu id ul curent, il retinem in
@@ -73,6 +81,35 @@ export const VotePage = ({ navigation }) => {
 
       setPlayersDB(playersArray); // modific arrayul in care tin minte playerii
       setPlayerIDs(idArray); // modific arrayul in care tin minte id urile
+
+      for (let i = 0; i < playersArray.length; i++) {
+        if (playersArray[i].name != playersArray[j].fake_id && !swapped[i]) {
+          let initial = i;
+          let initialColor = colors[i];
+
+          while (!swapped[i]) {
+            for (let j = 0; j < playersArray.length; j++) {
+              if (playersArray[i].fake_id == playersArray[j].name) {
+                if (!swapped[j]) {
+                  colors[i] = colors[j];
+                } else {
+                  colors[i] = initialColor;
+                }
+
+                swapped[i] = true;
+                i = j;
+
+                break;
+              }
+            }
+          }
+
+          i = initial;
+        }
+      }
+
+      setFakeColors(colors);
+
       return playersArray;
     } catch (err) {
       console.log(`Error: ${err}`);
@@ -247,7 +284,7 @@ export const VotePage = ({ navigation }) => {
                         alignItems="center"
                         w="full"
                         p="2"
-                        bgColor={player.userNameColor}
+                        bgColor={fakeColors[index]}
                         borderRadius="lg"
                       >
                         <Text color="black" fontWeight="bold" fontSize="lg">
