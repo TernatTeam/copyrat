@@ -172,6 +172,8 @@ export const ScorePage = ({ navigation }) => {
     const q = doc(db, 'games', `${roomData.keyCode}/admin/game_state`);
     const unsubscribe = onSnapshot(q, (doc) => {
       if (doc.data().nav_to_score === false) {
+        countNextRound();
+
         navigation.reset({
           routes: [
             {
@@ -270,13 +272,6 @@ export const ScorePage = ({ navigation }) => {
             bg="primary3.500"
             _pressed={{ bg: 'primary3.600' }}
             onPress={async () => {
-              //getAdminIdAndRound();
-              // butonul care va incepe o noua runda
-
-              // acest lucru e posibil doar daca playerul care apasa are rolul de admin
-
-              countNextRound(); // actualizez numarul rundei
-
               if (roomData.round_number < 3) {
                 showToast('Preparing new roles...');
                 await roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote
