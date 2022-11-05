@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { TouchableOpacity } from 'react-native';
 
@@ -37,6 +37,7 @@ export const VotePage = ({ navigation }) => {
   -> indexOfVoted = indexul playerului cu care doresti sa votezi, pana confirmi votul
   -> alreadyVoted = variabila de stare, care indica daca playerul si a confirmat sau nu votul
 */
+  const players = useRef("");
   const [playersDB, setPlayersDB] = useState([]);
   const [playerIDs, setPlayerIDs] = useState([]);
   const [indexOfVoted, setIndexOfVoted] = useState(null);
@@ -72,6 +73,7 @@ export const VotePage = ({ navigation }) => {
 
       setPlayersDB(playersArray); // modific arrayul in care tin minte playerii
       setPlayerIDs(idArray); // modific arrayul in care tin minte id urile
+      return playersArray;
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -104,20 +106,20 @@ export const VotePage = ({ navigation }) => {
   const calculateScore = async () => {
     // functia care calculeaza punctajele la final de runda
     let newScores = []; // array auxiliar in care stocam scorurile de runda asta
-    const nrOfPlayers = playersDB.length;
+    const nrOfPlayers = players.current.length;
 
     for (let i = 0; i < nrOfPlayers; i++) {
       // calculam pentru fiecare player
       let score = 0;
 
-      if (playersDB[i].name == playersDB[i].fake_id) {
+      if (players.current[i].name == players.current[i].fake_id) {
         // Real
         if (
-          playersDB[playersDB[i].vote].name !=
-          playersDB[playersDB[i].vote].fake_id
+          players.current[players.current[i].vote].name !=
+          players.current[players.current[i].vote].fake_id
         ) {
           //vot bun
-          score += nrOfPlayers - 1 - playersDB[playersDB[i].vote].no_of_votes;
+          score += nrOfPlayers - 1 - players.current[players.current[i].vote].no_of_votes;
         }
         if (score < 1) {
           score = 1;
@@ -128,7 +130,7 @@ export const VotePage = ({ navigation }) => {
         }
       } else {
         // fake
-        score += nrOfPlayers - 2 - playersDB[i].no_of_votes;
+        score += nrOfPlayers - 2 - players.current[i].no_of_votes;
         score *= 10;
         if (score == nrOfPlayers - 2) {
           score += 5;
@@ -157,9 +159,9 @@ export const VotePage = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getPlayers(); // cand se incarca prima data pagina, luam din baza de date
+    const aux = getPlayers(); // cand se incarca prima data pagina, luam din baza de date
     getAdminIdAndRound(); // playerii si id urile lor, cat si pe al admin ului si numarul rundei
-
+    
     updateDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_state'), {
       nav_to_score: false,
     });
@@ -311,10 +313,9 @@ export const VotePage = ({ navigation }) => {
             onPress={async () => {
               let all_voted = true;
               // butonul care calculeaza si afiseaza scorurile, si da update in baza de date
-              await getPlayers();
-
-              for (let i = 0; i < playersDB.length; i++) {
-                if (playersDB[i].vote < 0) {
+              players.current = await getPlayers();
+              for (let i = 0; i < players.current.length; i++) {
+                if (players.current[i].vote < 0) {
                   all_voted = false;
                 }
               }
