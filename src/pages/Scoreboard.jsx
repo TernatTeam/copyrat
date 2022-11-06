@@ -227,8 +227,10 @@ export const ScorePage = ({ navigation }) => {
         />
 
         <Box w="full" alignItems="center" justifyContent="center">
-          <Heading size="2xl" fontWeight="500" color="black">
+          <Heading size="xl">
+            <Text fontFamily="RadioNewsman" color="black">
             Scoreboard:
+            </Text>
           </Heading>
         </Box>
 
@@ -247,13 +249,13 @@ export const ScorePage = ({ navigation }) => {
                   my="2"
                   w="full"
                 >
-                  <Text fontSize="sm" fontWeight="bold">
+                  <Text fontSize="sm" fontFamily="RadioNewsman">
                     {index + 1}.
                   </Text>
-                  <Text fontSize="md" fontWeight="bold" color="white">
+                  <Text fontSize="md" fontFamily="RadioNewsman" color="white">
                     {player.name}
                   </Text>
-                  <Text fontWeight="bold">{player.score}</Text>
+                  <Text fontFamily="RadioNewsman">{player.score}</Text>
                 </Flex>
               );
             })}
@@ -285,7 +287,7 @@ export const ScorePage = ({ navigation }) => {
               );
             }}
           >
-            <Text fontWeight="semibold" color="black">
+            <Text fontFamily="RadioNewsman" color="black">
               Next Round
             </Text>
           </Button>

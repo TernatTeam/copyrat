@@ -8,6 +8,8 @@ export const UnderlinedInput = ({
   isInvalid = false,
   value,
   icon,
+  iconColor = 'white',
+  inputColor = 'white',
   placeholder,
   type = 'text',
   iconClickedCallback,
@@ -27,7 +29,7 @@ export const UnderlinedInput = ({
               placeholderTextColor: 'red.500',
             }
           : {
-              borderBottomColor: 'white',
+              borderBottomColor: inputColor,
               placeholderTextColor: 'white',
             }
       }
@@ -36,7 +38,7 @@ export const UnderlinedInput = ({
           as={<Ionicons name={icon} />}
           size={6}
           mr="2"
-          color={isInvalid ? `red.500` : 'white'}
+          color={isInvalid ? `red.500` : iconColor}
           onPress={() => {
             if (isIconClickable) {
               iconClickedCallback();
@@ -47,7 +49,6 @@ export const UnderlinedInput = ({
       variant="underlined"
       placeholder={placeholder}
       placeholderTextColor={isInvalid ? `red.500` : 'black'}
-      color={isInvalid ? 'red.500' : 'white'}
       value={value}
     />
   );

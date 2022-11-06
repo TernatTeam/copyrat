@@ -49,7 +49,7 @@ export const ProfileCard = ({ navigation }) => {
           icon={<Icon as={<Ionicons name="log-out" />} />}
           borderRadius="full"
           _icon={{
-            color: 'white',
+            color: 'primary3.500',
             size: '8',
           }}
           _pressed={{

@@ -133,9 +133,10 @@ export const ForgotPasswordPage = ({ navigation }) => {
           <Box safeArea pt="16" pb="2">
             <Center w="full" mb="4">
               <Image
+                size="2xl"
+                my="-16"
                 alt="Copy Rat Logo"
                 source={CopyratLogo}
-                style={{ width: 150, height: 150 }}
               />
             </Center>
 
@@ -149,6 +150,8 @@ export const ForgotPasswordPage = ({ navigation }) => {
 
             <VStack space={4} mt="4">
               <UnderlinedInput
+                inputColor="primary3.500"
+                iconColor="primary3.500"
                 placeholder="Email"
                 icon="mail-outline"
                 isInvalid={isInvalidEmail}

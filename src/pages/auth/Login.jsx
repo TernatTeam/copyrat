@@ -78,7 +78,7 @@ export const LoginPage = ({ navigation }) => {
                   render: () => {
                     return (
                       <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
-                        Your email or password is incorect
+                        Your email or password is incorrect
                       </Box>
                     );
                   },
@@ -123,9 +123,10 @@ export const LoginPage = ({ navigation }) => {
           <Box safeArea pt="16" pb="2">
             <Center w="full" mb="4">
               <Image
+                size="2xl"
+                my="-16"
                 alt="Copy Rat Logo"
                 source={CopyratLogo}
-                style={{ width: 150, height: 150 }}
               />
             </Center>
 
@@ -139,6 +140,8 @@ export const LoginPage = ({ navigation }) => {
 
             <VStack space={4} mt="4">
               <UnderlinedInput
+                inputColor="primary3.500"
+                iconColor="primary3.500"
                 placeholder="Email"
                 icon="mail-outline"
                 isInvalid={isInvalidEmail}
@@ -150,6 +153,8 @@ export const LoginPage = ({ navigation }) => {
               />
 
               <UnderlinedInput
+                inputColor="primary3.500"
+                iconColor="primary3.500"
                 placeholder="Password"
                 icon={passWordHidden ? 'eye-outline' : 'eye-off-outline'}
                 type={passWordHidden ? 'password' : 'text'}
