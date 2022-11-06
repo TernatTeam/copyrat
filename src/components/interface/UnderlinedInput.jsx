@@ -8,6 +8,7 @@ export const UnderlinedInput = ({
   isInvalid = false,
   value,
   icon,
+  iconColor = "white", 
   placeholder,
   type = 'text',
   iconClickedCallback,
@@ -36,7 +37,7 @@ export const UnderlinedInput = ({
           as={<Ionicons name={icon} />}
           size={6}
           mr="2"
-          color={isInvalid ? `red.500` : 'white'}
+          color={isInvalid ? `red.500` : iconColor}
           onPress={() => {
             if (isIconClickable) {
               iconClickedCallback();

@@ -172,7 +172,7 @@ export const ModalJoinRoom = ({
               alignItems="center"
               justifyContent="center"
             >
-              <Text fontFamily="RadioNewsman" color="white" fontSize="md">
+              <Text fontFamily="RadioNewsman" color="black" fontSize="md">
                 Join room
               </Text>
             </Modal.Header>
@@ -184,6 +184,8 @@ export const ModalJoinRoom = ({
             >
               <VStack space={4} w="full">
                 <UnderlinedInput
+                  iconColor="primary3.500"
+                  fontFamily="RadioNewsman"
                   placeholder="Name"
                   icon="person-outline"
                   isInvalid={isNameInvalid}
@@ -195,6 +197,8 @@ export const ModalJoinRoom = ({
                 />
 
                 <UnderlinedInput
+                  iconColor="primary3.500"
+                  fontFamily="RadioNewsman"
                   placeholder="Room Key"
                   icon="key-outline"
                   isInvalid={isInvalidKeyCode}
@@ -218,7 +222,7 @@ export const ModalJoinRoom = ({
                 //the size didnt match so i had to do this..
                 _spinner={{ paddingY: '0.48' }}
               >
-                <Text fontWeight="semibold" color="black">
+                <Text fontFamily="RadioNewsman" fontWeight="semibold" color="black">
                   Done
                 </Text>
               </Button>

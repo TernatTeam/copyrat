@@ -184,7 +184,7 @@ export const RoomSettingsPage = ({ navigation }) => {
             icon={<Icon as={<Ionicons name="close-outline" />} />}
             borderRadius="full"
             _icon={{
-              color: 'white',
+              color: "primary3.500",
               size: '8',
             }}
             _pressed={{
@@ -198,8 +198,9 @@ export const RoomSettingsPage = ({ navigation }) => {
 
         <ScrollView w="full" h="full" px="10">
           <Text
+            py="10"
             pb="10"
-            fontSize="2xl"
+            fontSize="3xl"
             textAlign="center"
             fontFamily="RadioNewsman"
             color="black"
@@ -211,14 +212,15 @@ export const RoomSettingsPage = ({ navigation }) => {
             <Box justifyContent="center">
               <Text
                 fontFamily="RadioNewsman"
-                color="white"
+                color="black"
                 fontWeight="semibold"
-                fontSize="sm"
+                fontSize="md"
               >
                 Set your username:
               </Text>
 
               <UnderlinedInput
+                iconColor="primary3.500"
                 placeholder="username"
                 icon="person-outline"
                 onChangeText={(value) => {
@@ -232,11 +234,11 @@ export const RoomSettingsPage = ({ navigation }) => {
 
             <Box>
               <Text
-                mb="4"
+                mb="3"
                 fontFamily="RadioNewsman"
-                color="white"
+                color="black"
                 fontWeight="semibold"
-                fontSize="sm"
+                fontSize="md"
               >
                 Set the time of every round:
               </Text>
@@ -253,12 +255,12 @@ export const RoomSettingsPage = ({ navigation }) => {
                       title={timeButton.label}
                       key={index}
                       borderWidth={
-                        selectedTime === timeButton.value ? '2' : '2'
+                        selectedTime === timeButton.value ? '3' : '3'
                       }
                       borderColor={
                         selectedTime === timeButton.value
                           ? 'black'
-                          : 'primary3.600'
+                          : 'primary3.50'
                       }
                       px="4"
                       bg="primary3.500"
