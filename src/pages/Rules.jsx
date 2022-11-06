@@ -19,7 +19,7 @@ export const RulesPage = ({ navigation }) => {
   };
 
   return (
-    <Flex safeArea bg="primary1.500" h="100%" w="100%" alignItems="center">
+    <Flex safeArea bg="primary1.300" h="100%" w="100%" alignItems="center">
       <HStack
         px="4"
         w="full"
@@ -34,7 +34,7 @@ export const RulesPage = ({ navigation }) => {
             size: '8',
           }}
           _pressed={{
-            bg: 'primary3.600',
+            bg: 'primary3.400',
           }}
           onPress={() => {
             navigation.navigate('Tabs');
@@ -122,7 +122,7 @@ export const RulesPage = ({ navigation }) => {
               size: '8',
             }}
             _pressed={{
-              bg: 'primary3.600',
+              bg: 'primary3.400',
             }}
             onPress={() => {
               playSound();
@@ -156,7 +156,7 @@ export const RulesPage = ({ navigation }) => {
               size: '8',
             }}
             _pressed={{
-              bg: 'primary3.600',
+              bg: 'primary3.400',
             }}
             onPress={() => {
               playSound();

@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
-import { VStack, Spinner, Text, Image, Center } from 'native-base';
+import { VStack, Spinner, Text, Image, Center, Box } from 'native-base';
 
 import * as Animatable from 'react-native-animatable';
 
@@ -13,7 +13,8 @@ const circle1 = {
   0.5: { scale: 0.5 },
   1: { scale: 1 },
 };
-const circle2 = { 0: { scale: 1 }, 0.5: { scale: 0.5 }, 1: { scale: 0 } };
+
+const windowHeight = Dimensions.get('window').height;
 
 export const FullPageLoader = () => {
   const circleRef = useRef(null);
@@ -23,13 +24,10 @@ export const FullPageLoader = () => {
   }, []);
 
   return (
-    <Center
-      style={{ ...StyleSheet.absoluteFillObject }}
-      bg="primary1.500"
-      h="100%"
-      w="100%"
-    >
-      <Animatable.View ref={circleRef} style={styles.circle} />
+    <Center bg="primary1.400" h="100%" w="100%" position="relative">
+      <Box position="absolute" h={windowHeight + 200} w={windowHeight + 200}>
+        <Animatable.View ref={circleRef} duration={400} style={styles.circle} />
+      </Box>
 
       <VStack justifyContent="center" alignItems="center" mb="12">
         <Image alt="Copy Rat Logo" source={CopyratLogo} size="xl" />
@@ -40,7 +38,7 @@ export const FullPageLoader = () => {
       </VStack>
 
       <Spinner
-        color="white"
+        color="black"
         accessibilityLabel="Loading pages"
         style={{ transform: [{ scaleX: 2.5 }, { scaleY: 2.5 }] }}
       />
@@ -49,12 +47,17 @@ export const FullPageLoader = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   circle: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#add7f0',
-    borderRadius: 200,
+    backgroundColor: '#d8ecf8',
+    borderRadius: (windowHeight + 200) / 2,
     height: '100%',
     width: '100%',
   },

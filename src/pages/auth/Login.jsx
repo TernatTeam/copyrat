@@ -77,9 +77,15 @@ export const LoginPage = ({ navigation }) => {
                   placement: 'top',
                   render: () => {
                     return (
-                      <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
+                      <Text
+                        bg="primary4.300"
+                        px="2"
+                        py="1"
+                        fontFamily="RadioNewsman"
+                        rounded="sm"
+                      >
                         Your email or password is incorrect
-                      </Box>
+                      </Text>
                     );
                   },
                 });
@@ -100,9 +106,15 @@ export const LoginPage = ({ navigation }) => {
           placement: 'top',
           render: () => {
             return (
-              <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
+              <Text
+                bg="primary4.300"
+                px="2"
+                py="1"
+                fontFamily="RadioNewsman"
+                rounded="sm"
+              >
                 {err.message}
-              </Box>
+              </Text>
             );
           },
         });
@@ -118,25 +130,28 @@ export const LoginPage = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <Center bg="primary1.500" h="100%" w="100%">
-        <ScrollView w="full" h="full" px="16">
+      <Center bg="primary1.300" h="100%" w="100%">
+        <ScrollView w="full" h="full" px="12">
           <Box safeArea pt="16" pb="2">
             <Center w="full" mb="4">
               <Image size="xl" alt="Copy Rat Logo" source={CopyratLogo} />
             </Center>
 
-            <Heading size="lg" fontWeight="600" color="black">
+            <Text fontSize="lg" fontFamily="RadioNewsman" color="black">
               Welcome
-            </Heading>
+            </Text>
 
-            <Heading mt="1" size="xs" fontWeight="semibold" color="black">
+            <Text mt="1" fontSize="sm" fontFamily="RadioNewsman" color="black">
               Sign in to continue!
-            </Heading>
+            </Text>
 
             <VStack space={4} mt="4">
               <UnderlinedInput
-                inputColor="primary3.500"
-                iconColor="primary3.500"
+                inputColor="primary3.300"
+                iconColor="primary3.300"
+                focusInputColor="primary3.500"
+                focusIconColor="primary3.500"
+                fontFamily="RadioNewsman"
                 placeholder="Email"
                 icon="mail-outline"
                 isInvalid={isInvalidEmail}
@@ -148,8 +163,11 @@ export const LoginPage = ({ navigation }) => {
               />
 
               <UnderlinedInput
-                inputColor="primary3.500"
-                iconColor="primary3.500"
+                inputColor="primary3.300"
+                iconColor="primary3.300"
+                focusInputColor="primary3.500"
+                focusIconColor="primary3.500"
+                fontFamily="RadioNewsman"
                 placeholder="Password"
                 icon={passWordHidden ? 'eye-outline' : 'eye-off-outline'}
                 type={passWordHidden ? 'password' : 'text'}
@@ -167,9 +185,9 @@ export const LoginPage = ({ navigation }) => {
 
               <Link
                 _text={{
-                  fontSize: 'xs',
-                  fontWeight: '500',
+                  fontSize: 11,
                   color: 'white',
+                  fontFamily: 'RadioNewsman',
                 }}
                 onPress={() => {
                   navigation.navigate('ForgotPassword');
@@ -177,42 +195,42 @@ export const LoginPage = ({ navigation }) => {
                 alignSelf="flex-end"
                 mt="1"
               >
-                Forgot Password?
+                Forgot password?
               </Link>
 
               <Button
                 title="Sign in"
                 rounded="lg"
                 medium
-                bg="primary3.500"
-                _pressed={{ bg: 'primary3.600' }}
+                bg="primary3.300"
+                _pressed={{ bg: 'primary3.400' }}
                 onPress={onSubmit}
                 disabled={isLoading}
                 isLoading={isLoading}
                 //the size didnt match so i had to do this..
                 _spinner={{ paddingY: '0.45' }}
               >
-                <Text fontWeight="semibold" color="black">
+                <Text fontFamily="RadioNewsman" color="black">
                   Sign in
                 </Text>
               </Button>
 
-              <HStack mt="1" justifyContent="center">
-                <Text fontSize="sm" color="black">
+              <HStack mt="1" justifyContent="flex-end">
+                <Text fontFamily="RadioNewsman" fontSize={11} color="black">
                   Don't have an account ? &nbsp;
                 </Text>
 
                 <Link
                   _text={{
                     color: 'white',
-                    fontWeight: 'medium',
-                    fontSize: 'sm',
+                    fontFamily: 'RadioNewsman',
+                    fontSize: 11,
                   }}
                   onPress={() => {
                     navigation.navigate('Register');
                   }}
                 >
-                  Sign Up
+                  Sign up
                 </Link>
               </HStack>
             </VStack>

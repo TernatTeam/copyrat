@@ -68,7 +68,7 @@ export const HomePage = ({ navigation }) => {
   };
 
   return (
-    <Box safeArea bg="primary1.500" h="100%" w="100%">
+    <Box safeArea bg="primary1.300" h="100%" w="100%">
       <ModalJoinRoom
         show={isModalOpen}
         navigation={navigation}
@@ -77,22 +77,22 @@ export const HomePage = ({ navigation }) => {
         }}
       />
 
-      <HStack px="4" w="full" justifyContent="flex-end">
+      <HStack px="1" pt="1" w="full" justifyContent="flex-end">
         <IconButton
           icon={<Icon as={<Ionicons name="book" />} />}
           borderRadius="full"
           _icon={{
-            color: 'primary3.500',
+            color: 'primary3.300',
             size: '8',
           }}
           _pressed={{
-            bg: 'primary3.600',
+            bg: 'primary3.400',
           }}
           onPress={() => navigation.navigate('Rules')}
         />
       </HStack>
 
-      <Box px="10">
+      <Box p="4">
         <TouchableOpacity
           onPress={() => {
             showToast(rat_alert[Math.floor(Math.random() * 13)]);
@@ -112,16 +112,16 @@ export const HomePage = ({ navigation }) => {
           justifyContent="center"
           alignItems="flex-end"
           w="full"
-          pt="20"
+          pt="12"
         >
           <Box w="full" alignItems="flex-start" mb="20">
             <Button
-              w="60%"
+              w="55%"
               title="Create Room"
               rounded="lg"
               medium
-              bg="primary3.500"
-              _pressed={{ bg: 'primary3.600' }}
+              bg="primary3.300"
+              _pressed={{ bg: 'primary3.400' }}
               onPress={() => {
                 navigation.navigate('Room Settings');
               }}
@@ -134,12 +134,12 @@ export const HomePage = ({ navigation }) => {
 
           <Box w="full" alignItems="flex-end">
             <Button
-              w="60%"
+              w="55%"
               title="Join Room"
               rounded="lg"
               medium
-              bg="primary3.500"
-              _pressed={{ bg: 'primary3.600' }}
+              bg="primary3.300"
+              _pressed={{ bg: 'primary3.400' }}
               onPress={() => {
                 setIsModalOpen(true);
               }}

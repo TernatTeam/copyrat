@@ -65,8 +65,9 @@ export const LobbyPage = ({ navigation, route }) => {
   const setEndRoundTime = async () => {
     await setDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_settings'), {
       round_start_timestamp: serverTimestamp(),
-      round_seconds: route.params.roundSeconds,
+      round_seconds: 20,
     });
+    //route.params.roundSeconds
   };
 
   //Assign roles
@@ -82,7 +83,7 @@ export const LobbyPage = ({ navigation, route }) => {
       if (arr.indexOf(r) === -1) arr.push(r);
     }
     //update roles and fake_id
-    for (let i = 0; i < no_of_rats; i++) { 
+    for (let i = 0; i < no_of_rats; i++) {
       await updateDoc(
         doc(db, `games/${roomData.keyCode}/players/${uIds[arr[i]]}`),
         {
@@ -137,7 +138,7 @@ export const LobbyPage = ({ navigation, route }) => {
           placement: 'top',
           render: () => {
             return (
-              <Box flex={1} bg="red.500" px="2" py="1" rounded="sm" mb={4}>
+              <Box flex={1} bg="primary4.300" px="2" py="1" rounded="sm" mb={4}>
                 <Text>{hasLeft.name} left the room</Text>
               </Box>
             );
@@ -188,18 +189,23 @@ export const LobbyPage = ({ navigation, route }) => {
   };
 
   return (
-    <Box safeArea bg="primary1.500" h="100%" w="100%" position="absolute">
-      <Box px="4" w="full" justifyContent="center" alignItems="flex-start">
+    <Box safeArea bg="primary1.300" h="100%" w="100%" px="4">
+      <Box
+        ml="-3"
+        mt="1"
+        w="full"
+        justifyContent="center"
+        alignItems="flex-start"
+      >
         <IconButton
           icon={<Icon as={<Ionicons name="arrow-back-outline" />} />}
-          i
           borderRadius="full"
           _icon={{
-            color: "primary3.500",
+            color: 'primary3.300',
             size: '8',
           }}
           _pressed={{
-            bg: 'primary3.600',
+            bg: 'primary3.400',
           }}
           onPress={async () => {
             try {
@@ -221,7 +227,7 @@ export const LobbyPage = ({ navigation, route }) => {
         />
       </Box>
 
-      <Box w="full" alignItems="center" justifyContent="center" pt="4">
+      <Box w="full" alignItems="center" justifyContent="center" pt="4" pb="12">
         <Text
           fontSize="2xl"
           textAlign="center"
@@ -231,12 +237,7 @@ export const LobbyPage = ({ navigation, route }) => {
           Room key:
         </Text>
 
-        <Flex
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          mb="12"
-        >
+        <Flex direction="row" justifyContent="center" alignItems="center">
           <Text
             textAlign="center"
             fontSize="3xl"
@@ -250,23 +251,23 @@ export const LobbyPage = ({ navigation, route }) => {
             icon={<Icon as={<Ionicons name="copy-outline" />} />}
             borderRadius="full"
             _icon={{
-              color: "primary3.500",
+              color: 'primary3.300',
               size: '5',
             }}
             _pressed={{
-              bg: 'primary3.600',
+              bg: 'primary3.400',
             }}
             onPress={copyToClipboard}
           />
         </Flex>
       </Box>
 
-      <Box px="4" mt="2">
-        <ScrollView w="full" h="60%">
+      <Box px="4" bg="primary1.400" rounded="xl" h="60%">
+        <ScrollView w="full">
           {isLoading ? (
             <PlayersLoader />
           ) : (
-            <VStack flex="1" justifyContent="center" alignItems="center" px="2">
+            <VStack my="2" flex="1" justifyContent="center" alignItems="center">
               {players.map((player, index) => {
                 return (
                   <Flex
@@ -292,21 +293,20 @@ export const LobbyPage = ({ navigation, route }) => {
         </ScrollView>
       </Box>
 
-      <Box position="absolute" bottom="6" w="full" px="4">
+      <Box py="6" mt="auto">
         {auth.currentUser.uid == roomData.game_admin_uid && (
           <Button
-            onPress={async() => {
+            onPress={async () => {
               if (auth.currentUser.uid == roomData.game_admin_uid) {
-                await setRoles();
                 await setEndRoundTime();
-                
+                await setRoles();
               }
             }}
             title="Start"
             rounded="lg"
             medium
-            bg="primary3.500"
-            _pressed={{ bg: 'primary3.600' }}
+            bg="primary3.300"
+            _pressed={{ bg: 'primary3.400' }}
             disabled={isLoadingButton}
             isLoading={isLoadingButton}
             _spinner={{ paddingY: '0.45' }}

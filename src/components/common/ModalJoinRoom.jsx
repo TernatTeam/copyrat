@@ -56,9 +56,15 @@ export const ModalJoinRoom = ({
         placement: 'top',
         render: () => {
           return (
-            <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
+            <Text
+              bg="primary4.300"
+              px="2"
+              py="1"
+              fontFamily="RadioNewsman"
+              rounded="sm"
+            >
               {text}
-            </Box>
+            </Text>
           );
         },
       });
@@ -168,7 +174,7 @@ export const ModalJoinRoom = ({
         <Box justifyContent="center" alignItems="center" pb="2" w="full">
           <Modal.Content borderRadius={10}>
             <Modal.Header
-              bg="primary1.500"
+              bg="primary1.400"
               alignItems="center"
               justifyContent="center"
             >
@@ -178,14 +184,16 @@ export const ModalJoinRoom = ({
             </Modal.Header>
 
             <Modal.Body
-              bg="primary1.500"
+              bg="primary1.400"
               alignItems="center"
               justifyContent="center"
             >
               <VStack space={4} w="full">
                 <UnderlinedInput
-                  inputColor="primary3.500"
-                  iconColor="primary3.500"
+                  inputColor="primary3.300"
+                  iconColor="primary3.300"
+                  focusInputColor="primary3.500"
+                  focusIconColor="primary3.500"
                   fontFamily="RadioNewsman"
                   placeholder="Name"
                   icon="person-outline"
@@ -198,8 +206,10 @@ export const ModalJoinRoom = ({
                 />
 
                 <UnderlinedInput
-                  inputColor="primary3.500"
-                  iconColor="primary3.500"
+                  inputColor="primary3.300"
+                  iconColor="primary3.300"
+                  focusInputColor="primary3.500"
+                  focusIconColor="primary3.500"
                   fontFamily="RadioNewsman"
                   placeholder="Room Key"
                   icon="key-outline"
@@ -213,11 +223,11 @@ export const ModalJoinRoom = ({
               </VStack>
             </Modal.Body>
 
-            <Modal.Footer bg="primary1.500">
+            <Modal.Footer bg="primary1.400">
               <Button
                 w="full"
-                bg="primary3.500"
-                _pressed={{ bg: 'primary3.600' }}
+                bg="primary3.300"
+                _pressed={{ bg: 'primary3.400' }}
                 onPress={onSubmit}
                 disabled={isLoading}
                 isLoading={isLoading}

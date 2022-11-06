@@ -30,7 +30,7 @@ const joinGameSchema = yup.object({
 });
 
 const timeButtons = [
-  { label: '2 min', value: 30 },
+  { label: '2 min', value: 120 },
   { label: '3 min', value: 180 },
   { label: '4 min', value: 240 },
 ];
@@ -139,9 +139,15 @@ export const RoomSettingsPage = ({ navigation }) => {
                 placement: 'top',
                 render: () => {
                   return (
-                    <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
+                    <Text
+                      bg="primary4.300"
+                      px="2"
+                      py="1"
+                      fontFamily="RadioNewsman"
+                      rounded="sm"
+                    >
                       Something went wrong
-                    </Box>
+                    </Text>
                   );
                 },
               });
@@ -162,9 +168,15 @@ export const RoomSettingsPage = ({ navigation }) => {
           placement: 'top',
           render: () => {
             return (
-              <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
+              <Text
+                bg="primary4.300"
+                px="2"
+                py="1"
+                fontFamily="RadioNewsman"
+                rounded="sm"
+              >
                 {err.message}
-              </Box>
+              </Text>
             );
           },
         });
@@ -178,17 +190,23 @@ export const RoomSettingsPage = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <Center safeArea bg="primary1.500" h="100%" w="100%" position="relative">
-        <Box px="4" w="full" justifyContent="center" alignItems="flex-start">
+      <Center safeArea bg="primary1.300" h="100%" w="100%" position="relative">
+        <Box
+          px="1"
+          pt="1"
+          w="full"
+          justifyContent="center"
+          alignItems="flex-start"
+        >
           <IconButton
             icon={<Icon as={<Ionicons name="close-outline" />} />}
             borderRadius="full"
             _icon={{
-              color: 'primary3.500',
+              color: 'primary3.300',
               size: '8',
             }}
             _pressed={{
-              bg: 'primary3.600',
+              bg: 'primary3.400',
             }}
             onPress={() => {
               navigation.navigate('Tabs');
@@ -196,19 +214,18 @@ export const RoomSettingsPage = ({ navigation }) => {
           />
         </Box>
 
-        <ScrollView w="full" h="full" px="10">
+        <ScrollView w="full" h="full" px="4" pt="4">
           <Text
-            py="10"
-            pb="10"
+            pb="12"
             fontSize="3xl"
             textAlign="center"
             fontFamily="RadioNewsman"
             color="black"
           >
-            Create Game
+            Create Room
           </Text>
 
-          <VStack space={8}>
+          <VStack bg="primary1.400" rounded="xl" p="4" space={8}>
             <Box justifyContent="center">
               <Text
                 fontFamily="RadioNewsman"
@@ -220,8 +237,10 @@ export const RoomSettingsPage = ({ navigation }) => {
               </Text>
 
               <UnderlinedInput
-                inputColor="primary3.500"
-                iconColor="primary3.500"
+                inputColor="primary3.300"
+                iconColor="primary3.300"
+                focusInputColor="primary3.500"
+                focusIconColor="primary3.500"
                 placeholder="Name"
                 fontFamily="RadioNewsman"
                 icon="person-outline"
@@ -262,11 +281,11 @@ export const RoomSettingsPage = ({ navigation }) => {
                       borderColor={
                         selectedTime === timeButton.value
                           ? 'black'
-                          : 'primary3.50'
+                          : 'primary3.225'
                       }
                       px="4"
-                      bg="primary3.500"
-                      _pressed={{ bg: 'primary3.600' }}
+                      bg="primary3.300"
+                      _pressed={{ bg: 'primary3.400' }}
                       onPress={() => {
                         setSelectedTime(timeButton.value);
                       }}
@@ -289,8 +308,8 @@ export const RoomSettingsPage = ({ navigation }) => {
           <Button
             title="Create game"
             w="full"
-            bg="primary3.500"
-            _pressed={{ bg: 'primary3.600' }}
+            bg="primary3.300"
+            _pressed={{ bg: 'primary3.400' }}
             onPress={onSubmit}
             disabled={isDisabled}
             isLoading={isLoadingCreateRoom}

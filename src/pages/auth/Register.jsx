@@ -87,9 +87,15 @@ export const RegisterPage = ({ navigation }) => {
                   placement: 'top',
                   render: () => {
                     return (
-                      <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
+                      <Text
+                        bg="primary4.300"
+                        px="2"
+                        py="1"
+                        fontFamily="RadioNewsman"
+                        rounded="sm"
+                      >
                         The email address is already in use by another account
-                      </Box>
+                      </Text>
                     );
                   },
                 });
@@ -112,9 +118,15 @@ export const RegisterPage = ({ navigation }) => {
             placement: 'top',
             render: () => {
               return (
-                <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
+                <Text
+                  bg="primary4.300"
+                  px="2"
+                  py="1"
+                  fontFamily="RadioNewsman"
+                  rounded="sm"
+                >
                   {err.message}
-                </Box>
+                </Text>
               );
             },
           });
@@ -131,25 +143,28 @@ export const RegisterPage = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <Center bg="primary1.500" h="100%" w="100%">
-        <ScrollView w="full" h="full" px="16">
+      <Center bg="primary1.300" h="100%" w="100%">
+        <ScrollView w="full" h="full" px="12">
           <Box safeArea pt="16" pb="2">
             <Center w="full" mb="4">
               <Image size="xl" alt="Copy Rat Logo" source={CopyratLogo} />
             </Center>
 
-            <Heading size="lg" fontWeight="600" color="black">
+            <Text fontSize="lg" fontFamily="RadioNewsman" color="black">
               Welcome
-            </Heading>
+            </Text>
 
-            <Heading mt="1" size="xs" fontWeight="semibold" color="black">
+            <Text mt="1" fontSize="sm" fontFamily="RadioNewsman" color="black">
               Sign up to continue!
-            </Heading>
+            </Text>
 
             <VStack space={4} mt="4">
               <UnderlinedInput
-                inputColor="primary3.500"
-                iconColor="primary3.500"
+                inputColor="primary3.300"
+                iconColor="primary3.300"
+                focusInputColor="primary3.500"
+                focusIconColor="primary3.500"
+                fontFamily="RadioNewsman"
                 placeholder="Username"
                 icon="person-outline"
                 isInvalid={isInvalidUsername}
@@ -161,8 +176,11 @@ export const RegisterPage = ({ navigation }) => {
               />
 
               <UnderlinedInput
-                inputColor="primary3.500"
-                iconColor="primary3.500"
+                inputColor="primary3.300"
+                iconColor="primary3.300"
+                focusInputColor="primary3.500"
+                focusIconColor="primary3.500"
+                fontFamily="RadioNewsman"
                 placeholder="Email"
                 icon="mail-outline"
                 isInvalid={isInvalidEmail}
@@ -174,8 +192,11 @@ export const RegisterPage = ({ navigation }) => {
               />
 
               <UnderlinedInput
-                inputColor="primary3.500"
-                iconColor="primary3.500"
+                inputColor="primary3.300"
+                iconColor="primary3.300"
+                focusInputColor="primary3.500"
+                focusIconColor="primary3.500"
+                fontFamily="RadioNewsman"
                 placeholder="Password"
                 icon={passWordHidden ? 'eye-outline' : 'eye-off-outline'}
                 type={passWordHidden ? 'password' : 'text'}
@@ -195,15 +216,15 @@ export const RegisterPage = ({ navigation }) => {
                 title="Sign Up"
                 rounded="lg"
                 medium
-                bg="primary3.500"
-                _pressed={{ bg: 'primary3.600' }}
+                bg="primary3.300"
+                _pressed={{ bg: 'primary3.400' }}
                 onPress={onSubmit}
                 disabled={isLoading}
                 isLoading={isLoading}
                 //the size didnt match so i had to do this..
                 _spinner={{ paddingY: '0.45' }}
               >
-                <Text fontWeight="semibold" color="black">
+                <Text fontFamily="RadioNewsman" color="black">
                   Sign Up
                 </Text>
               </Button>

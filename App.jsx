@@ -17,6 +17,7 @@ import { auth, db } from './config/firebase/firebase-key-config';
 
 import { FullPageLoader } from './src/components/common';
 import { doc, getDoc } from 'firebase/firestore';
+import { LoginPage } from './src/pages/auth';
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState();
