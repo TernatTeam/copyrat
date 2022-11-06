@@ -200,9 +200,12 @@ export const VotePage = ({ navigation }) => {
     const q = doc(db, 'games', `${roomData.keyCode}/admin/game_state`);
     const unsubscribe = onSnapshot(q, (doc) => {
       if (doc.data().nav_to_score === true) {
-        navigation.reset({
-          routes: [{ name: 'Scoreboard' }],
-        });
+        showToast('Calculating scores...');
+        setTimeout(() => {
+          navigation.reset({
+            routes: [{ name: 'Scoreboard' }],
+          });
+        }, 1000);
       }
     });
 
@@ -281,7 +284,7 @@ export const VotePage = ({ navigation }) => {
                         bgColor={fakeColors[index]}
                         borderRadius="lg"
                       >
-                        <Text color="black" fontWeight="bold" fontSize="lg">
+                        <Text color="black" fontFamily="RadioNewsman" fontSize="lg">
                           {player.fake_id}
                         </Text>
 
@@ -322,15 +325,15 @@ export const VotePage = ({ navigation }) => {
               // confirma votul o singura data, adica daca nu ai mai apasat
               await confirmVote(); // pe "Done" (variabila alreadyVoted are valoarea false)
               setAlreadyVoted(true);
-              showToast(`Locking in ... ${playersDB[indexOfVoted].fake_id}`);
+              showToast(`Locking in ${playersDB[indexOfVoted].fake_id}`);
             } else {
               showToast('Please vote for someone');
               // in caz contrar, anunt playerul
             } // ca nu a votat cu nimeni
           }}
         >
-          <Text fontWeight="semibold" color={alreadyVoted ? 'grey' : 'black'}>
-            Lock In Your Vote
+          <Text fontFamily="RadioNewsman" color={alreadyVoted ? 'grey' : 'black'}>
+            Lock In
           </Text>
         </Button>
 
@@ -340,6 +343,7 @@ export const VotePage = ({ navigation }) => {
             rounded="lg"
             medium
             bg="red.700"
+            fontFamily="RadioNewsman"
             _pressed={{ bg: 'red.800' }}
             onPress={async () => {
               let all_voted = true;
@@ -353,11 +357,10 @@ export const VotePage = ({ navigation }) => {
 
               if (!all_voted) {
                 //daca nu si-a facut update
-                showToast('Votes not locked in! Please try again');
+                showToast('Votes not locked in! Please try again.');
               } else {
                 // if votes locked in
                 await calculateScore(); // scores
-                showToast('Calculating scores... Muie :D');
                 // ne mutam pe pagina cu leaderboard ul
                 setTimeout(async () => {
                   // wait for votes b4 leaving page
@@ -371,7 +374,7 @@ export const VotePage = ({ navigation }) => {
               }
             }}
           >
-            <Text fontWeight="semibold" color="white">
+            <Text fontFamily="RadioNewsman" color="white">
               Stop Vote
             </Text>
           </Button>

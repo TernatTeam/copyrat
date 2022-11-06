@@ -173,7 +173,7 @@ export const ChatPage = ({ navigation, route }) => {
 
       <Modal isOpen={isTimesUpModalOpen} contentLabel="Round number">
         <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
-          Times up!
+          Time's up!
         </Text>
       </Modal>
 

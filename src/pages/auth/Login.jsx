@@ -78,7 +78,7 @@ export const LoginPage = ({ navigation }) => {
                   render: () => {
                     return (
                       <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
-                        Your email or password is incorect
+                        Your email or password is incorrect
                       </Box>
                     );
                   },
