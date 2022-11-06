@@ -260,12 +260,6 @@ export const LobbyPage = ({ navigation, route }) => {
         </Flex>
       </Box>
 
-      <Box px="6">
-        <Heading size="xl" fontWeight="600" color="black">
-          Players:
-        </Heading>
-      </Box>
-
       <Box px="4" mt="2">
         <ScrollView w="full" h="60%">
           {isLoading ? (
@@ -285,9 +279,9 @@ export const LobbyPage = ({ navigation, route }) => {
                     my="2"
                     w="full"
                   >
-                    <Text fontWeight="bold">{player.name}</Text>
+                    <Text fontFamily="RadioNewsman">{player.name}</Text>
                     {player.uid == roomData.game_admin_uid && (
-                      <Text fontWeight="extrabold">Room Admin</Text>
+                      <Text fontFamily="RadioNewsman">Room Admin</Text>
                     )}
                   </Flex>
                 );
@@ -316,7 +310,7 @@ export const LobbyPage = ({ navigation, route }) => {
             isLoading={isLoadingButton}
             _spinner={{ paddingY: '0.45' }}
           >
-            <Text fontWeight="semibold" color="black">
+            <Text fontFamily="RadioNewsman" color="black">
               Start
             </Text>
           </Button>
