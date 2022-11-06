@@ -65,9 +65,8 @@ export const LobbyPage = ({ navigation, route }) => {
   const setEndRoundTime = async () => {
     await setDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_settings'), {
       round_start_timestamp: serverTimestamp(),
-      round_seconds: 20,
+      round_seconds: route.params.roundSeconds,
     });
-    //route.params.roundSeconds
   };
 
   //Assign roles
