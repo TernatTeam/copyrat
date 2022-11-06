@@ -15,9 +15,9 @@ const theme = extendTheme({
       600: '#DAB937', // 10% darker
     },
     primary3: {
-      50: '#F9F9F9', // 5% lighten
-      500: '#ECECEC', // original
-      600: '#D3D3D3', // 10% darker
+      50: '#daedf8', // 5% lighten
+      500: '#d8ecf8', // original
+      600: '#add7f0', // 10% darker
     },
     primary4: {
       50: '#E9FFFF', // 35% lighten
