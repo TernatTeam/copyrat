@@ -130,6 +130,7 @@ export const HomePage = ({ navigation }) => {
         >
           <VStack justifyContent="flex-start" alignItems="center">
             <Image
+              mt="-6"
               mb="-20"
               size="2xl"
               alt="Copy Rat Logo"

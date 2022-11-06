@@ -1,24 +1,20 @@
-import React from "react";
+import React from 'react';
 
-import { VStack, Spinner, Text, Image, Center } from "native-base";
+import { VStack, Spinner, Text, Image, Center } from 'native-base';
 
-import CopyratLogo from "../../../assets/logo_trans.png";
+import CopyratLogo from '../../../assets/logo_trans.png';
 
 export const FullPageLoader = () => {
   return (
     <Center bg="primary1.500" h="100%" w="100%">
       <VStack justifyContent="center" alignItems="center" mb="12">
-        <Image
-          alt="Copy Rat Logo"
-          source={CopyratLogo}
-          style={{ width: 150, height: 150 }}
-          mb="-9"
-        />
+        <Image alt="Copy Rat Logo" source={CopyratLogo} size="2xl" mb="-20" />
 
         <Text fontSize="5xl" fontFamily="RadioNewsman" color="black">
           copyrat
         </Text>
       </VStack>
+
       <Spinner
         color="white"
         accessibilityLabel="Loading pages"

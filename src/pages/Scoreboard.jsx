@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   Box,
@@ -12,10 +12,8 @@ import {
 
 import {
   doc,
-  getDoc,
   updateDoc,
   deleteDoc,
-  increment,
   serverTimestamp,
   collection,
   getDocs,
@@ -277,8 +275,6 @@ export const ScorePage = ({ navigation }) => {
                 await roundReset(); // setam noi fake_id uri si resetam no_of_votes, vote
                 await deleteChat(); // stergem chatul de tura trecuta
                 await updateEndRoundTime(); // ca si cum ai da start game iar
-              } else {
-                showToast('Well done! See you again soon');
               }
 
               await updateDoc(
