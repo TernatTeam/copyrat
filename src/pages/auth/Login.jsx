@@ -122,12 +122,7 @@ export const LoginPage = ({ navigation }) => {
         <ScrollView w="full" h="full" px="16">
           <Box safeArea pt="16" pb="2">
             <Center w="full" mb="4">
-              <Image
-                size="2xl"
-                my="-16"
-                alt="Copy Rat Logo"
-                source={CopyratLogo}
-              />
+              <Image size="xl" alt="Copy Rat Logo" source={CopyratLogo} />
             </Center>
 
             <Heading size="lg" fontWeight="600" color="black">
