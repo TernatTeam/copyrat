@@ -242,14 +242,14 @@ export const VotePage = ({ navigation }) => {
   };
 
   return (
-    <Box safeArea bg="primary1.500" h="100%" w="100%">
+    <Box safeArea bg="primary1.500" h="100%" w="100%"  px="4">
       <Box pt="6" w="full" alignItems="center" justifyContent="center">
         <Text fontSize="2xl" fontFamily="RadioNewsman">
           Vote out the rats!
         </Text>
       </Box>
 
-      <Box px="4" mt="2" mb="12" h="60%">
+      <Box px="4" mt="2" mb="12" h="60%" bg="primary1.600" rounded="xl">
         <ScrollView w="full">
           <VStack flex="1" justifyContent="center" alignItems="center" px="2">
             {
@@ -309,7 +309,7 @@ export const VotePage = ({ navigation }) => {
         </ScrollView>
       </Box>
 
-      <Box p="6" mt="auto">
+      <Box py="6" mt="auto">
         <Button
           title="LockIn"
           rounded="lg"
