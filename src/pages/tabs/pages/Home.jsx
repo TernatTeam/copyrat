@@ -152,7 +152,7 @@ export const HomePage = ({ navigation }) => {
         >
           <Box w="full" alignItems="flex-start" mb="20">
             <Button
-              w="50%"
+              w="60%"
               title="Create Room"
               rounded="lg"
               medium
@@ -162,7 +162,7 @@ export const HomePage = ({ navigation }) => {
                 navigation.navigate('Room Settings');
               }}
             >
-              <Text fontFamily="RadioNewsman" color="black">
+              <Text fontFamily="RadioNewsman" color="black" fontSize="md">
                 Create room
               </Text>
             </Button>
@@ -170,7 +170,7 @@ export const HomePage = ({ navigation }) => {
 
           <Box w="full" alignItems="flex-end">
             <Button
-              w="50%"
+              w="60%"
               title="Join Room"
               rounded="lg"
               medium
@@ -180,7 +180,7 @@ export const HomePage = ({ navigation }) => {
                 setIsModalOpen(true);
               }}
             >
-              <Text fontFamily="RadioNewsman" color="black">
+              <Text fontFamily="RadioNewsman" color="black" fontSize="md">
                 Join room
               </Text>
             </Button>
