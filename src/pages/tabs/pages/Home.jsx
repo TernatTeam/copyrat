@@ -14,9 +14,6 @@ import {
 
 import { Ionicons } from '@expo/vector-icons';
 
-import { signOut } from 'firebase/auth';
-import { auth } from '../../../../config/firebase/firebase-key-config';
-
 import CopyratLogo from '../../../../assets/logo_trans.png';
 import { ModalJoinRoom } from '../../../components/common';
 import { TouchableOpacity } from 'react-native';
@@ -40,14 +37,6 @@ export const HomePage = ({ navigation }) => {
     'Cri-cri...grey autumn...',
     'I’m Yu. He’s Mi.',
   ];
-
-  const logOut = () => {
-    signOut(auth).then(() => {
-      navigation.reset({
-        routes: [{ name: 'Login' }],
-      });
-    });
-  };
 
   const showToast = (message) => {
     if (!toast.isActive(id)) {
@@ -88,26 +77,7 @@ export const HomePage = ({ navigation }) => {
         }}
       />
 
-      <HStack
-        px="4"
-        w="full"
-        justifyContent="space-between"
-        alignItems="flex-start"
-      >
-        <IconButton
-          icon={<Icon as={<Ionicons name="log-out" />} />}
-          borderRadius="full"
-          _icon={{
-            color: 'white',
-            size: '8',
-          }}
-          _pressed={{
-            bg: 'primary3.600',
-          }}
-          onPress={logOut}
-          rotation={180}
-        />
-
+      <HStack px="4" w="full" justifyContent="flex-end">
         <IconButton
           icon={<Icon as={<Ionicons name="book" />} />}
           borderRadius="full"

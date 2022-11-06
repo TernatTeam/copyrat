@@ -2,10 +2,32 @@ import React, { useEffect, useState } from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Box, Flex, Heading, HStack, Stack, Text, VStack } from 'native-base';
+import {
+  Box,
+  Flex,
+  HStack,
+  Stack,
+  Text,
+  VStack,
+  IconButton,
+  Icon,
+} from 'native-base';
 
-export const ProfileCard = () => {
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../config/firebase/firebase-key-config';
+
+import { Ionicons } from '@expo/vector-icons';
+
+export const ProfileCard = ({ navigation }) => {
   const [user, setUser] = useState();
+
+  const logOut = () => {
+    signOut(auth).then(() => {
+      navigation.reset({
+        routes: [{ name: 'Login' }],
+      });
+    });
+  };
 
   const getData = async () => {
     try {
@@ -21,8 +43,24 @@ export const ProfileCard = () => {
   }, []);
 
   return (
-    <Box safeArea w="100%" h="100%" alignItems="flex-start" p="4">
-      <Stack space={4} w="full">
+    <Box safeArea w="full" alignItems="flex-start">
+      <HStack w="full" justifyContent="flex-start">
+        <IconButton
+          icon={<Icon as={<Ionicons name="log-out" />} />}
+          borderRadius="full"
+          _icon={{
+            color: 'white',
+            size: '8',
+          }}
+          _pressed={{
+            bg: 'primary3.600',
+          }}
+          onPress={logOut}
+          rotation={180}
+        />
+      </HStack>
+
+      <Stack space={4} w="full" px="4">
         <Box w="full" rounded="xl" bg="primary1.600">
           <Stack space={3} p="4">
             <Flex
@@ -30,24 +68,22 @@ export const ProfileCard = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Heading size="md" color="white" mr="1">
+              <Text fontSize="md" fontFamily="RadioNewsman" color="white">
                 {user?.name}
-              </Heading>
+              </Text>
 
               {user?.role && (
-                <Heading fontSize="sm" color="violet.400" fontWeight="bold">
+                <Text
+                  color="violet.400"
+                  fontSize="xs"
+                  fontFamily="RadioNewsman"
+                >
                   {user.role}
-                </Heading>
+                </Text>
               )}
             </Flex>
 
-            <Text
-              fontSize="lg"
-              color="white"
-              fontWeight="bold"
-              ml="-0.5"
-              mt="-1"
-            >
+            <Text fontSize="sm" color="white" fontFamily="RadioNewsman">
               {user?.email}
             </Text>
           </Stack>
@@ -60,29 +96,20 @@ export const ProfileCard = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Heading size="md" color="white" mr="1">
+              <Text
+                fontFamily="RadioNewsman"
+                fontSize="md"
+                color="white"
+                mr="1"
+              >
                 Game History
-              </Heading>
+              </Text>
             </Flex>
 
             <VStack space={3}>
-              <Box rounded="3xl" bg="violet.400" p="2">
-                <Text px="2" fontSize="lg" color="white" fontWeight="bold">
-                  ceva
-                </Text>
-              </Box>
-
-              <Box rounded="3xl" bg="violet.400" p="2">
-                <Text px="2" fontSize="lg" color="white" fontWeight="bold">
-                  ceva
-                </Text>
-              </Box>
-
-              <Box rounded="3xl" bg="violet.400" p="2">
-                <Text px="2" fontSize="lg" color="white" fontWeight="bold">
-                  ceva
-                </Text>
-              </Box>
+              <Text fontFamily="RadioNewsman" color="white" fontSize="sm">
+                COMING SOON
+              </Text>
             </VStack>
           </Stack>
         </Box>

@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '50%',
     left: '25%',
-    backgroundColor: 'white',
+    backgroundColor: '#daedf8',
   },
 });
 

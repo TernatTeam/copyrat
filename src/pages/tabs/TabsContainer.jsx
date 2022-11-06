@@ -57,21 +57,16 @@ export const TabsContainer = ({ item, onPress, accessibilityState }) => {
       <Animatable.View ref={viewRef} duration={400} style={styles.container}>
         <Box
           bg="white"
-          borderColor="white"
-          borderWidth={4}
+          borderColor="black"
+          borderWidth={2}
           borderRadius={25}
-          width={50}
-          height={50}
+          h="12"
+          w="12"
           justifyContent="center"
           alignItems="center"
         >
           <Animatable.View ref={circleRef} style={styles.circle} />
-          <Icon
-            as={Ionicons}
-            name={item.icon}
-            size="lg"
-            color={focused ? 'white' : 'black'}
-          />
+          <Icon as={Ionicons} name={item.icon} size="lg" color="black" />
         </Box>
         <Animatable.Text
           ref={textRef}
@@ -94,8 +89,8 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#747474',
-    borderRadius: 25,
+    backgroundColor: '#add7f0',
+    borderRadius: 24,
   },
   text: {
     fontFamily: 'RadioNewsman',
