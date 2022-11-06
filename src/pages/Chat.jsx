@@ -42,7 +42,7 @@ export const ChatPage = ({ navigation, route }) => {
   const [countDown, setCountDown] = useState(0);
 
   const addSeconds = (date, seconds) => {
-    date.setSeconds(date.getSeconds() + seconds);
+    date?.setSeconds(date.getSeconds() + seconds);
     return date;
   };
 
@@ -53,8 +53,8 @@ export const ChatPage = ({ navigation, route }) => {
       const docSnap = await getDoc(docRef);
 
       const roundEndTimestamp = addSeconds(
-        docSnap.data().round_start_timestamp.toDate(),
-        docSnap.data().round_seconds,
+        docSnap?.data()?.round_start_timestamp.toDate(),
+        docSnap?.data()?.round_seconds,
       );
 
       setRoundEndTimestamp(new Date(roundEndTimestamp).getTime());

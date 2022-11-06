@@ -46,7 +46,7 @@ export const ModalShowRats = ({
                 onPress={onClose}
               >
                 <Text fontFamily="RadioNewsman" fontWeight="semibold" color="black">
-                  Ok.
+                  Ok
                 </Text>
               </Button>
             </Modal.Footer>

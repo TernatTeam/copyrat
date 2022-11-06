@@ -30,9 +30,9 @@ const joinGameSchema = yup.object({
 });
 
 const timeButtons = [
-  { label: '3 min', value: 30 },
-  { label: '5 min', value: 300 },
-  { label: '7 min', value: 420 },
+  { label: '2 min', value: 30 },
+  { label: '3 min', value: 180 },
+  { label: '4 min', value: 240 },
 ];
 
 export const RoomSettingsPage = ({ navigation }) => {
@@ -40,7 +40,7 @@ export const RoomSettingsPage = ({ navigation }) => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [name, setName] = useState('');
   const [isInvalidName, setIsInvalidName] = useState(false);
-  const [selectedTime, setSelectedTime] = useState(180);
+  const [selectedTime, setSelectedTime] = useState(120);
   const keyboardStatus = useKeyboard();
   const [{}, dispatch] = useGlobal();
 
@@ -222,7 +222,8 @@ export const RoomSettingsPage = ({ navigation }) => {
               <UnderlinedInput
                 inputColor="primary3.500"
                 iconColor="primary3.500"
-                placeholder="username"
+                placeholder="Name"
+                fontFamily="RadioNewsman"
                 icon="person-outline"
                 onChangeText={(value) => {
                   setIsInvalidName(false);

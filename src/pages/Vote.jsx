@@ -270,19 +270,18 @@ export const VotePage = ({ navigation }) => {
                       }}
                       style={{
                         width: '100%',
-                        margin: 10,
                         marginTop: 15,
                         alignItems: 'center',
                       }}
                     >
-                      <Center
+                      <Box
                         flexDirection="row"
                         justifyContent="space-between"
                         alignItems="center"
                         w="full"
                         p="2"
                         bgColor={fakeColors[index]}
-                        borderRadius="lg"
+                        borderRadius={10}
                       >
                         <Text color="black" fontFamily="RadioNewsman" fontSize="lg">
                           {player.fake_id}
@@ -299,7 +298,7 @@ export const VotePage = ({ navigation }) => {
                           size={6}
                           color={'white'}
                         />
-                      </Center>
+                      </Box>
                     </TouchableOpacity>
                   )
                 );

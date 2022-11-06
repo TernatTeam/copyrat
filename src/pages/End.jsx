@@ -20,7 +20,10 @@ export const EndPage = ({ navigation, route }) => {
       justifyContent="center"
       opacity="1"
     >
-
+      <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
+        {route.params.winner} won!
+      </Text>
+      
       <Button
         title="LockIn"
         rounded="lg"
@@ -34,12 +37,13 @@ export const EndPage = ({ navigation, route }) => {
           });
         }}
       >
+        
         <Text fontWeight="semibold" color="black" fontSize={20}>
           Done
         </Text>
       </Button>
 
-      <Modal
+      {/* <Modal
         isOpen={isModalOpen}
         onRequestClose={() => {
           closeModal();
@@ -49,7 +53,7 @@ export const EndPage = ({ navigation, route }) => {
         <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
           {route.params.winner} won!
         </Text>
-      </Modal>
+      </Modal> */}
     </Box>
   );
 };
