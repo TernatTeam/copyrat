@@ -200,6 +200,7 @@ export const VotePage = ({ navigation }) => {
     const q = doc(db, 'games', `${roomData.keyCode}/admin/game_state`);
     const unsubscribe = onSnapshot(q, (doc) => {
       if (doc.data().nav_to_score === true) {
+        
         navigation.reset({
           routes: [{ name: 'Scoreboard' }],
         });
