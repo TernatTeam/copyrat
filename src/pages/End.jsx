@@ -18,11 +18,8 @@ export const EndPage = ({ navigation, route }) => {
       flex="1"
       alignItems={'center'}
       justifyContent="center"
-      opacity={isModalOpen ? 0.7 : 1}
+      opacity="1"
     >
-      <Text fontSize="4xl" fontFamily="RadioNewsman" color="black">
-        copyrat
-      </Text>
 
       <Button
         title="LockIn"

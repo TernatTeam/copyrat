@@ -17,7 +17,7 @@ export const ModalShowRats = ({
               alignItems="center"
               justifyContent="center"
             >
-              <Text color="white" style={{ fontSize: 18, fontWeight: 'bold' }}>
+              <Text fontFamily="RadioNewsman" color="white" textAlign="center" style={{ fontSize: 18, fontWeight: 'bold' }}>
                 The rats this round were:
               </Text>
             </Modal.Header>
@@ -30,7 +30,7 @@ export const ModalShowRats = ({
               {players.map((player, index) => {
                 if (player.name != player.fake_id) {
                   return (
-                    <Text color={player.userNameColor} fontWeight="semibold" key={index}>
+                    <Text color={player.userNameColor} fontFamily="RadioNewsman" key={index}>
                       {player.name}
                     </Text>
                   );
@@ -45,8 +45,8 @@ export const ModalShowRats = ({
                 _pressed={{ bg: 'primary3.600' }}
                 onPress={onClose}
               >
-                <Text fontWeight="semibold" color="black">
-                  Muie Dragos
+                <Text fontFamily="RadioNewsman" fontWeight="semibold" color="black">
+                  Ok.
                 </Text>
               </Button>
             </Modal.Footer>

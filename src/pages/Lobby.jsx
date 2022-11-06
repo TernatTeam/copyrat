@@ -192,9 +192,10 @@ export const LobbyPage = ({ navigation, route }) => {
       <Box px="4" w="full" justifyContent="center" alignItems="flex-start">
         <IconButton
           icon={<Icon as={<Ionicons name="arrow-back-outline" />} />}
+          i
           borderRadius="full"
           _icon={{
-            color: 'white',
+            color: "primary3.500",
             size: '8',
           }}
           _pressed={{
@@ -249,7 +250,7 @@ export const LobbyPage = ({ navigation, route }) => {
             icon={<Icon as={<Ionicons name="copy-outline" />} />}
             borderRadius="full"
             _icon={{
-              color: 'white',
+              color: "primary3.500",
               size: '5',
             }}
             _pressed={{
