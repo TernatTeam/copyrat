@@ -48,7 +48,7 @@ export const HomePage = ({ navigation }) => {
           return (
             <Box
               textAlign="center"
-              bg="#71dada"
+              bg="primary3.500"
               px="2"
               py="1"
               rounded="sm"
