@@ -8,6 +8,7 @@ import {
   Flex,
   ScrollView,
   useToast,
+  VStack,
 } from 'native-base';
 
 import {
@@ -205,7 +206,7 @@ export const ScorePage = ({ navigation }) => {
               alignItems="center"
               flex={1}
             >
-              <Text fontSize="md" fontWeight="bold">
+              <Text fontFamily="RadioNewsman" rounded="sm">
                 {message}
               </Text>
             </Box>
@@ -216,26 +217,24 @@ export const ScorePage = ({ navigation }) => {
   };
 
   return (
-    <Box safeArea bg="primary1.500" h="100%" w="100%">
-      <Box px="5" w="full" justifyContent="center" alignItems="flex-start">
-        <ModalShowRats
-          show={isModalOpen}
-          players={playersDB}
-          onClose={() => {
-            setIsModalOpen(false);
-          }}
-        />
+    <Box safeArea bg="primary1.300" h="100%" w="100%" px="4">
+      <ModalShowRats
+        show={isModalOpen}
+        players={playersDB}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+      />
 
-        <Box w="full" alignItems="center" justifyContent="center">
-          <Heading size="xl">
-            <Text fontFamily="RadioNewsman" color="black">
-            Scoreboard:
-            </Text>
-          </Heading>
-        </Box>
+      <Box w="full" alignItems="center" justifyContent="center" pt="6" pb="12">
+        <Text fontSize="2xl" fontFamily="RadioNewsman" color="black">
+          Scoreboard:
+        </Text>
+      </Box>
 
-        <Box justifyContent="center" alignItems="center" w="full" h="70%">
-          <ScrollView w="full">
+      <Box px="4" bg="primary1.400" rounded="xl" h="60%">
+        <ScrollView w="full">
+          <VStack my="2" flex="1" justifyContent="center" alignItems="center">
             {playersDB.map((player, index) => {
               return (
                 <Flex
@@ -249,18 +248,22 @@ export const ScorePage = ({ navigation }) => {
                   my="2"
                   w="full"
                 >
-                  <Text fontSize="sm" fontFamily="RadioNewsman">
+                  <Text fontSize="sm" fontFamily="RadioNewsman" color="black">
                     {index + 1}.
                   </Text>
-                  <Text fontSize="md" fontFamily="RadioNewsman" color="white">
+
+                  <Text fontSize="md" fontFamily="RadioNewsman" color="black">
                     {player.name}
                   </Text>
-                  <Text fontFamily="RadioNewsman">{player.score}</Text>
+
+                  <Text fontFamily="RadioNewsman" color="black">
+                    {player.score}
+                  </Text>
                 </Flex>
               );
             })}
-          </ScrollView>
-        </Box>
+          </VStack>
+        </ScrollView>
       </Box>
 
       {auth.currentUser.uid === roomData.game_admin_uid && (
@@ -269,8 +272,8 @@ export const ScorePage = ({ navigation }) => {
             title="Next round"
             rounded="lg"
             medium
-            bg="primary3.500"
-            _pressed={{ bg: 'primary3.600' }}
+            bg="primary3.300"
+            _pressed={{ bg: 'primary3.400' }}
             onPress={async () => {
               if (roomData.round_number < 3) {
                 showToast('Preparing new roles...');

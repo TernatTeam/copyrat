@@ -13,24 +13,33 @@ export const ModalShowRats = ({
         <Box justifyContent="center" alignItems="center" pb="2" w="full">
           <Modal.Content borderRadius={15}>
             <Modal.Header
-              bg="primary1.500"
+              bg="primary1.300"
               alignItems="center"
               justifyContent="center"
             >
-              <Text fontFamily="RadioNewsman" color="white" textAlign="center" style={{ fontSize: 18, fontWeight: 'bold' }}>
+              <Text
+                fontFamily="RadioNewsman"
+                color="white"
+                textAlign="center"
+                style={{ fontSize: 18, fontWeight: 'bold' }}
+              >
                 The rats this round were:
               </Text>
             </Modal.Header>
 
             <Modal.Body
-              bg="primary1.500"
+              bg="primary1.300"
               alignItems="center"
               justifyContent="center"
             >
               {players.map((player, index) => {
                 if (player.name != player.fake_id) {
                   return (
-                    <Text color={player.userNameColor} fontFamily="RadioNewsman" key={index}>
+                    <Text
+                      color={player.userNameColor}
+                      fontFamily="RadioNewsman"
+                      key={index}
+                    >
                       {player.name}
                     </Text>
                   );
@@ -38,14 +47,18 @@ export const ModalShowRats = ({
               })}
             </Modal.Body>
 
-            <Modal.Footer bg="primary1.500">
+            <Modal.Footer bg="primary1.300">
               <Button
                 w="full"
-                bg="primary3.500"
-                _pressed={{ bg: 'primary3.600' }}
+                bg="primary3.300"
+                _pressed={{ bg: 'primary3.400' }}
                 onPress={onClose}
               >
-                <Text fontFamily="RadioNewsman" fontWeight="semibold" color="black">
+                <Text
+                  fontFamily="RadioNewsman"
+                  fontWeight="semibold"
+                  color="black"
+                >
                   Ok
                 </Text>
               </Button>

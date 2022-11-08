@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Icon, Input } from 'native-base';
 
@@ -9,28 +9,36 @@ export const UnderlinedInput = ({
   value,
   icon,
   iconColor = 'white',
+  focusIconColor = 'white',
   inputColor = 'white',
+  focusInputColor = 'white',
   placeholder,
   type = 'text',
   iconClickedCallback,
   isIconClickable = false,
   ...props
 }) => {
+  const [focusIcon, setFocusIcon] = useState(false);
+
   return (
     <Input
       type={type}
       {...props}
       borderBottomWidth={2}
-      borderBottomColor={`${isInvalid ? 'red.500' : 'black'}`}
+      borderBottomColor={`${isInvalid ? 'primary4.300' : inputColor}`}
+      onFocus={() => setFocusIcon(true)}
+      onBlur={() => {
+        setFocusIcon(false);
+      }}
       _focus={
         isInvalid
           ? {
-              borderBottomColor: 'red.500',
-              placeholderTextColor: 'red.500',
+              borderBottomColor: 'primary4.300',
+              placeholderTextColor: 'primary4.300',
             }
           : {
-              borderBottomColor: inputColor,
-              placeholderTextColor: 'white',
+              borderBottomColor: focusInputColor,
+              placeholderTextColor: focusInputColor,
             }
       }
       InputRightElement={
@@ -38,7 +46,9 @@ export const UnderlinedInput = ({
           as={<Ionicons name={icon} />}
           size={6}
           mr="2"
-          color={isInvalid ? `red.500` : iconColor}
+          color={
+            isInvalid ? `primary4.300` : focusIcon ? focusIconColor : iconColor
+          }
           onPress={() => {
             if (isIconClickable) {
               iconClickedCallback();
@@ -48,7 +58,7 @@ export const UnderlinedInput = ({
       }
       variant="underlined"
       placeholder={placeholder}
-      placeholderTextColor={isInvalid ? `red.500` : 'black'}
+      placeholderTextColor={isInvalid ? `primary4.300` : inputColor}
       value={value}
     />
   );

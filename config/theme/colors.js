@@ -2,42 +2,36 @@ import { extendTheme } from 'native-base';
 
 const theme = extendTheme({
   colors: {
+    // grey
     primary1: {
-      50: '#FFE1E1', // 35% lighten
-      100: '#FFC8C8', // 25% lighten
-      500: '#747474', // original
-      600: '#686868', // 10% darker
+      100: '#9e9e9e', // 30% lighten
+      200: '#909090', // 20% lighten
+      300: '#747474', // original
+      400: '#686868', // 10% darker
     },
+    // yellow
     primary2: {
-      50: '#FFFFA9', // 35% lighten
-      100: '#FFFF90', // 25% lighten
-      500: '#F3D250', // original
-      600: '#DAB937', // 10% darker
+      100: '#fbf695', // 30% lighten
+      200: '#fbf585', // 20% lighten
+      300: '#faf267', // original
+      400: '#f9ef45', // 10% darker
     },
+    //blue
     primary3: {
-      50: '#daedf8', // 5% lighten
-      500: '#d8ecf8', // original
-      600: '#add7f0', // 10% darker
+      100: '#e4f2fa', // 30% lighten
+      200: '#e0f0f9', // 20% lighten
+      225: '#daedf8', // 5% lighten
+      300: '#d8ecf8', // original
+      400: '#b1d9f1', // 10% darker
+      500: '#89c6ea', // 20% darker
     },
+    //red
     primary4: {
-      50: '#E9FFFF', // 35% lighten
-      100: '#D0FFFF', // 25% lighten
-      500: '#90CCF4', // original
-      600: '#77B3DB', // 10% darker
+      100: '#e98888', // 30% lighten
+      200: '#e67777', // 20% lighten
+      300: '#e05555', // original
+      400: '#db3b3b', // 10% darker
     },
-    primary5: {
-      50: '#5EFFFF', // 35% lighten
-      100: '#45FFFF', // 25% lighten
-      500: '#05dad5', // original // #O5aad5 // #747474
-      600: '#00C1BC', // 10% darker
-    },
-
-    // colors primary1:#05dad5
-    // primary2: #ebf4fa
-    // Redefinig only one shade, rest of the color will remain same.
-    // amber: {
-    //   400: '#d97706',
-    // },
   },
   // config: {
   //   Changing initialColorMode to 'dark'

@@ -1,20 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import {
   Box,
   Button,
-  Center,
   useToast,
   Text,
   ScrollView,
   VStack,
+  Flex,
 } from 'native-base';
 
 import {
   doc,
-  getDoc,
   updateDoc,
   increment,
   collection,
@@ -231,7 +230,7 @@ export const VotePage = ({ navigation }) => {
               alignItems="center"
               flex={1}
             >
-              <Text fontSize="md" fontWeight="bold">
+              <Text fontFamily="RadioNewsman" rounded="sm">
                 {message}
               </Text>
             </Box>
@@ -242,16 +241,16 @@ export const VotePage = ({ navigation }) => {
   };
 
   return (
-    <Box safeArea bg="primary1.500" h="100%" w="100%"  px="4">
-      <Box pt="6" w="full" alignItems="center" justifyContent="center">
+    <Box safeArea bg="primary1.300" h="100%" w="100%" px="4">
+      <Box pt="6" pb="12" w="full" alignItems="center" justifyContent="center">
         <Text fontSize="2xl" fontFamily="RadioNewsman">
           Vote out the rats!
         </Text>
       </Box>
 
-      <Box px="4" mt="2" mb="12" h="60%" bg="primary1.600" rounded="xl">
+      <Box px="4" h="60%" bg="primary1.400" rounded="xl">
         <ScrollView w="full">
-          <VStack flex="1" justifyContent="center" alignItems="center" px="2">
+          <VStack my="2" flex="1" justifyContent="center" alignItems="center">
             {
               // generare butoane de votare
               playersDB?.map((player, index) => {
@@ -268,37 +267,26 @@ export const VotePage = ({ navigation }) => {
                           showToast('You already locked in your vote');
                         }
                       }}
-                      style={{
-                        width: '100%',
-                        marginTop: 15,
-                        alignItems: 'center',
-                      }}
+                      style={[
+                        styles.containerPlayers,
+                        { backgroundColor: fakeColors[index] },
+                      ]}
                     >
-                      <Box
-                        flexDirection="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        w="full"
-                        p="2"
-                        bgColor={fakeColors[index]}
-                        borderRadius={10}
-                      >
-                        <Text color="black" fontFamily="RadioNewsman" fontSize="lg">
-                          {player.fake_id}
-                        </Text>
+                      <Text color="black" fontFamily="RadioNewsman">
+                        {player.fake_id}
+                      </Text>
 
-                        <Icon
-                          as={
-                            indexOfVoted === index ? (
-                              <Ionicons name="checkbox" />
-                            ) : (
-                              <Ionicons name="square-outline" />
-                            )
-                          }
-                          size={6}
-                          color={'white'}
-                        />
-                      </Box>
+                      <Icon
+                        as={
+                          indexOfVoted === index ? (
+                            <Ionicons name="checkbox" />
+                          ) : (
+                            <Ionicons name="square-outline" />
+                          )
+                        }
+                        size={6}
+                        color={'white'}
+                      />
                     </TouchableOpacity>
                   )
                 );
@@ -315,8 +303,8 @@ export const VotePage = ({ navigation }) => {
           mb="3"
           medium
           disabled={alreadyVoted}
-          bg={alreadyVoted ? 'primary3.600' : 'primary3.500'}
-          _pressed={{ bg: 'primary3.600' }}
+          bg={alreadyVoted ? 'primary3.400' : 'primary3.300'}
+          _pressed={{ bg: 'primary3.400' }}
           onPress={async () => {
             // la apasare, se apeleaza functia care trimite catre baza de date indicele persoanei cu care votezi
             if (indexOfVoted != null) {
@@ -331,7 +319,10 @@ export const VotePage = ({ navigation }) => {
             } // ca nu a votat cu nimeni
           }}
         >
-          <Text fontFamily="RadioNewsman" color={alreadyVoted ? 'grey' : 'black'}>
+          <Text
+            fontFamily="RadioNewsman"
+            color={alreadyVoted ? 'grey' : 'black'}
+          >
             Lock In
           </Text>
         </Button>
@@ -341,9 +332,9 @@ export const VotePage = ({ navigation }) => {
             title="stopVote"
             rounded="lg"
             medium
-            bg="red.700"
+            bg="primary4.300"
             fontFamily="RadioNewsman"
-            _pressed={{ bg: 'red.800' }}
+            _pressed={{ bg: 'primary4.400' }}
             onPress={async () => {
               let all_voted = true;
               // butonul care calculeaza si afiseaza scorurile, si da update in baza de date
@@ -373,7 +364,7 @@ export const VotePage = ({ navigation }) => {
               }
             }}
           >
-            <Text fontFamily="RadioNewsman" color="white">
+            <Text fontFamily="RadioNewsman" color="black">
               Stop Vote
             </Text>
           </Button>
@@ -382,5 +373,18 @@ export const VotePage = ({ navigation }) => {
     </Box>
   );
 };
+
+const styles = StyleSheet.create({
+  containerPlayers: {
+    flex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    marginVertical: 8,
+    padding: 12,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+});
 
 export default VotePage;

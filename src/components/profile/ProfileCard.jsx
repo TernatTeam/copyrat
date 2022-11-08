@@ -44,16 +44,16 @@ export const ProfileCard = ({ navigation }) => {
 
   return (
     <Box safeArea w="full" alignItems="flex-start">
-      <HStack w="full" justifyContent="flex-start">
+      <HStack w="full" justifyContent="flex-start" px="1" py="1">
         <IconButton
           icon={<Icon as={<Ionicons name="log-out" />} />}
           borderRadius="full"
           _icon={{
-            color: 'primary3.500',
+            color: 'primary3.300',
             size: '8',
           }}
           _pressed={{
-            bg: 'primary3.600',
+            bg: 'primary3.400',
           }}
           onPress={logOut}
           rotation={180}
@@ -61,7 +61,7 @@ export const ProfileCard = ({ navigation }) => {
       </HStack>
 
       <Stack space={4} w="full" px="4">
-        <Box w="full" rounded="xl" bg="primary1.600">
+        <Box w="full" rounded="xl" bg="primary1.400">
           <Stack space={3} p="4">
             <Flex
               direction="row"
@@ -89,7 +89,7 @@ export const ProfileCard = ({ navigation }) => {
           </Stack>
         </Box>
 
-        <Box w="full" rounded="xl" bg="primary1.600">
+        <Box w="full" rounded="xl" bg="primary1.400">
           <Stack space={3} p="4">
             <Flex
               direction="row"

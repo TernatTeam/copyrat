@@ -7,7 +7,7 @@
     "icon": "./assets/logo_trans.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/logo_trans.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#747474"
     },
