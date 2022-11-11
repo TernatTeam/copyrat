@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {
   Box,
   Center,
@@ -40,6 +42,18 @@ export const ChatPage = ({ navigation, route }) => {
   const [isTimesUpModalOpen, setIsTimesUpModalOpen] = useState(false);
   const [roundEndTimestamp, setRoundEndTimestamp] = useState();
   const [countDown, setCountDown] = useState(0);
+  const [selectedTextSize, setSelectedTextSize] = useState('md');
+
+  const getChatSettings = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('settings');
+      setSelectedTextSize(
+        jsonValue != null ? JSON.parse(jsonValue).textSizeChat : null,
+      );
+    } catch (err) {
+      console.log('Err: ', err);
+    }
+  };
 
   const addSeconds = (date, seconds) => {
     date.setSeconds(date.getSeconds() + seconds);
@@ -103,6 +117,7 @@ export const ChatPage = ({ navigation, route }) => {
       setIsRoundModalOpen(false);
     }, 2000);
 
+    getChatSettings();
     getRoundTime();
     getFakeIdAndUsernameColor();
 
@@ -231,6 +246,7 @@ export const ChatPage = ({ navigation, route }) => {
           fakeId: fakeId,
           userNameColor: userNameColor,
         }}
+        selectedTextSize={selectedTextSize}
       />
     </Box>
   ) : (

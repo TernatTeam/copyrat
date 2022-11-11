@@ -6,7 +6,7 @@ import { ProfileCard } from '../../../components/profile';
 
 export const ProfilePage = ({ navigation }) => {
   return (
-    <Box w="100%" h="100%" alignItems="center" bg="#747474" safeArea>
+    <Box w="100%" h="100%" alignItems="center" bg="primary1.300" safeArea>
       <ProfileCard navigation={navigation} />
     </Box>
   );

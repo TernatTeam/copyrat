@@ -21,7 +21,7 @@ export const RulesPage = ({ navigation }) => {
   return (
     <Flex safeArea bg="primary1.300" h="100%" w="100%" alignItems="center">
       <HStack
-        px="4"
+        px="2"
         w="full"
         justifyContent="space-between"
         alignItems="flex-start"

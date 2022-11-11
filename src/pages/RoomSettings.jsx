@@ -258,7 +258,6 @@ export const RoomSettingsPage = ({ navigation }) => {
                 mb="3"
                 fontFamily="RadioNewsman"
                 color="black"
-                fontWeight="semibold"
                 fontSize="md"
               >
                 Set the time of every round:

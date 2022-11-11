@@ -35,6 +35,7 @@ export const App = () => {
   };
 
   const storeData = async (user) => {
+    const applicationSettings = JSON.stringify({ textSizeChat: 'md' });
     const docRef = doc(db, `users/${user.uid}`);
     // in this case user is the storage key we
     // need to has this and put the key in a safe place like db maybe
@@ -46,6 +47,7 @@ export const App = () => {
         role: docSnap.data()?.role ? docSnap.data().role : null,
       });
       await AsyncStorage.setItem('user', jsonValue);
+      await AsyncStorage.setItem('settings', applicationSettings);
     } catch (err) {
       console.log('Err: ', err);
     }

@@ -43,8 +43,8 @@ export const ProfileCard = ({ navigation }) => {
   }, []);
 
   return (
-    <Box safeArea w="full" alignItems="flex-start">
-      <HStack w="full" justifyContent="flex-start" px="1" py="1">
+    <Box safeArea w="full" alignItems="center">
+      <HStack w="full" justifyContent="space-between" px="2" py="1">
         <IconButton
           icon={<Icon as={<Ionicons name="log-out" />} />}
           borderRadius="full"
@@ -58,9 +58,25 @@ export const ProfileCard = ({ navigation }) => {
           onPress={logOut}
           rotation={180}
         />
+
+        <IconButton
+          icon={<Icon as={<Ionicons name="settings-outline" />} />}
+          borderRadius="full"
+          _icon={{
+            color: 'primary3.300',
+            size: '8',
+          }}
+          _pressed={{
+            bg: 'primary3.400',
+          }}
+          onPress={() => {
+            navigation.navigate({ name: 'Settings' });
+          }}
+          rotation={180}
+        />
       </HStack>
 
-      <Stack space={4} w="full" px="4">
+      <Stack space={4} w="full" px="4" pt="4">
         <Box w="full" rounded="xl" bg="primary1.400">
           <Stack space={3} p="4">
             <Flex
@@ -83,7 +99,7 @@ export const ProfileCard = ({ navigation }) => {
               )}
             </Flex>
 
-            <Text fontSize="sm" color="white" fontFamily="RadioNewsman">
+            <Text fontSize="sm" color="white" fontWeight="bold">
               {user?.email}
             </Text>
           </Stack>

@@ -23,13 +23,14 @@ import {
   RulesPage,
   EndPage,
   RoomSettingsPage,
+  SettingsPage,
 } from '../src/pages/index';
 
 const Stack = createStackNavigator();
 
 const Index = ({ page }) => {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={{ colors: { background: '#747474' } }}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
@@ -41,11 +42,27 @@ const Index = ({ page }) => {
         {page === 'Login' ? (
           <Stack.Screen name="Login" component={LoginPage} />
         ) : (
-          <Stack.Screen name="Tabs" component={IndexTabs} />
+          <Stack.Screen
+            name="Tabs"
+            component={IndexTabs}
+            options={{
+              gestureEnabled: false,
+              cardStyleInterpolator:
+                CardStyleInterpolators.forScaleFromCenterAndroid,
+            }}
+          />
         )}
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordPage} />
-        <Stack.Screen name="Lobby" component={LobbyPage} />
+        <Stack.Screen
+          options={{
+            gestureEnabled: false,
+            cardStyleInterpolator:
+              CardStyleInterpolators.forScaleFromCenterAndroid,
+          }}
+          name="Lobby"
+          component={LobbyPage}
+        />
         <Stack.Screen name="Chat" component={ChatPage} />
         <Stack.Screen name="Vote" component={VotePage} />
         <Stack.Screen name="Scoreboard" component={ScorePage} />
@@ -64,6 +81,14 @@ const Index = ({ page }) => {
           }}
           name="Room Settings"
           component={RoomSettingsPage}
+        />
+        <Stack.Screen
+          options={{
+            gestureDirection: 'vertical',
+            cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
+          }}
+          name="Settings"
+          component={SettingsPage}
         />
         <Stack.Screen name="End" component={EndPage} />
       </Stack.Navigator>

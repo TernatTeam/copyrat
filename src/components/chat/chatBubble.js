@@ -43,6 +43,14 @@ export const chatBubble = (props) => {
             right: {
               color: 'white',
               textAlign: 'left',
+              fontSize:
+                props.selectedTextSize === 'sm'
+                  ? 14
+                  : props.selectedTextSize === 'md'
+                  ? 16
+                  : props.selectedTextSize === 'lg'
+                  ? 18
+                  : 16,
             },
           }}
           wrapperStyle={{
@@ -82,6 +90,14 @@ export const chatBubble = (props) => {
           textStyle={{
             left: {
               color: 'white',
+              fontSize:
+                props.selectedTextSize === 'sm'
+                  ? 14
+                  : props.selectedTextSize === 'md'
+                  ? 16
+                  : props.selectedTextSize === 'lg'
+                  ? 18
+                  : 16,
             },
           }}
           wrapperStyle={{
@@ -108,6 +124,14 @@ export const chatBubble = (props) => {
           textStyle={{
             left: {
               color: 'white',
+              fontSize:
+                props.selectedTextSize === 'sm'
+                  ? 14
+                  : props.selectedTextSize === 'md'
+                  ? 16
+                  : props.selectedTextSize === 'lg'
+                  ? 18
+                  : 16,
             },
           }}
           wrapperStyle={{
