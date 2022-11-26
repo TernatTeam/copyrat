@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
   Icon,
   IconButton,
   ScrollView,

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import {
   Box,
-  Heading,
   Button,
   Text,
   Flex,
@@ -26,24 +25,22 @@ import { useGlobal } from '../../state';
 import { ModalShowRats } from '../components/common';
 
 let route = 'Chat';
-let winnerID = '';
 let players = [];
 
 export const ScorePage = ({ navigation }) => {
   const toast = useToast();
   const id = 'scoreboard-toasts';
-  /* variabile carora li se modifica valoarea pe parcursul jocului:
-  -> playersDB = array ul cu playeri, luat din baza de date
-*/
-  //const players = useRef("");
+  // variabile carora li se modifica valoarea pe parcursul jocului:
+  // -> playersDB = array ul cu playeri, luat din baza de date
+
   const [playersDB, setPlayersDB] = useState([]);
   const [playerIDs, setPlayerIDs] = useState([]);
 
-  /* variabile carora nu li se modifica valoarea pe parcursul jocului:
-  -> roomData = variabila globala care retine informatii despre jocul curent
-  -> adminId = id ul playerului care a creat camera
-  -> currentPlayer = obiectul cu informatiile despre un player (divera pe fiecare device)
-*/
+  // variabile carora nu li se modifica valoarea pe parcursul jocului:
+  // -> roomData = variabila globala care retine informatii despre jocul curent
+  // -> adminId = id ul playerului care a creat camera
+  // -> currentPlayer = obiectul cu informatiile despre un player (divera pe fiecare device)
+
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [{ roomData }, dispatch] = useGlobal();
 
@@ -73,8 +70,6 @@ export const ScorePage = ({ navigation }) => {
 
       setPlayersDB(playersArray); // modific arrayul in care tin minte playerii
       setPlayerIDs(idArray); // modific arrayul in care tin minte id urile
-
-      winnerID = playersArray[0].name;
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -177,7 +172,7 @@ export const ScorePage = ({ navigation }) => {
           routes: [
             {
               name: route,
-              params: { winner: winnerID, round: roomData.round_number + 1 },
+              params: { players: players, round: roomData.round_number + 1 },
             },
           ],
         });
@@ -291,7 +286,7 @@ export const ScorePage = ({ navigation }) => {
             }}
           >
             <Text fontFamily="RadioNewsman" color="black">
-              Next Round
+              {roomData.round_number === 3 ? 'End Game' : 'Next Round'}
             </Text>
           </Button>
         </Box>
