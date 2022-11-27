@@ -12,21 +12,28 @@ import {
 } from 'firebase/firestore';
 import { auth, db } from './firebase-key-config';
 
+import { registerForPushNotifications } from '../notifications/PushNotifications';
+
 export const registration = async (name, email, password) => {
   try {
+    const token = await registerForPushNotifications();
+
     await createUserWithEmailAndPassword(auth, email, password).then(
       (userCredential) => {
         const user = userCredential.user;
+
         setDoc(doc(db, 'users', user.uid), {
           name: name,
           email: email,
           password: password,
           created_at: serverTimestamp(),
+          notification_token: token,
         });
       },
     );
     return 200;
-  } catch (_) {
+  } catch (err) {
+    console.log(err);
     return 500;
   }
 };

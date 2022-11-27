@@ -23,17 +23,33 @@ const schedulePushNotification = async () => {
   });
 };
 
-const registerForPushNotificationsAsync = async () => {
+const registerForPushNotifications = async () => {
   let token;
 
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
       name: 'default',
       importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [250, 250, 250, 250],
+      vibrationPattern: [0, 250, 250, 250],
       lightColor: '#FF231F7C',
     });
   }
+
+  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+
+  if (existingStatus !== 'granted') {
+    const { status } = await Notifications.requestPermissionsAsync();
+    finalStatus = status;
+  }
+
+  if (finalStatus !== 'granted') {
+    alert('Failed to get push token for push notification!');
+    return;
+  }
+
+  token = (await Notifications.getExpoPushTokenAsync()).data;
+
   return token;
 };
 
@@ -44,9 +60,7 @@ export const PushNotifications = () => {
   const responseListener = useRef();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token),
-    );
+    registerForPushNotifications().then((token) => setExpoPushToken(token));
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
@@ -92,3 +106,5 @@ export const PushNotifications = () => {
     </View>
   );
 };
+
+export { registerForPushNotifications };
