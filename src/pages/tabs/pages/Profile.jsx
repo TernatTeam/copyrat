@@ -1,14 +1,23 @@
 import React from 'react';
 
-import { Box } from 'native-base';
+import { Stack } from 'native-base';
 
-import { ProfileCard } from '../../../components/profile';
+import { ProfileCard, GameHistory } from '../../../components/profile';
 
 export const ProfilePage = ({ navigation }) => {
   return (
-    <Box w="100%" h="100%" alignItems="center" bg="#747474" safeArea>
+    <Stack
+      w="100%"
+      h="100%"
+      alignItems="center"
+      bg="primary1.300"
+      safeArea
+      px="2"
+      space="4"
+    >
       <ProfileCard navigation={navigation} />
-    </Box>
+      <GameHistory />
+    </Stack>
   );
 };
 

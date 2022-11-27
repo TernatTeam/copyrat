@@ -13,15 +13,17 @@ export const RulesPage = ({ navigation }) => {
     await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
 
     await Audio.Sound.createAsync(
-      { uri: 'https://www.soundjay.com/misc/page-flip-02.mp3' },
-      { shouldPlay: true, rate: 1.5 },
+      {
+        uri: 'https://firebasestorage.googleapis.com/v0/b/copyrat-7b7d6.appspot.com/o/page-flip-02.mp3?alt=media&token=45237d61-b866-4715-930c-f082c590a7e9',
+      },
+      { shouldPlay: true, rate: 2 },
     );
   };
 
   return (
     <Flex safeArea bg="primary1.300" h="100%" w="100%" alignItems="center">
       <HStack
-        px="4"
+        px="2"
         w="full"
         justifyContent="space-between"
         alignItems="flex-start"

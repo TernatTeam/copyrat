@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
   Icon,
   IconButton,
   ScrollView,
@@ -63,10 +62,20 @@ export const LobbyPage = ({ navigation, route }) => {
   };
 
   const setEndRoundTime = async () => {
-    await setDoc(doc(db, 'games', roomData.keyCode, 'admin', 'game_settings'), {
-      round_start_timestamp: serverTimestamp(),
-      round_seconds: route.params.roundSeconds,
-    });
+    try {
+      await setDoc(
+        doc(db, 'games', roomData.keyCode, 'admin', 'game_settings'),
+        {
+          round_start_timestamp: serverTimestamp(),
+          round_seconds: route.params.roundSeconds,
+        },
+      );
+
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
   };
 
   //Assign roles
@@ -297,8 +306,11 @@ export const LobbyPage = ({ navigation, route }) => {
           <Button
             onPress={async () => {
               if (auth.currentUser.uid == roomData.game_admin_uid) {
-                await setEndRoundTime();
-                await setRoles();
+                const response = await setEndRoundTime();
+
+                if (response) {
+                  await setRoles();
+                }
               }
             }}
             title="Start"

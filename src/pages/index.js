@@ -5,3 +5,4 @@ export * from './Scoreboard';
 export * from './Rules';
 export * from './RoomSettings';
 export * from './End';
+export * from './Settings';

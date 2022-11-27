@@ -8,6 +8,7 @@ export const UnderlinedInput = ({
   isInvalid = false,
   value,
   icon,
+  textInputColor = 'white',
   iconColor = 'white',
   focusIconColor = 'white',
   inputColor = 'white',
@@ -60,6 +61,7 @@ export const UnderlinedInput = ({
       placeholder={placeholder}
       placeholderTextColor={isInvalid ? `primary4.300` : inputColor}
       value={value}
+      color={textInputColor}
     />
   );
 };

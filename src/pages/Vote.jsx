@@ -2,15 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { TouchableOpacity, StyleSheet } from 'react-native';
 
-import {
-  Box,
-  Button,
-  useToast,
-  Text,
-  ScrollView,
-  VStack,
-  Flex,
-} from 'native-base';
+import { Box, Button, useToast, Text, ScrollView, VStack } from 'native-base';
 
 import {
   doc,
@@ -48,6 +40,7 @@ export const VotePage = ({ navigation }) => {
   -> adminId = id ul playerului care a creat camera
 */
   const [currentPlayer, setCurrentPlayer] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const [{ roomData }] = useGlobal();
 
   const getPlayers = async () => {
@@ -336,6 +329,7 @@ export const VotePage = ({ navigation }) => {
             fontFamily="RadioNewsman"
             _pressed={{ bg: 'primary4.400' }}
             onPress={async () => {
+              setIsLoading(true);
               let all_voted = true;
               // butonul care calculeaza si afiseaza scorurile, si da update in baza de date
               players.current = await getPlayers();
@@ -348,6 +342,7 @@ export const VotePage = ({ navigation }) => {
               if (!all_voted) {
                 //daca nu si-a facut update
                 showToast('Votes not locked in! Please try again.');
+                setIsLoading(false);
               } else {
                 // if votes locked in
                 await calculateScore(); // scores
@@ -361,8 +356,13 @@ export const VotePage = ({ navigation }) => {
                     },
                   );
                 }, 1000);
+                setIsLoading(false);
               }
             }}
+            disabled={isLoading}
+            isLoading={isLoading}
+            //the size didnt match so i had to do this..
+            _spinner={{ paddingY: '0.45' }}
           >
             <Text fontFamily="RadioNewsman" color="black">
               Stop Vote

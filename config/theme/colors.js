@@ -8,6 +8,11 @@ const theme = extendTheme({
       200: '#909090', // 20% lighten
       300: '#747474', // original
       400: '#686868', // 10% darker
+      500: '#5d5d5d', // 20% darker
+      600: '#515151', // 30% darker
+      700: '#464646', // 40% darker
+      800: '#3a3a3a', // 50% darker
+      900: '#2e2e2e', // 60% darker
     },
     // yellow
     primary2: {

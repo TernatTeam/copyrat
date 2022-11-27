@@ -77,7 +77,7 @@ export const HomePage = ({ navigation }) => {
         }}
       />
 
-      <HStack px="1" pt="1" w="full" justifyContent="flex-end">
+      <HStack px="2" pt="1" w="full" justifyContent="flex-end">
         <IconButton
           icon={<Icon as={<Ionicons name="book" />} />}
           borderRadius="full"
