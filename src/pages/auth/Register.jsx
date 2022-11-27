@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import * as yup from 'yup';
 
@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Center,
-  Heading,
   Image,
   Text,
   ScrollView,
@@ -19,6 +18,7 @@ import { registration } from '../../../config/firebase/firebase-functions';
 
 import CopyratLogo from '../../../assets/logo_trans.png';
 import { UnderlinedInput } from '../../components/interface';
+import { useKeyboard } from '../../hooks';
 
 const registerSchema = yup.object({
   password: yup
@@ -48,6 +48,8 @@ export const RegisterPage = ({ navigation }) => {
   const id = 'error-toasts';
 
   const [isLoading, setIsLoading] = useState(false);
+  const scroll = useRef();
+  const keyboardStatus = useKeyboard();
 
   const resetFieldsErrors = () => {
     setIsInvalidUsername(true);
@@ -141,10 +143,16 @@ export const RegisterPage = ({ navigation }) => {
       });
   };
 
+  useEffect(() => {
+    if (keyboardStatus) {
+      scroll.current.scrollTo({ y: 100, animated: true });
+    }
+  }, [keyboardStatus]);
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <Center bg="primary1.300" h="100%" w="100%">
-        <ScrollView w="full" h="full" px="12">
+        <ScrollView w="full" h="full" px="12" ref={scroll}>
           <Box safeArea pt="16" pb="2">
             <Center w="full" mb="4">
               <Image size="xl" alt="Copy Rat Logo" source={CopyratLogo} />
