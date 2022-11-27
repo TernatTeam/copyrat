@@ -76,9 +76,17 @@ export const SettingsPage = ({ navigation }) => {
       <Stack w="full" px="4" pt="4">
         <Box w="full" rounded="xl" bg="primary1.400">
           <Stack space={4} p="4">
-            <Text fontSize="xl" color="white" fontFamily="RadioNewsman">
-              Chat settings
-            </Text>
+            <Flex justifyContent="center" alignItems="center" direction="row">
+              <Icon
+                as={<Ionicons name="chatbox-ellipses-outline" />}
+                color="white"
+                mr="2"
+                size="xl"
+              />
+              <Text fontSize="xl" color="white" fontFamily="RadioNewsman">
+                Chat settings
+              </Text>
+            </Flex>
 
             <Box px="2">
               <Text fontFamily="RadioNewsman" color="black" fontSize="md">

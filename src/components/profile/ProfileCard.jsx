@@ -44,7 +44,7 @@ export const ProfileCard = ({ navigation }) => {
 
   return (
     <Box safeArea w="full" alignItems="center">
-      <HStack w="full" justifyContent="space-between" px="2" py="1">
+      <HStack w="full" justifyContent="space-between" py="1">
         <IconButton
           icon={<Icon as={<Ionicons name="log-out" />} />}
           borderRadius="full"
@@ -56,7 +56,6 @@ export const ProfileCard = ({ navigation }) => {
             bg: 'primary3.400',
           }}
           onPress={logOut}
-          rotation={180}
         />
 
         <IconButton
@@ -72,11 +71,10 @@ export const ProfileCard = ({ navigation }) => {
           onPress={() => {
             navigation.navigate({ name: 'Settings' });
           }}
-          rotation={180}
         />
       </HStack>
 
-      <Stack space={4} w="full" px="4" pt="4">
+      <Stack space={4} w="full" pt="4">
         <Box w="full" rounded="xl" bg="primary1.400">
           <Stack space={3} p="4">
             <Flex
@@ -102,31 +100,6 @@ export const ProfileCard = ({ navigation }) => {
             <Text fontSize="sm" color="white" fontWeight="bold">
               {user?.email}
             </Text>
-          </Stack>
-        </Box>
-
-        <Box w="full" rounded="xl" bg="primary1.400">
-          <Stack space={3} p="4">
-            <Flex
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Text
-                fontFamily="RadioNewsman"
-                fontSize="md"
-                color="white"
-                mr="1"
-              >
-                Game History
-              </Text>
-            </Flex>
-
-            <VStack space={3}>
-              <Text fontFamily="RadioNewsman" color="white" fontSize="sm">
-                COMING SOON
-              </Text>
-            </VStack>
           </Stack>
         </Box>
       </Stack>
