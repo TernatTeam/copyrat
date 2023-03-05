@@ -4,21 +4,8 @@ import { Text, Icon, IconButton, Flex, HStack, VStack, Box } from 'native-base';
 
 import { Ionicons } from '@expo/vector-icons';
 
-import { Audio } from 'expo-av';
-
 export const RulesPage = ({ navigation }) => {
   const [page, setPage] = useState(1);
-
-  const playSound = async () => {
-    await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
-
-    await Audio.Sound.createAsync(
-      {
-        uri: 'https://firebasestorage.googleapis.com/v0/b/copyrat-7b7d6.appspot.com/o/page-flip-02.mp3?alt=media&token=45237d61-b866-4715-930c-f082c590a7e9',
-      },
-      { shouldPlay: true, rate: 2 },
-    );
-  };
 
   return (
     <Flex safeArea bg="primary1.300" h="100%" w="100%" alignItems="center">
@@ -46,7 +33,16 @@ export const RulesPage = ({ navigation }) => {
 
       <VStack p="5" justifyContent="center" alignItems="center" m="auto">
         {page == 1 && (
-          <Text
+          <Box>
+            <Text
+            color="primary3.400"
+            fontSize="24"
+            fontFamily="RadioNewsman"
+            textAlign="center"
+          >
+            Basics{'\n'}
+          </Text>
+            <Text
             color="white"
             fontSize="17"
             fontFamily="RadioNewsman"
@@ -61,10 +57,21 @@ export const RulesPage = ({ navigation }) => {
             You could either play as yourself (meaning you're a cat), either as
             one of your friends (making you a rat).
           </Text>
+          </Box>
+          
         )}
 
         {page == 2 && (
-          <Text
+          <>
+             <Text
+            color="primary3.400"
+            fontSize="24"
+            fontFamily="RadioNewsman"
+            textAlign="center"
+          >
+            Roles{'\n'}
+          </Text>
+            <Text
             color="white"
             fontSize="17"
             fontFamily="RadioNewsman"
@@ -82,9 +89,20 @@ export const RulesPage = ({ navigation }) => {
             to fool the rest. You can vote as well, so try to catch the other
             rats.
           </Text>
+          </>
+          
         )}
 
         {page == 3 && (
+          <>
+           <Text
+            color="primary3.400"
+            fontSize="24"
+            fontFamily="RadioNewsman"
+            textAlign="center"
+          >
+            Scores{'\n'}
+            </Text>
           <Text
             color="white"
             fontSize="17"
@@ -106,6 +124,8 @@ export const RulesPage = ({ navigation }) => {
             {'\n'}
             Good luck !
           </Text>
+          </>
+          
         )}
       </VStack>
 
@@ -127,7 +147,6 @@ export const RulesPage = ({ navigation }) => {
               bg: 'primary3.400',
             }}
             onPress={() => {
-              playSound();
               setTimeout(() => {
                 if (page > 1) {
                   setPage(page - 1);
@@ -161,7 +180,6 @@ export const RulesPage = ({ navigation }) => {
               bg: 'primary3.400',
             }}
             onPress={() => {
-              playSound();
               setTimeout(() => {
                 if (page < 3) {
                   setPage(page + 1);
