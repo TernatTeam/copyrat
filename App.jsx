@@ -53,16 +53,6 @@ export const App = () => {
     }
   };
 
-  // const removeValue = async () => {
-  //   try {
-  //     await AsyncStorage.removeItem('user');
-  //   } catch (e) {
-  //     // remove error
-  //   }
-
-  //   console.log('Done.');
-  // };
-
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
