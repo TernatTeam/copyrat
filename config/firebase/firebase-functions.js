@@ -43,7 +43,8 @@ export const signIn = async (email, password) => {
     await signInWithEmailAndPassword(auth, email, password);
 
     return 200;
-  } catch (_) {
+  } catch (err) {
+    console.log(err);
     return 500;
   }
 };
@@ -53,6 +54,7 @@ export const forgotPass = async (email) => {
     await sendPasswordResetEmail(auth, email);
     return 200;
   } catch (err) {
+    console.log(err);
     return 500;
   }
 };
