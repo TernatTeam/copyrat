@@ -12,11 +12,12 @@ import {
 } from 'firebase/firestore';
 import { auth, db } from './firebase-key-config';
 
-import { registerForPushNotifications } from '../notifications/PushNotifications';
+//to use need to install expo-notifications;
+// import { registerForPushNotifications } from '../notifications/PushNotifications';
 
 export const registration = async (name, email, password) => {
   try {
-    const token = await registerForPushNotifications();
+    // const token = await registerForPushNotifications();
 
     await createUserWithEmailAndPassword(auth, email, password).then(
       (userCredential) => {
