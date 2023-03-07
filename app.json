@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "backgroundColor": "#747474"
@@ -24,10 +26,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo_trans.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.aamasteraa.copyrat"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2d87150e-38ba-424e-aec5-bec01fcb7b59"
+      }
     }
   }
 }

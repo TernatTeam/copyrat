@@ -25,7 +25,6 @@ export const registration = async (name, email, password) => {
         setDoc(doc(db, 'users', user.uid), {
           name: name,
           email: email,
-          password: password,
           created_at: serverTimestamp(),
           notification_token: token,
         });
