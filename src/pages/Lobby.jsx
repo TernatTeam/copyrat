@@ -179,9 +179,9 @@ export const LobbyPage = ({ navigation, route }) => {
   }, [players]);
 
   // only for dev
-  useEffect(() => {
-    setPlayers([]);
-  }, []);
+  // useEffect(() => {
+  //   setPlayers([]);
+  // }, []);
 
   const PlayersLoader = () => {
     const loaderArray = [];
@@ -316,14 +316,17 @@ export const LobbyPage = ({ navigation, route }) => {
             title="Start"
             rounded="lg"
             medium
-            bg="primary3.300"
+            bg={players.length <= 3 ? 'primary1.100' : 'primary3.300'}
             _pressed={{ bg: 'primary3.400' }}
-            disabled={isLoadingButton}
+            disabled={isLoadingButton || players.length <= 3}
             isLoading={isLoadingButton}
             _spinner={{ paddingY: '0.45' }}
           >
-            <Text fontFamily="RadioNewsman" color="black">
-              Start
+            <Text
+              fontFamily="RadioNewsman"
+              color={players.length <= 3 ? 'primary1.300' : 'black'}
+            >
+              {players.length <= 3 ? 'You need at least 4 players' : 'Start'}
             </Text>
           </Button>
         )}

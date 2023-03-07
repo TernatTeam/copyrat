@@ -4,33 +4,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Box, Flex, HStack, Stack, Text, IconButton, Icon } from 'native-base';
 
-import { signOut } from 'firebase/auth';
-import { auth } from '../../../config/firebase/firebase-key-config';
-
 import { Ionicons } from '@expo/vector-icons';
+import { ModalLogout } from '../common';
 
 export const ProfileCard = ({ navigation }) => {
   const [user, setUser] = useState();
-
-  const removeValue = async () => {
-    try {
-      await AsyncStorage.removeItem('user');
-    } catch (e) {
-      console.log(e);
-    }
-
-    console.log('Done.');
-  };
-
-  const logOut = async () => {
-    await removeValue();
-
-    signOut(auth).then(() => {
-      navigation.reset({
-        routes: [{ name: 'Login' }],
-      });
-    });
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getData = async () => {
     try {
@@ -47,6 +26,13 @@ export const ProfileCard = ({ navigation }) => {
 
   return (
     <Box safeArea w="full" alignItems="center">
+      <ModalLogout
+        show={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+      />
+
       <HStack w="full" justifyContent="space-between" py="1">
         <IconButton
           icon={<Icon as={<Ionicons name="log-out" />} />}
@@ -58,7 +44,9 @@ export const ProfileCard = ({ navigation }) => {
           _pressed={{
             bg: 'primary3.400',
           }}
-          onPress={logOut}
+          onPress={() => {
+            setIsModalOpen(true);
+          }}
         />
 
         <IconButton

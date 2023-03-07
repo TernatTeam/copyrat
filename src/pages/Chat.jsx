@@ -145,9 +145,9 @@ export const ChatPage = ({ navigation, route }) => {
   }, []);
 
   // only for dev
-  useEffect(() => {
-    setMessages([]);
-  }, []);
+  // useEffect(() => {
+  //   setMessages([]);
+  // }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
