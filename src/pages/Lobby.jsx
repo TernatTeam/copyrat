@@ -326,7 +326,7 @@ export const LobbyPage = ({ navigation, route }) => {
               fontFamily="RadioNewsman"
               color={players.length <= 3 ? 'primary1.300' : 'black'}
             >
-              {players.length <= 3 ? 'You need at least 4 players' : 'Start'}
+              {players.length <= 3 ? '4 players minimum' : 'Start'}
             </Text>
           </Button>
         )}
