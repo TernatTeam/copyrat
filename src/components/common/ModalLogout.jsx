@@ -4,6 +4,7 @@ import { Box, Button, Modal, Text, KeyboardAvoidingView } from 'native-base';
 
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../config/firebase/firebase-key-config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ModalLogout = ({ show, onClose = () => {} }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +52,7 @@ export const ModalLogout = ({ show, onClose = () => {} }) => {
                 bg="primary3.300"
                 _pressed={{ bg: 'primary3.400' }}
                 onPress={onClose}
+                disabled={isLoading}
               >
                 <Text
                   fontFamily="RadioNewsman"

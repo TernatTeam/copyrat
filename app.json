@@ -2,9 +2,9 @@
   "expo": {
     "name": "copyrat",
     "slug": "copyrat",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
-    "icon": "./assets/logo_trans.png",
+    "icon": "./assets/icons/144x144.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -14,23 +14,19 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "backgroundColor": "#747474"
     },
     "android": {
+      "versionCode": 3,
       "backgroundColor": "#747474",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo_trans.png",
+        "foregroundImage": "./assets/icons/144x144.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.aamasteraa.copyrat"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
