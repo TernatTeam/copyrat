@@ -2,9 +2,9 @@
   "expo": {
     "name": "copyrat",
     "slug": "copyrat",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "orientation": "portrait",
-    "icon": "./assets/icons/144x144.png",
+    "icon": "./assets/icons/72x72.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -20,10 +20,10 @@
       "backgroundColor": "#747474"
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 5,
       "backgroundColor": "#747474",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/144x144.png",
+        "foregroundImage": "./assets/icons/72x72.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.aamasteraa.copyrat"

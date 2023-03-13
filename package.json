@@ -32,5 +32,11 @@
     "@babel/core": "7.21.0",
     "node-fetch": "^3.3.0"
   },
+  "overrides": {
+    "@expo/config-plugins": "~6.0.0",
+    "@expo/prebuild-config": "~6.0.0",
+    "expo-modules-autolinking": "~1.1.0",
+    "react-devtools-core": "~4.25.0"
+  },
   "private": true
 }
