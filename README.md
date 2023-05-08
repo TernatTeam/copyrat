@@ -3,4 +3,4 @@
 chat where they should impersonate other members.
 * Building is realised with Expo and Firebase, front end with React, React-Native and JavaScript
 for funtionalities.
-!(/assets/logo_trans.png)
+![Logo](/assets/logo_trans.png)
